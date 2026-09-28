@@ -1,0 +1,370 @@
+:root {
+  --bg:         #F5F1E8;
+  --surface:    #FFFFFF;
+  --text:       #1A1A1A;
+  --text-soft:  #6B6B68;
+  --border:     rgba(0,0,0,.08);
+  --shadow:     0 2px 8px rgba(0,0,0,.08);
+  --accent:     #2E4B3F;
+  --star:       #A07010;
+
+  --c-boardgame: #EDD9A3;
+  --c-videogame: #C5B8E8;
+  --c-beverage:  #A8C9A5;
+  --c-food:      #F5CC6A;
+  --c-surprise:  #BDC9E8;
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --pad:  16px;
+  --gap:  10px;
+  --max:  520px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a      { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; background: none; border: none; }
+
+#app {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.screen {
+  padding: var(--pad);
+  padding-top:    calc(var(--pad) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+}
+
+.back-btn {
+  display: inline-block;
+  color: var(--text-soft);
+  font-size: 15px;
+  padding: 4px 0 16px;
+}
+
+/* Home */
+
+.home-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 0 0;
+}
+
+.home-logo {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.3px;
+}
+
+.home-logo-icon { font-size: 22px; }
+
+.home-tagline {
+  height: 40px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  object-position: right top;
+  display: block;
+}
+
+.home-header {
+  text-align: center;
+  padding: 28px 0 24px;
+}
+
+.home-title {
+  font-family: 'Caveat', cursive;
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.home-subtitle {
+  font-size: 15px;
+  color: var(--text-soft);
+  line-height: 1.5;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* Category grid — 2×2, beverage and food full-width */
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap);
+  margin-bottom: var(--gap);
+}
+
+.cat-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px 14px 16px;
+  border-radius: var(--r-lg);
+  min-height: 190px;
+  position: relative;
+  overflow: hidden;
+  transition: transform .12s;
+}
+
+.cat-tile:active { transform: scale(.97); }
+
+.cat-tile[data-cat="boardgame"] { background: var(--c-boardgame); }
+.cat-tile[data-cat="videogame"] { background: var(--c-videogame); }
+.cat-tile[data-cat="beverage"]  { background: var(--c-beverage);  }
+.cat-tile[data-cat="food"]      { background: var(--c-food);      }
+
+/* Beverage and food span full width with a shorter height */
+.cat-tile[data-cat="beverage"],
+.cat-tile[data-cat="food"] {
+  grid-column: 1 / -1;
+  min-height: 120px;
+}
+
+.cat-illustration {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  pointer-events: none;
+}
+
+.cat-tile[data-cat="beverage"] .cat-illustration,
+.cat-tile[data-cat="food"] .cat-illustration {
+  width: 100px;
+  height: 100px;
+  top: 10px;
+  right: 12px;
+}
+
+.cat-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.cat-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(0,0,0,.72);
+  line-height: 1.2;
+}
+
+.cat-arrow {
+  font-size: 16px;
+  color: rgba(0,0,0,.38);
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+
+/* Plan sorpresa */
+
+.surprise-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--c-surprise);
+  border-radius: var(--r-lg);
+  padding: 20px 20px 20px 16px;
+  margin-top: var(--gap);
+  transition: transform .12s;
+}
+
+.surprise-card:active { transform: scale(.98); }
+
+.surprise-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: block;
+}
+
+.surprise-body { flex: 1; }
+
+.surprise-title {
+  font-family: 'Caveat', cursive;
+  font-size: 26px;
+  font-weight: 700;
+  color: rgba(0,0,0,.75);
+  line-height: 1.1;
+}
+
+.surprise-desc {
+  font-size: 13px;
+  color: rgba(0,0,0,.5);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.surprise-arrow {
+  font-size: 18px;
+  color: rgba(0,0,0,.35);
+  flex-shrink: 0;
+}
+
+.home-footer {
+  text-align: center;
+  padding: 28px 0 0;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.home-wave { margin-top: 32px; line-height: 0; }
+.home-wave svg { display: block; width: 100%; }
+
+/* Category screen */
+
+.cat-screen-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 20px;
+}
+
+.cat-screen-header h2 {
+  font-family: 'Caveat', cursive;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.result-count {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 14px;
+}
+
+/* Item cards */
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  padding: 12px;
+  border: 1px solid rgba(0,0,0,.07);
+  box-shadow: var(--shadow);
+  transition: transform .1s;
+}
+
+.item-card:active { transform: scale(.98); }
+
+.item-thumb {
+  width: 62px;
+  height: 62px;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.item-thumb--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  flex-shrink: 0;
+  border-radius: var(--r-sm);
+}
+
+.item-thumb--fallback[data-cat="boardgame"] { background: var(--c-boardgame); }
+.item-thumb--fallback[data-cat="videogame"] { background: var(--c-videogame); }
+.item-thumb--fallback[data-cat="beverage"]  { background: var(--c-beverage);  }
+.item-thumb--fallback[data-cat="food"]      { background: var(--c-food);      }
+
+.item-body  { flex: 1; min-width: 0; }
+
+.item-name {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-rating {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--star);
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-see-all {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: var(--r-md);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+/* States */
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(0,0,0,.1);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.msg-empty {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--text-soft);
+  font-size: 15px;
+  line-height: 1.6;
+}

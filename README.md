@@ -43,16 +43,20 @@ Las valoraciones se agregan en cliente sobre los documentos cargados, evitando l
 bunker/
 ├── public/
 │   ├── index.html              # aplicación principal (SPA con router por hash)
-│   ├── admin.html              # panel de administración
+│   ├── 404.html                # página de error
+│   ├── admin.html              # panel de administración (pendiente)
 │   ├── css/styles.css
 │   ├── js/
 │   │   ├── app.js              # lógica de la aplicación
 │   │   └── firebase-config.js  # inicialización del SDK
 │   └── images/
-│       ├── *.png               # ilustraciones de categorías
+│       ├── *.webp              # ilustraciones de categorías
 │       └── items/              # imágenes del catálogo
 ├── scripts/
-│   └── set-admin.js            # script de configuración inicial (Admin SDK)
+│   ├── set-admin.js            # asigna el rol de administrador (Admin SDK)
+│   ├── seed-items.js           # carga items de prueba en Firestore
+│   └── optimize-images.js      # convierte las ilustraciones PNG a WebP
+├── assets-src/                 # ilustraciones originales (PNG), fuera del despliegue
 ├── firestore.rules             # reglas de seguridad de Firestore
 ├── firestore.indexes.json
 └── firebase.json
@@ -80,10 +84,27 @@ Para asignar privilegios de administrador a un usuario ya registrado en Firebase
 ```bash
 cd scripts
 npm install
-# Descargar service account key desde Firebase Console → Project Settings → Service accounts
+# Descargar la clave de cuenta de servicio desde Firebase Console → Configuración del proyecto → Cuentas de servicio
 node set-admin.js ./clave.json email@ejemplo.com
 # Eliminar la clave tras ejecutarlo
 ```
+
+## Scripts de apoyo
+
+Todos se ejecutan desde `scripts/` tras `npm install`.
+
+```bash
+# Cargar items de prueba (IDs con prefijo seed_, se pueden repetir sin duplicar)
+node seed-items.js ./clave.json
+
+# Borrarlos
+node seed-items.js ./clave.json --borrar
+
+# Convertir las ilustraciones PNG de public/images a WebP
+node optimize-images.js
+```
+
+La clave de cuenta de servicio no debe subirse nunca al repositorio; el `.gitignore` ya excluye los nombres habituales.
 
 ## Modelo de datos (Firestore)
 

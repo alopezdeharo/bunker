@@ -4,6 +4,7 @@
   --text:       #1A1A1A;
   --text-soft:  #6B6B68;
   --border:     rgba(0,0,0,.08);
+  --border-strong: rgba(0,0,0,.12);
   --shadow:     0 2px 8px rgba(0,0,0,.08);
   --accent:     #2E4B3F;
   --star:       #A07010;
@@ -275,7 +276,7 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   padding: 8px 14px;
   border-radius: 999px;
   background: var(--surface);
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid var(--border-strong);
   font-size: 14px;
   color: var(--text);
   white-space: nowrap;
@@ -381,6 +382,81 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   color: var(--accent);
   text-align: center;
   box-shadow: var(--shadow);
+}
+
+/* Pantalla del plan sorpresa */
+
+.plan-sub {
+  margin: -8px 0 20px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.plan-ask {
+  padding: 22px 18px 18px;
+  border-radius: var(--r-lg);
+  background: var(--c-surprise);
+  text-align: center;
+}
+
+.plan-question {
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.plan-ask .chips {
+  justify-content: center;
+  margin: 0 0 18px;
+  padding: 2px 0;
+}
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  box-shadow: var(--shadow);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform .1s, opacity .12s;
+}
+
+.btn-primary:active   { transform: scale(.98); }
+.btn-primary:disabled { opacity: .6; cursor: default; }
+
+.plan-piece { margin-bottom: 18px; }
+
+.plan-piece-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.plan-piece-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.plan-reroll {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.plan-reroll:active { transform: scale(.96); }
+
+.plan-note {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-soft);
 }
 
 /* Ficha de detalle */

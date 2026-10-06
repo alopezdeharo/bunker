@@ -54,7 +54,7 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   padding: 4px 0 16px;
 }
 
-/* Home */
+/* Inicio */
 
 .home-topbar {
   display: flex;
@@ -104,7 +104,7 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   margin: 0 auto;
 }
 
-/* Category grid — 2×2, beverage and food full-width */
+/* Cuadrícula de categorías */
 
 .cat-grid {
   display: grid;
@@ -132,7 +132,6 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
 .cat-tile[data-cat="beverage"]  { background: var(--c-beverage);  }
 .cat-tile[data-cat="food"]      { background: var(--c-food);      }
 
-/* Beverage and food span full width with a shorter height */
 .cat-tile[data-cat="beverage"],
 .cat-tile[data-cat="food"] {
   grid-column: 1 / -1;
@@ -235,7 +234,7 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
 .home-wave { margin-top: 32px; line-height: 0; }
 .home-wave svg { display: block; width: 100%; }
 
-/* Category screen */
+/* Pantalla de categoría */
 
 .cat-screen-header {
   display: flex;
@@ -256,7 +255,49 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   margin-bottom: 14px;
 }
 
-/* Item cards */
+/* Filtros rápidos */
+
+.chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 calc(var(--pad) * -1) 14px;
+  padding: 2px var(--pad);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chips::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid rgba(0,0,0,.12);
+  font-size: 14px;
+  color: var(--text);
+  white-space: nowrap;
+  transition: background .12s, color .12s, border-color .12s, transform .1s;
+}
+
+.chip:active { transform: scale(.96); }
+
+.chip[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.chip-sep {
+  flex-shrink: 0;
+  width: 1px;
+  height: 20px;
+  background: rgba(0,0,0,.14);
+}
+
+/* Tarjetas de items */
 
 .items-list {
   display: flex;
@@ -342,7 +383,93 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   box-shadow: var(--shadow);
 }
 
-/* States */
+/* Ficha de detalle */
+
+.detail-hero {
+  display: block;
+  width: 100%;
+  height: 220px;
+  border-radius: var(--r-lg);
+  object-fit: cover;
+  margin-bottom: 18px;
+}
+
+.detail-hero--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+}
+
+.detail-hero--fallback[data-cat="boardgame"] { background: var(--c-boardgame); }
+.detail-hero--fallback[data-cat="videogame"] { background: var(--c-videogame); }
+.detail-hero--fallback[data-cat="beverage"]  { background: var(--c-beverage);  }
+.detail-hero--fallback[data-cat="food"]      { background: var(--c-food);      }
+
+.detail-name {
+  font-family: 'Caveat', cursive;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+
+.detail-desc {
+  font-size: 16px;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.detail-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.fact {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.detail-rating {
+  font-size: 15px;
+  color: var(--star);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 6px;
+}
+
+.detail-tags {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.detail-notes { margin-top: 28px; }
+
+.detail-notes h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  margin-bottom: 10px;
+}
+
+.note {
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+  margin-bottom: 8px;
+}
+
+.note p      { font-size: 15px; line-height: 1.5; }
+.note footer { font-size: 13px; color: var(--text-soft); margin-top: 6px; }
+
+/* Estados */
 
 .loading {
   display: flex;

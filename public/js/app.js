@@ -42,6 +42,7 @@ function router() {
     home:     renderHome,
     category: () => renderCategory(param),
     item:     () => renderItem(param),
+    surprise: renderSurprise,
   }[screen] ?? renderHome)();
 }
 
@@ -58,6 +59,7 @@ function bindBack(fallbackHash) {
 window.addEventListener('hashchange', router);
 
 function renderHome() {
+  lastPlan = null;
   getApp().innerHTML = `
     <div class="screen">
       <div class="home-topbar">
@@ -324,6 +326,330 @@ function renderResults(state) {
       renderResults(state);
     });
   }
+}
+
+// ── Plan sorpresa ──
+
+const PLAN_KINDS = ['activity', 'beverage', 'food'];
+
+const PLAN_PIECES = {
+  activity: { label: '🎲 Para jugar', toggle: '🎲 Jugar', categories: ['boardgame', 'videogame'] },
+  beverage: { label: '🍹 Para beber', toggle: '🍹 Beber', categories: ['beverage'] },
+  food:     { label: '🍿 Para comer', toggle: '🍿 Comer', categories: ['food'] },
+};
+
+const GROUP_SIZES = {
+  '2':   { label: '2',   range: [2, 2] },
+  '3-4': { label: '3–4', range: [3, 4] },
+  '5-7': { label: '5–7', range: [5, 7] },
+  '8+':  { label: '8+',  range: [8, Infinity] },
+};
+
+const TIME_OPTIONS = {
+  quick: { label: 'Poco tiempo', minutes: 30 },
+  hour:  { label: 'Hasta 1 h',   minutes: 60 },
+  any:   { label: 'Sin prisa',   minutes: Infinity },
+};
+
+const GROUP_SIZE_KEY = 'bunker.players';
+
+let lastPlan = null;
+
+function savedGroupSize() {
+  try {
+    const value = localStorage.getItem(GROUP_SIZE_KEY);
+    return GROUP_SIZES[value] ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveGroupSize(value) {
+  try {
+    localStorage.setItem(GROUP_SIZE_KEY, value);
+  } catch {}
+}
+
+async function loadPlanPools() {
+  const items   = await loadItems(['boardgame', 'videogame', 'beverage', 'food']);
+  const ratings = await loadRatings(items.map(i => i.id));
+
+  const enriched = items.map(item => ({
+    ...item,
+    _avg:   ratings[item.id]?.avg   ?? 0,
+    _votes: ratings[item.id]?.count ?? 0,
+  }));
+
+  return Object.fromEntries(PLAN_KINDS.map(kind => [
+    kind,
+    enriched.filter(i => PLAN_PIECES[kind].categories.includes(i.category)),
+  ]));
+}
+
+function ensurePools(plan) {
+  if (plan.pools) return Promise.resolve();
+
+  if (!plan.loading) {
+    plan.loading = loadPlanPools()
+      .then(pools => { plan.pools = pools; })
+      .catch(err => console.error(err))
+      .finally(() => { plan.loading = null; });
+  }
+  return plan.loading;
+}
+
+function fitsPlayers(item, [lo, hi], strict) {
+  const d = item.details ?? {};
+  if (d.minPlayers == null) return false;
+  const max = d.maxPlayers ?? d.minPlayers;
+  return strict
+    ? d.minPlayers <= lo && max >= (hi === Infinity ? lo : hi)
+    : d.minPlayers <= hi && max >= lo;
+}
+
+function fitsTime(kind, item, minutes) {
+  const d = item.details ?? {};
+  const needed = kind === 'activity' ? d.durationMin : d.preparationTime;
+  return needed == null || needed <= minutes;
+}
+
+function planCandidates(plan, kind) {
+  const pool    = plan.pools[kind];
+  const range   = GROUP_SIZES[plan.players].range;
+  const minutes = TIME_OPTIONS[plan.time].minutes;
+
+  const levels = kind === 'activity'
+    ? [
+        i => fitsPlayers(i, range, true)  && fitsTime(kind, i, minutes),
+        i => fitsPlayers(i, range, false) && fitsTime(kind, i, minutes),
+        i => fitsPlayers(i, range, false),
+      ]
+    : [i => fitsTime(kind, i, minutes)];
+
+  for (let level = 0; level < levels.length; level++) {
+    const items = pool.filter(levels[level]);
+    if (items.length) return { items, exact: level === 0 };
+  }
+  return { items: pool, exact: false };
+}
+
+function pickFor(plan, kind) {
+  const { items, exact } = planCandidates(plan, kind);
+  if (!items.length) return null;
+
+  const currentId = plan.picks[kind]?.item.id;
+  const seen      = plan.seen[kind];
+  const others    = weightedOrder(items).filter(i => i.id !== currentId);
+  const pool      = others.length ? others : items;
+  const unseen    = pool.filter(i => !seen.has(i.id));
+
+  if (!unseen.length) seen.clear();
+  const item = unseen[0] ?? pool[0];
+  seen.add(item.id);
+
+  return { item, exact };
+}
+
+function refreshPicks(plan) {
+  for (const kind of PLAN_KINDS) {
+    if (!plan.include.has(kind)) {
+      delete plan.picks[kind];
+      continue;
+    }
+
+    const current = plan.picks[kind];
+    if (current) {
+      const { items, exact } = planCandidates(plan, kind);
+      if (items.some(i => i.id === current.item.id)) {
+        current.exact = exact;
+        continue;
+      }
+    }
+
+    const next = pickFor(plan, kind);
+    if (next) plan.picks[kind] = next;
+    else delete plan.picks[kind];
+  }
+}
+
+function newPlan(plan) {
+  for (const kind of PLAN_KINDS) {
+    if (!plan.include.has(kind)) continue;
+    const next = pickFor(plan, kind);
+    if (next) plan.picks[kind] = next;
+  }
+}
+
+function applyChip(plan, { group, value }) {
+  if (group === 'players') {
+    plan.players = value;
+    saveGroupSize(value);
+  } else if (group === 'time') {
+    plan.time = value;
+  } else if (plan.include.has(value)) {
+    if (plan.include.size > 1) plan.include.delete(value);
+  } else {
+    plan.include.add(value);
+  }
+}
+
+function syncChips(plan) {
+  document.querySelectorAll('#plan .chip').forEach(btn => {
+    const { group, value } = btn.dataset;
+    const on = group === 'players' ? plan.players === value
+             : group === 'time'    ? plan.time === value
+             : plan.include.has(value);
+    btn.setAttribute('aria-pressed', String(on));
+  });
+}
+
+function planChip(group, value, label, on) {
+  return `<button type="button" class="chip" data-group="${group}" data-value="${esc(value)}" aria-pressed="${on}">${esc(label)}</button>`;
+}
+
+function renderSurprise() {
+  const plan = lastPlan ?? {
+    phase:   'ask',
+    players: savedGroupSize() ?? '3-4',
+    time:    'any',
+    include: new Set(PLAN_KINDS),
+    pools:   null,
+    loading: null,
+    picks:   {},
+    seen:    { activity: new Set(), beverage: new Set(), food: new Set() },
+  };
+  lastPlan = plan;
+
+  getApp().innerHTML = `
+    <div class="screen">
+      <button class="back-btn" id="back-btn">← Volver</button>
+      <header class="cat-screen-header">
+        <span>✨</span>
+        <h2>Plan sorpresa</h2>
+      </header>
+      <p class="plan-sub">No sabemos qué hay hoy, pero seguro que es una buena idea.</p>
+      <div id="plan"></div>
+    </div>
+  `;
+  bindBack('#home');
+
+  ensurePools(plan);
+
+  if (plan.phase === 'plan') renderPlan(plan);
+  else renderAsk(plan);
+}
+
+function renderAsk(plan) {
+  const root = document.getElementById('plan');
+
+  root.innerHTML = `
+    <section class="plan-ask">
+      <p class="plan-question">¿Cuántos sois?</p>
+      <div class="chips" role="group" aria-label="Número de personas">
+        ${Object.entries(GROUP_SIZES).map(([value, g]) =>
+          planChip('players', value, g.label, plan.players === value)
+        ).join('')}
+      </div>
+      <button type="button" class="btn-primary" id="btn-idea">Danos una idea</button>
+    </section>
+  `;
+
+  root.querySelector('.chips').addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    applyChip(plan, btn.dataset);
+    syncChips(plan);
+  });
+
+  document.getElementById('btn-idea').addEventListener('click', async e => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    btn.textContent = 'Pensando…';
+
+    await ensurePools(plan);
+
+    if (!plan.pools) {
+      root.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+      return;
+    }
+
+    plan.phase = 'plan';
+    newPlan(plan);
+    renderPlan(plan);
+  });
+}
+
+function renderPlan(plan) {
+  const root = document.getElementById('plan');
+  if (!root) return;
+
+  root.innerHTML = `
+    <div class="chips" role="group" aria-label="Ajustes del plan">
+      ${Object.entries(GROUP_SIZES).map(([value, g]) =>
+        planChip('players', value, `👥 ${g.label}`, plan.players === value)
+      ).join('')}
+      <span class="chip-sep" aria-hidden="true"></span>
+      ${Object.entries(TIME_OPTIONS).map(([value, t]) =>
+        planChip('time', value, t.label, plan.time === value)
+      ).join('')}
+      <span class="chip-sep" aria-hidden="true"></span>
+      ${PLAN_KINDS.map(kind =>
+        planChip('include', kind, PLAN_PIECES[kind].toggle, plan.include.has(kind))
+      ).join('')}
+    </div>
+    <div id="plan-pieces"></div>
+    <button type="button" class="btn-primary" id="btn-new-plan">Otro plan</button>
+  `;
+
+  root.querySelector('.chips').addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn) return;
+    applyChip(plan, btn.dataset);
+    refreshPicks(plan);
+    syncChips(plan);
+    renderPieces(plan);
+  });
+
+  document.getElementById('plan-pieces').addEventListener('click', e => {
+    const btn = e.target.closest('.plan-reroll');
+    if (!btn) return;
+    const next = pickFor(plan, btn.dataset.kind);
+    if (next) plan.picks[btn.dataset.kind] = next;
+    renderPieces(plan);
+  });
+
+  document.getElementById('btn-new-plan').addEventListener('click', () => {
+    newPlan(plan);
+    renderPieces(plan);
+  });
+
+  renderPieces(plan);
+}
+
+function renderPieces(plan) {
+  const box = document.getElementById('plan-pieces');
+  if (!box) return;
+
+  const kinds = PLAN_KINDS.filter(kind => plan.picks[kind]);
+
+  if (!kinds.length) {
+    box.innerHTML = `<p class="msg-empty">Todavía no tenemos catálogo suficiente para montar un plan así.</p>`;
+    return;
+  }
+
+  box.innerHTML = kinds.map(kind => {
+    const { item, exact } = plan.picks[kind];
+    return `
+      <section class="plan-piece">
+        <div class="plan-piece-head">
+          <span class="plan-piece-label">${PLAN_PIECES[kind].label}</span>
+          <button type="button" class="plan-reroll" data-kind="${kind}">🔄 Otra</button>
+        </div>
+        ${buildItemCard(item)}
+        ${exact ? '' : `<p class="plan-note">Es lo más cercano que tenemos a lo que pedís.</p>`}
+      </section>
+    `;
+  }).join('');
 }
 
 // ── Ficha de detalle ──

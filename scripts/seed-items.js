@@ -122,6 +122,28 @@ const ITEMS = [
     description: 'Base, tomate y lo que haya. Cada uno pone lo suyo.',
     tags: ['contundente'], availability: 'quick', kind: 'prepare',
     details: { type: ['hearty'], preparationTime: 25, servings: 4, vegetarian: false, bestBefore: null } },
+
+  // fuera de carta
+  { id: 'seed_secret-te-miel', name: 'Té con miel y limón', category: 'beverage', secret: true,
+    description: 'Para cuando la garganta pide tregua.',
+    tags: ['reconfortante'], availability: 'quick', kind: 'prepare',
+    details: { type: 'tea', alcoholic: false, temperature: 'hot', preparationTime: 6,
+               flavor: ['cítrico', 'dulce'], caffeineLevel: 'low', steepingTime: 4,
+               openedAt: null, bestBefore: null } },
+  { id: 'seed_secret-chocolate-sal', name: 'Chocolate negro con sal', category: 'food', secret: true,
+    description: 'Dos onzas y en silencio.',
+    tags: ['capricho'], availability: 'ready', kind: 'consume',
+    details: { type: ['sweet'], preparationTime: 0, servings: 1, vegetarian: true, bestBefore: null } },
+  { id: 'seed_secret-cafe-irlandes', name: 'Café irlandés', category: 'beverage', secret: true,
+    description: 'Café, whisky, azúcar y nata. Mejor despacio.',
+    tags: ['cóctel', 'café'], availability: 'quick', kind: 'prepare',
+    details: { type: 'cocktail', alcoholic: true, temperature: 'hot', preparationTime: 8,
+               flavor: ['intenso'], caffeineLevel: 'high', steepingTime: null,
+               openedAt: null, bestBefore: null } },
+  { id: 'seed_secret-caldo', name: 'Caldo casero', category: 'food', secret: true,
+    description: 'Hay que tenerlo hecho de antes. Reconforta como pocas cosas.',
+    tags: ['reconfortante'], availability: 'planned', kind: 'prepare',
+    details: { type: ['hearty'], preparationTime: 90, servings: 4, vegetarian: false, bestBefore: null } },
 ];
 
 async function run() {

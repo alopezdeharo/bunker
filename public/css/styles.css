@@ -226,11 +226,27 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
 }
 
 .home-footer {
+  position: relative;
   text-align: center;
   padding: 28px 0 0;
   font-size: 13px;
   color: var(--text-soft);
 }
+
+.secret-link {
+  position: absolute;
+  right: 4px;
+  bottom: -34px;
+  padding: 12px 10px;
+  color: var(--text-soft);
+  text-decoration: none;
+  opacity: .4;
+  transition: opacity .2s, transform .2s;
+}
+
+.secret-link:hover,
+.secret-link:focus-visible { opacity: 1; }
+.secret-link:active        { opacity: 1; transform: scale(1.25); }
 
 .home-wave { margin-top: 32px; line-height: 0; }
 .home-wave svg { display: block; width: 100%; }
@@ -296,6 +312,15 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   width: 1px;
   height: 20px;
   background: rgba(0,0,0,.14);
+}
+
+.item-group { margin-bottom: 22px; }
+
+.item-group-title {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
 }
 
 /* Tarjetas de items */
@@ -386,7 +411,7 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
 
 /* Pantalla del plan sorpresa */
 
-.plan-sub {
+.screen-intro {
   margin: -8px 0 20px;
   font-size: 15px;
   line-height: 1.5;

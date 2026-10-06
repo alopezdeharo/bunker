@@ -43,6 +43,7 @@ function router() {
     category: () => renderCategory(param),
     item:     () => renderItem(param),
     surprise: renderSurprise,
+    secret:   renderSecret,
   }[screen] ?? renderHome)();
 }
 
@@ -117,6 +118,7 @@ function renderHome() {
 
       <footer class="home-footer">
         ♥ Mejores planes. Mismas personas.
+        <a class="secret-link" href="#secret" aria-label="Fuera de carta">✦</a>
       </footer>
 
       <div class="home-wave">
@@ -159,6 +161,7 @@ async function renderCategory(cat) {
 
     const ordered = weightedOrder(enriched);
     const state = {
+      cat,
       items:   ordered,
       groups:  buildFilterGroups(cat, ordered),
       active:  new Set(),
@@ -309,14 +312,27 @@ function renderResults(state) {
     return;
   }
 
-  const displayed = state.showAll ? filtered : filtered.slice(0, INITIAL_ITEMS);
-  const hasMore   = filtered.length > displayed.length;
+  const sections = state.cat === 'food' ? groupFood(filtered) : null;
+  let listHtml;
+  let shownCount;
+
+  if (sections) {
+    const shown = state.showAll
+      ? sections
+      : sections.map(s => ({ ...s, items: s.items.slice(0, FOOD_SECTION_ITEMS) }));
+    shownCount = shown.reduce((n, s) => n + s.items.length, 0);
+    listHtml   = shown.map(buildItemSection).join('');
+  } else {
+    const displayed = state.showAll ? filtered : filtered.slice(0, INITIAL_ITEMS);
+    shownCount = displayed.length;
+    listHtml   = `<div class="items-list">${displayed.map(buildItemCard).join('')}</div>`;
+  }
+
+  const hasMore = filtered.length > shownCount;
 
   content.innerHTML = `
     <p class="result-count">${filtered.length} ${filtered.length === 1 ? 'opción' : 'opciones'}</p>
-    <div class="items-list">
-      ${displayed.map(buildItemCard).join('')}
-    </div>
+    ${listHtml}
     ${hasMore ? `<button class="btn-see-all" id="btn-see-all">Ver todas (${filtered.length})</button>` : ''}
   `;
 
@@ -326,6 +342,41 @@ function renderResults(state) {
       renderResults(state);
     });
   }
+}
+
+// ── Agrupaciones de comida ──
+
+const FOOD_GROUPS = [
+  { type: 'snack',  label: 'Para picar' },
+  { type: 'sweet',  label: 'Algo dulce' },
+  { type: 'hearty', label: 'Algo contundente' },
+];
+
+const FOOD_SECTION_ITEMS = 3;
+
+function primaryType(item) {
+  const type = item.details?.type;
+  return Array.isArray(type) ? type[0] : type;
+}
+
+function groupFood(items) {
+  const known = new Set(FOOD_GROUPS.map(g => g.type));
+
+  return [
+    ...FOOD_GROUPS.map(g => ({ label: g.label, items: items.filter(i => primaryType(i) === g.type) })),
+    { label: 'Más ideas', items: items.filter(i => !known.has(primaryType(i))) },
+  ].filter(s => s.items.length);
+}
+
+function buildItemSection(section) {
+  return `
+    <section class="item-group">
+      <h3 class="item-group-title">${esc(section.label)}</h3>
+      <div class="items-list">
+        ${section.items.map(buildItemCard).join('')}
+      </div>
+    </section>
+  `;
 }
 
 // ── Plan sorpresa ──
@@ -527,7 +578,7 @@ function renderSurprise() {
         <span>✨</span>
         <h2>Plan sorpresa</h2>
       </header>
-      <p class="plan-sub">No sabemos qué hay hoy, pero seguro que es una buena idea.</p>
+      <p class="screen-intro">No sabemos qué hay hoy, pero seguro que es una buena idea.</p>
       <div id="plan"></div>
     </div>
   `;
@@ -650,6 +701,67 @@ function renderPieces(plan) {
       </section>
     `;
   }).join('');
+}
+
+// ── Fuera de carta ──
+
+const SECRET_ORDER = ['ready', 'quick', 'planned'];
+
+async function loadSecretItems() {
+  const snap = await getDocs(query(
+    collection(db, 'items'),
+    where('secret', '==', true),
+    where('active', '==', true)
+  ));
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+async function renderSecret() {
+  getApp().innerHTML = `
+    <div class="screen">
+      <button class="back-btn" id="back-btn">← Volver</button>
+      <header class="cat-screen-header">
+        <span>✦</span>
+        <h2>Fuera de carta</h2>
+      </header>
+      <p class="screen-intro">Bueno... has encontrado algo que normalmente no enseñamos.</p>
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack('#home');
+
+  const content = document.getElementById('content');
+
+  try {
+    const items   = await loadSecretItems();
+    const ratings = await loadRatings(items.map(i => i.id));
+
+    const ordered = weightedOrder(items.map(item => ({
+      ...item,
+      _avg:   ratings[item.id]?.avg   ?? 0,
+      _votes: ratings[item.id]?.count ?? 0,
+    })));
+
+    if (!ordered.length) {
+      content.innerHTML = `<p class="msg-empty">Todavía no hay nada fuera de carta.</p>`;
+      return;
+    }
+
+    const sections = [
+      ...SECRET_ORDER.map(key => ({
+        label: AVAILABILITY_LABELS[key],
+        items: ordered.filter(i => i.availability === key),
+      })),
+      { label: 'Más ideas', items: ordered.filter(i => !SECRET_ORDER.includes(i.availability)) },
+    ].filter(s => s.items.length);
+
+    content.innerHTML = sections.map(buildItemSection).join('');
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
 }
 
 // ── Ficha de detalle ──
@@ -895,10 +1007,19 @@ async function loadRatings(itemIds) {
   return result;
 }
 
+const RATING_PRIOR_VOTES = 3;
+const RATING_PRIOR_MEAN  = 3;
+
+function smoothedAverage(item) {
+  const votes = item._votes ?? 0;
+  const avg   = item._avg   ?? 0;
+  return (RATING_PRIOR_MEAN * RATING_PRIOR_VOTES + avg * votes) / (RATING_PRIOR_VOTES + votes);
+}
+
 function weightedOrder(items) {
   const pool = items.map(item => ({
     item,
-    w: Math.pow(item._votes > 0 ? item._avg : 3, 1.5),
+    w: Math.pow(smoothedAverage(item), 1.5),
   }));
 
   const result = [];

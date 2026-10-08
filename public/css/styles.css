@@ -570,6 +570,66 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
 .note p      { font-size: 15px; line-height: 1.5; }
 .note footer { font-size: 13px; color: var(--text-soft); margin-top: 6px; }
 
+/* Votos y notas */
+
+.detail-rating:empty { display: none; }
+
+.notes-empty {
+  margin-bottom: 14px;
+  font-size: 14px;
+  color: var(--text-soft);
+}
+
+.vote { margin: 18px 0 20px; }
+
+.vote-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.stars { display: flex; gap: 2px; margin-left: -6px; }
+
+.star {
+  padding: 4px 6px;
+  font-size: 32px;
+  line-height: 1;
+  color: rgba(0,0,0,.2);
+  transition: color .12s, transform .1s;
+}
+
+.star.on     { color: var(--star); }
+.star:active { transform: scale(1.15); }
+
+.vote-msg,
+.note-msg {
+  min-height: 18px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-form textarea,
+.note-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+
+.note-form textarea { resize: vertical; }
+
 /* Estados */
 
 .loading {

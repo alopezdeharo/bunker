@@ -1,6 +1,6 @@
-import { db } from './firebase-config.js';
+import { db, ensureUser, currentUserId } from './firebase-config.js';
 import {
-  collection, query, where, getDocs, doc, getDoc, limit
+  collection, query, where, getDocs, doc, getDoc, limit, setDoc, updateDoc, addDoc, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 
 const CATEGORIES = {
@@ -818,6 +818,7 @@ async function renderItem(id) {
     const item = { id: snap.id, ...snap.data() };
     backBtn.dataset.fallback = `#category/${item.category}`;
     content.innerHTML = buildDetail(item, ratings[id], comments);
+    bindDetail(item, content, comments);
   } catch (err) {
     console.error(err);
     content.innerHTML = err.code === 'permission-denied'
@@ -835,8 +836,7 @@ async function loadComments(itemId) {
     ));
     return snap.docs
       .map(d => d.data())
-      .sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0))
-      .slice(0, 3);
+      .sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0));
   } catch (err) {
     console.warn('Notas no disponibles:', err.code ?? err.message);
     return [];
@@ -885,24 +885,35 @@ function buildDetail(item, rating, comments) {
   const emoji = CATEGORIES[item.category]?.emoji ?? '📦';
   const cat   = esc(item.category);
   const facts = buildFacts(item);
-  const votes = rating?.count ?? 0;
 
   const hero = item.image
     ? `<img class="detail-hero" src="${esc(item.image)}" alt="${esc(item.name)}"
          onerror="this.outerHTML='<div class=\\'detail-hero detail-hero--fallback\\' data-cat=\\'${cat}\\'>${emoji}</div>'">`
     : `<div class="detail-hero detail-hero--fallback" data-cat="${cat}">${emoji}</div>`;
 
-  const notes = comments.length ? `
+  const notes = `
     <section class="detail-notes">
       <h3>Lo que opinó la gente</h3>
-      ${comments.map(c => `
-        <blockquote class="note">
-          <p>“${esc(c.text)}”</p>
-          <footer>— ${esc(c.name || 'Alguien de la reunión')}</footer>
-        </blockquote>
-      `).join('')}
+      <div id="notes-list"></div>
+
+      <div class="vote">
+        <p class="vote-label">¿Qué te pareció?</p>
+        <div class="stars" role="group" aria-label="Tu valoración">
+          ${[1, 2, 3, 4, 5].map(n =>
+            `<button type="button" class="star" data-stars="${n}" aria-label="${n} de 5" aria-pressed="false">★</button>`
+          ).join('')}
+        </div>
+        <p class="vote-msg" id="vote-msg" role="status"></p>
+      </div>
+
+      <div class="note-form">
+        <textarea id="note-text" rows="3" maxlength="500" placeholder="Deja una nota: qué tal estuvo, cómo lo hicisteis…"></textarea>
+        <input id="note-name" type="text" maxlength="40" placeholder="Tu nombre (opcional)" autocomplete="off">
+        <button type="button" class="btn-primary" id="btn-note">Dejar una nota</button>
+        <p class="note-msg" id="note-msg" role="status"></p>
+      </div>
     </section>
-  ` : '';
+  `;
 
   return `
     <article class="detail">
@@ -910,11 +921,179 @@ function buildDetail(item, rating, comments) {
       <h2 class="detail-name">${esc(item.name)}</h2>
       ${item.description ? `<p class="detail-desc">${esc(item.description)}</p>` : ''}
       ${facts.length ? `<div class="detail-facts">${facts.map(f => `<span class="fact">${esc(f)}</span>`).join('')}</div>` : ''}
-      ${votes ? `<p class="detail-rating">★ ${fmtAvg(rating.avg)} · ${votes} ${votes === 1 ? 'voto' : 'votos'}</p>` : ''}
+      <p class="detail-rating" id="detail-rating">${ratingText(rating)}</p>
       ${item.tags?.length ? `<p class="detail-tags">${item.tags.map(esc).join(' · ')}</p>` : ''}
       ${notes}
     </article>
   `;
+}
+
+// ── Votos y notas ──
+
+const NOTES_VISIBLE = 3;
+const NAME_KEY = 'bunker.name';
+
+function ratingText(rating) {
+  const votes = rating?.count ?? 0;
+  return votes ? `★ ${fmtAvg(rating.avg)} · ${votes} ${votes === 1 ? 'voto' : 'votos'}` : '';
+}
+
+function savedName() {
+  try {
+    return localStorage.getItem(NAME_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function saveName(value) {
+  try {
+    localStorage.setItem(NAME_KEY, value);
+  } catch {}
+}
+
+function noteHtml(c) {
+  return `
+    <blockquote class="note">
+      <p>“${esc(c.text)}”</p>
+      <footer>— ${esc(c.name || 'Alguien de la reunión')}</footer>
+    </blockquote>
+  `;
+}
+
+function buildNotesList(comments, showAll) {
+  if (!comments.length) {
+    return `<p class="notes-empty">Todavía nadie ha dejado una nota. ¿Empiezas tú?</p>`;
+  }
+
+  const shown = showAll ? comments : comments.slice(0, NOTES_VISIBLE);
+  const more  = comments.length > shown.length
+    ? `<button type="button" class="btn-see-all" id="btn-more-notes">Ver las ${comments.length} notas</button>`
+    : '';
+
+  return shown.map(noteHtml).join('') + more;
+}
+
+async function loadMyRating(itemId) {
+  const uid = await currentUserId();
+  if (!uid) return null;
+  const snap = await getDoc(doc(db, 'ratings', `${itemId}_${uid}`));
+  return snap.exists() ? snap.data().stars : null;
+}
+
+async function saveRating(itemId, stars) {
+  const user = await ensureUser();
+  const ref  = doc(db, 'ratings', `${itemId}_${user.uid}`);
+  const prev = await getDoc(ref);
+
+  if (prev.exists()) {
+    await updateDoc(ref, { stars, updatedAt: serverTimestamp() });
+  } else {
+    await setDoc(ref, {
+      itemId,
+      uid: user.uid,
+      stars,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+}
+
+async function saveNote(itemId, name, text) {
+  const user = await ensureUser();
+  await addDoc(collection(db, 'comments'), {
+    itemId,
+    uid: user.uid,
+    name,
+    text,
+    createdAt: serverTimestamp(),
+    hidden: false,
+  });
+}
+
+function paintStars(root, stars) {
+  root.querySelectorAll('.star').forEach(btn => {
+    const value = Number(btn.dataset.stars);
+    btn.classList.toggle('on', value <= (stars ?? 0));
+    btn.setAttribute('aria-pressed', String(value === stars));
+  });
+}
+
+function bindDetail(item, root, initialComments) {
+  const stars   = root.querySelector('.stars');
+  const voteMsg = root.querySelector('#vote-msg');
+  const noteMsg = root.querySelector('#note-msg');
+  const list    = root.querySelector('#notes-list');
+  const text    = root.querySelector('#note-text');
+  const name    = root.querySelector('#note-name');
+  const noteBtn = root.querySelector('#btn-note');
+
+  let comments = initialComments;
+  let showAll   = false;
+
+  name.value = savedName();
+
+  loadMyRating(item.id)
+    .then(mine => paintStars(stars, mine))
+    .catch(() => {});
+
+  const renderList = () => {
+    list.innerHTML = buildNotesList(comments, showAll);
+    list.querySelector('#btn-more-notes')?.addEventListener('click', () => {
+      showAll = true;
+      renderList();
+    });
+  };
+  renderList();
+
+  stars.addEventListener('click', async e => {
+    const btn = e.target.closest('.star');
+    if (!btn) return;
+
+    const value = Number(btn.dataset.stars);
+    voteMsg.textContent = '';
+    paintStars(stars, value);
+
+    try {
+      await saveRating(item.id, value);
+      voteMsg.textContent = 'Guardado. Gracias.';
+      const ratings = await loadRatings([item.id]);
+      root.querySelector('#detail-rating').textContent = ratingText(ratings[item.id]);
+    } catch (err) {
+      console.error(err);
+      voteMsg.textContent = 'No se pudo guardar. Prueba otra vez.';
+      loadMyRating(item.id).then(mine => paintStars(stars, mine)).catch(() => {});
+    }
+  });
+
+  noteBtn.addEventListener('click', async () => {
+    const body = text.value.trim();
+    if (!body) {
+      noteMsg.textContent = 'Escribe algo primero.';
+      return;
+    }
+
+    noteBtn.disabled = true;
+    noteMsg.textContent = '';
+
+    try {
+      const author = name.value.trim().slice(0, 40);
+      saveName(author);
+      await saveNote(item.id, author, body.slice(0, 500));
+
+      text.value = '';
+      const fresh = await loadComments(item.id);
+      if (fresh.length) comments = fresh;
+      showAll = false;
+      renderList();
+      noteMsg.textContent = 'Nota guardada.';
+    } catch (err) {
+      console.error(err);
+      noteMsg.textContent = 'No se pudo guardar. Prueba otra vez.';
+    } finally {
+      noteBtn.disabled = false;
+    }
+  });
 }
 
 function buildItemCard(item) {

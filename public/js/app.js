@@ -37,10 +37,10 @@ function router() {
   window.scrollTo(0, 0);
 
   const hash = location.hash.slice(1) || 'home';
-  const [screen, param] = hash.split('/');
+  const [screen, param, sub] = hash.split('/');
   ({
     home:     renderHome,
-    category: () => renderCategory(param),
+    category: () => renderCategory(param, sub),
     item:     () => renderItem(param),
     surprise: renderSurprise,
     secret:   renderSecret,
@@ -61,6 +61,8 @@ window.addEventListener('hashchange', router);
 
 function renderHome() {
   lastPlan = null;
+  orderMemory.clear();
+  filterMemory.clear();
   getApp().innerHTML = `
     <div class="screen">
       <div class="home-topbar">
@@ -130,7 +132,9 @@ function renderHome() {
   `;
 }
 
-async function renderCategory(cat) {
+async function renderCategory(cat, section) {
+  if (cat === 'food' && section) return renderFoodSection(section);
+
   const catInfo = CATEGORIES[cat] ?? { label: 'Categoría', emoji: '📦' };
 
   getApp().innerHTML = `
@@ -159,12 +163,15 @@ async function renderCategory(cat) {
       _votes: ratingsMap[item.id]?.count ?? 0,
     }));
 
-    const ordered = weightedOrder(enriched);
+    const ordered = orderByMemory(cat, enriched);
+    const active  = filterMemory.get(cat) ?? new Set();
+    filterMemory.set(cat, active);
+
     const state = {
       cat,
       items:   ordered,
       groups:  buildFilterGroups(cat, ordered),
-      active:  new Set(),
+      active,
       showAll: false,
     };
 
@@ -270,7 +277,7 @@ function renderChips(state) {
   el.innerHTML = `
     <div class="chips" role="group" aria-label="Filtros rápidos">
       ${state.groups.map(g => g.chips.map(c => `
-        <button type="button" class="chip" data-key="${esc(c.key)}" aria-pressed="false">${esc(c.label)}</button>
+        <button type="button" class="chip" data-key="${esc(c.key)}" aria-pressed="${state.active.has(c.key)}">${esc(c.label)}</button>
       `).join('')).join('<span class="chip-sep" aria-hidden="true"></span>')}
     </div>
   `;
@@ -317,11 +324,8 @@ function renderResults(state) {
   let shownCount;
 
   if (sections) {
-    const shown = state.showAll
-      ? sections
-      : sections.map(s => ({ ...s, items: s.items.slice(0, FOOD_SECTION_ITEMS) }));
-    shownCount = shown.reduce((n, s) => n + s.items.length, 0);
-    listHtml   = shown.map(buildItemSection).join('');
+    shownCount = filtered.length;
+    listHtml   = sections.map(buildFoodRow).join('');
   } else {
     const displayed = state.showAll ? filtered : filtered.slice(0, INITIAL_ITEMS);
     shownCount = displayed.length;
@@ -352,7 +356,7 @@ const FOOD_GROUPS = [
   { type: 'hearty', label: 'Algo contundente' },
 ];
 
-const FOOD_SECTION_ITEMS = 3;
+const FOOD_ROW_ITEMS = 5;
 
 function primaryType(item) {
   const type = item.details?.type;
@@ -363,8 +367,8 @@ function groupFood(items) {
   const known = new Set(FOOD_GROUPS.map(g => g.type));
 
   return [
-    ...FOOD_GROUPS.map(g => ({ label: g.label, items: items.filter(i => primaryType(i) === g.type) })),
-    { label: 'Más ideas', items: items.filter(i => !known.has(primaryType(i))) },
+    ...FOOD_GROUPS.map(g => ({ type: g.type, label: g.label, items: items.filter(i => primaryType(i) === g.type) })),
+    { type: 'other', label: 'Más ideas', items: items.filter(i => !known.has(primaryType(i))) },
   ].filter(s => s.items.length);
 }
 
@@ -377,6 +381,129 @@ function buildItemSection(section) {
       </div>
     </section>
   `;
+}
+
+// ── Comida en filas ──
+
+const orderMemory  = new Map();
+const filterMemory = new Map();
+
+function orderByMemory(cat, items) {
+  const known = orderMemory.get(cat);
+  let ordered;
+
+  if (!known) {
+    ordered = weightedOrder(items);
+  } else {
+    const rank  = new Map(known.map((id, i) => [id, i]));
+    const kept  = items.filter(i => rank.has(i.id)).sort((a, b) => rank.get(a.id) - rank.get(b.id));
+    const fresh = weightedOrder(items.filter(i => !rank.has(i.id)));
+    ordered = [...kept, ...fresh];
+  }
+
+  orderMemory.set(cat, ordered.map(i => i.id));
+  return ordered;
+}
+
+function foodPhoto(item) {
+  const emoji    = CATEGORIES.food?.emoji ?? '🍿';
+  const fallback = `<div class="food-photo food-photo--fallback">${emoji}</div>`;
+  if (!item.image) return fallback;
+
+  return `<img class="food-photo" src="${esc(item.image)}" alt="${esc(item.name)}" loading="lazy"
+    onerror="this.outerHTML='<div class=\\'food-photo food-photo--fallback\\'>${emoji}</div>'">`;
+}
+
+function buildFoodCard(item) {
+  const minutes      = item.details?.preparationTime;
+  const availability = AVAILABILITY_LABELS[item.availability];
+  const votes        = item._votes ?? 0;
+
+  return `
+    <a class="food-card" href="#item/${esc(item.id)}">
+      ${foodPhoto(item)}
+      <div class="food-card-body">
+        <p class="food-card-name">${esc(item.name)}</p>
+        <p class="food-card-meta">${minutes > 0 ? `⏱ ${minutes} min` : '&nbsp;'}</p>
+        ${availability ? `<span class="food-pill is-${esc(item.availability)}">${availability}</span>` : ''}
+        ${votes ? `<p class="food-card-rating"><b>★ ${fmtAvg(item._avg)}</b> · ${votes} ${votes === 1 ? 'voto' : 'votos'}</p>` : ''}
+      </div>
+    </a>
+  `;
+}
+
+function buildFoodRow(section) {
+  const shown = section.items.slice(0, FOOD_ROW_ITEMS);
+  const more  = section.items.length > shown.length;
+  const href  = `#category/food/${section.type}`;
+
+  return `
+    <section class="food-section">
+      <div class="food-section-head">
+        <h3>${esc(section.label)}</h3>
+        ${more ? `<a href="${href}">Ver todo →</a>` : ''}
+      </div>
+      <div class="food-row">
+        ${shown.map(buildFoodCard).join('')}
+        ${more ? `<a class="food-more" href="${href}"><span>→</span>Ver todo<small>${section.items.length} opciones</small></a>` : ''}
+      </div>
+    </section>
+  `;
+}
+
+async function renderFoodSection(type) {
+  const group = FOOD_GROUPS.find(g => g.type === type);
+  const label = group ? group.label : type === 'other' ? 'Más ideas' : null;
+
+  getApp().innerHTML = `
+    <div class="screen">
+      <button class="back-btn" id="back-btn">← Volver</button>
+      <header class="cat-screen-header">
+        <span>${CATEGORIES.food?.emoji ?? '🍿'}</span>
+        <h2>${esc(label ?? 'Comida')}</h2>
+      </header>
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack('#category/food');
+
+  const content = document.getElementById('content');
+
+  if (!label) {
+    content.innerHTML = `
+      <p class="msg-empty">No hemos encontrado esto.</p>
+      <a class="btn-see-all" href="#category/food">Volver a la comida</a>
+    `;
+    return;
+  }
+
+  try {
+    const items   = await loadItems(['food']);
+    const ratings = await loadRatings(items.map(i => i.id));
+
+    const ordered = orderByMemory('food', items.map(item => ({
+      ...item,
+      _avg:   ratings[item.id]?.avg   ?? 0,
+      _votes: ratings[item.id]?.count ?? 0,
+    })));
+
+    const section = groupFood(ordered).find(s => s.type === (group ? group.type : 'other'));
+
+    if (!section) {
+      content.innerHTML = `<p class="msg-empty">Todavía no hay nada aquí.</p>`;
+      return;
+    }
+
+    content.innerHTML = `
+      <p class="result-count">${section.items.length} ${section.items.length === 1 ? 'opción' : 'opciones'}</p>
+      <div class="food-grid">${section.items.map(buildFoodCard).join('')}</div>
+    `;
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
 }
 
 // ── Plan sorpresa ──
@@ -909,7 +1036,7 @@ function buildDetail(item, rating, comments) {
       <div class="note-form">
         <textarea id="note-text" rows="3" maxlength="500" placeholder="Deja una nota: qué tal estuvo, cómo lo hicisteis…"></textarea>
         <input id="note-name" type="text" maxlength="40" placeholder="Tu nombre (opcional)" autocomplete="off">
-        <button type="button" class="btn-primary" id="btn-note">Dejar una nota</button>
+        <button type="button" class="btn-primary" id="btn-note" disabled>Dejar una nota</button>
         <p class="note-msg" id="note-msg" role="status"></p>
       </div>
     </section>
@@ -956,7 +1083,7 @@ function noteHtml(c) {
   return `
     <blockquote class="note">
       <p>“${esc(c.text)}”</p>
-      <footer>— ${esc(c.name || 'Alguien de la reunión')}</footer>
+      <footer>— ${esc(c.name || 'Alguien del búnker')}</footer>
     </blockquote>
   `;
 }
@@ -1033,6 +1160,10 @@ function bindDetail(item, root, initialComments) {
 
   name.value = savedName();
 
+  const syncNoteButton = () => { noteBtn.disabled = !text.value.trim(); };
+  text.addEventListener('input', syncNoteButton);
+  syncNoteButton();
+
   loadMyRating(item.id)
     .then(mine => paintStars(stars, mine))
     .catch(() => {});
@@ -1068,10 +1199,7 @@ function bindDetail(item, root, initialComments) {
 
   noteBtn.addEventListener('click', async () => {
     const body = text.value.trim();
-    if (!body) {
-      noteMsg.textContent = 'Escribe algo primero.';
-      return;
-    }
+    if (!body) return;
 
     noteBtn.disabled = true;
     noteMsg.textContent = '';
@@ -1091,7 +1219,7 @@ function bindDetail(item, root, initialComments) {
       console.error(err);
       noteMsg.textContent = 'No se pudo guardar. Prueba otra vez.';
     } finally {
-      noteBtn.disabled = false;
+      syncNoteButton();
     }
   });
 }

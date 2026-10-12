@@ -1,0 +1,288 @@
+[
+  {
+    "id": "bev-peach-tonic", "name": "Peach Tonic", "category": "beverage",
+    "description": "Melocotón y tónica con un toque de limón, con mucho hielo y una rodaja de naranja. Sin alcohol.",
+    "tags": ["mocktail", "sin alcohol", "fresco"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "mocktail", "alcoholic": false, "temperature": "cold", "preparationTime": 3, "caffeineLevel": "none", "steepingTime": null, "bestBefore": null },
+    "ingredients": ["30 ml de Rives melocotón", "120 ml de tónica", "10 ml de zumo de limón", "Mucho hielo", "Una rodaja de naranja o limón"],
+    "steps": ["Llena un vaso alto de hielo.", "Añade el Rives y el limón.", "Completa con la tónica despacio y remueve una vez.", "Decora con la rodaja."]
+  },
+  {
+    "id": "bev-apple-iced-tea", "name": "Apple Iced Tea", "category": "beverage",
+    "description": "Té negro frío con manzana y limón. Sin alcohol.",
+    "tags": ["mocktail", "sin alcohol", "té frío"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "mocktail", "alcoholic": false, "temperature": "cold", "preparationTime": 10, "caffeineLevel": "some", "steepingTime": null, "bestBefore": null },
+    "ingredients": ["30 ml de Rives manzana", "120 ml de té negro frío", "10-15 ml de limón", "Hielo"],
+    "steps": ["Pon hielo en el vaso.", "Añade el Rives y el limón.", "Completa con el té frío y remueve."]
+  },
+  {
+    "id": "bev-peach-iced-tea", "name": "Peach Iced Tea", "category": "beverage",
+    "description": "Té negro frío concentrado con melocotón y un chorrito de limón. Sin alcohol.",
+    "tags": ["mocktail", "sin alcohol", "té frío"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "mocktail", "alcoholic": false, "temperature": "cold", "preparationTime": 10, "caffeineLevel": "some", "steepingTime": null, "bestBefore": null },
+    "ingredients": ["30 ml de Rives melocotón", "120-150 ml de té negro frío concentrado", "Un chorrito de limón", "Hielo", "Piel de naranja"],
+    "steps": ["Pon hielo en el vaso.", "Añade el Rives y el limón.", "Completa con el té concentrado.", "Decora con la piel de naranja."]
+  },
+  {
+    "id": "bev-apple-peach-fizz", "name": "Apple & Peach Fizz", "category": "beverage",
+    "description": "Manzana y melocotón con agua con gas y limón. Burbujeante y sin alcohol.",
+    "tags": ["mocktail", "sin alcohol", "burbujas"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "mocktail", "alcoholic": false, "temperature": "cold", "preparationTime": 3, "caffeineLevel": "none", "steepingTime": null, "bestBefore": null },
+    "ingredients": ["15-20 ml de Rives manzana", "15-20 ml de Rives melocotón", "120 ml de agua con gas", "10 ml de limón", "Hielo", "Piel de naranja"],
+    "steps": ["Pon hielo en el vaso.", "Añade los dos Rives y el limón.", "Completa con el agua con gas y remueve con suavidad.", "Decora con la piel de naranja."]
+  },
+  {
+    "id": "bev-cola-cao", "name": "Cola Cao", "category": "beverage",
+    "description": "Cacao soluble de toda la vida, caliente o frío.",
+    "tags": ["cacao", "dulce"], "availability": "quick", "kind": "consume",
+    "details": { "type": "cocoa", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": null, "steepingTime": null, "bestBefore": null },
+    "pairsWith": ["food-tortitas-a-tu-gusto", "food-vasitos-de-galleta"]
+  },
+  {
+    "id": "bev-cacao-premium", "name": "Cacao premium", "category": "beverage",
+    "description": "Cacao soluble sin azúcares añadidos ni edulcorantes, menos dulce que un Cola Cao y apto para veganos. Caliente o frío.",
+    "tags": ["cacao", "sin azúcares añadidos", "vegano"], "availability": "quick", "kind": "consume",
+    "details": { "type": "cocoa", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": null, "steepingTime": null, "bestBefore": "2027-09-30" },
+    "pairsWith": ["food-tortitas-a-tu-gusto", "food-vasitos-de-galleta"]
+  },
+  {
+    "id": "bev-agua-filtrada", "name": "Agua filtrada", "category": "beverage",
+    "description": "Agua filtrada, fría.",
+    "tags": ["agua"], "availability": "ready", "kind": "consume",
+    "details": { "type": "water", "alcoholic": false, "temperature": "cold", "preparationTime": 0, "caffeineLevel": "none", "steepingTime": null, "bestBefore": null }
+  },
+  {
+    "id": "bev-agua-con-gas", "name": "Agua con gas", "category": "beverage",
+    "description": "Agua con gas, fría.",
+    "tags": ["agua", "burbujas"], "availability": "ready", "kind": "consume",
+    "details": { "type": "water", "alcoholic": false, "temperature": "cold", "preparationTime": 0, "caffeineLevel": "none", "steepingTime": null, "bestBefore": null }
+  },
+  {
+    "id": "bev-refresco-de-la-casa", "name": "Refresco de la casa", "category": "beverage",
+    "description": "El refresco que haya ese día: Aquarius, Coca-Cola o Nestea.",
+    "tags": ["refresco"], "availability": "ready", "kind": "consume",
+    "details": { "type": "soft", "alcoholic": false, "temperature": "cold", "preparationTime": 0, "caffeineLevel": null, "steepingTime": null, "bestBefore": null }
+  },
+  {
+    "id": "bev-cafe-de-filtro", "name": "Café de filtro hecho a mano", "category": "beverage",
+    "description": "Café de Huehuetenango (Guatemala) hecho a mano en filtro. Notas habituales de este origen: chocolate, caramelo y fruta roja, con acidez cítrica. Solo o con leche sin lactosa.",
+    "tags": ["café", "filtro", "especialidad"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "coffee", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "high", "steepingTime": null, "bestBefore": "2026-08-31" },
+    "variants": [
+      { "id": "solo", "name": "Solo" },
+      { "id": "con-leche", "name": "Con leche sin lactosa" }
+    ],
+    "pairsWith": ["food-mugcake"]
+  },
+  {
+    "id": "bev-limonada-casera", "name": "Limonada casera", "category": "beverage",
+    "description": "Limonada hecha al momento, bien fría.",
+    "tags": ["limonada", "fresco", "sin alcohol"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "soft", "alcoholic": false, "temperature": "cold", "preparationTime": 10, "caffeineLevel": "none", "steepingTime": null, "bestBefore": null }
+  },
+  {
+    "id": "bev-chocolate-espesito", "name": "Chocolate espesito", "category": "beverage",
+    "description": "Chocolate a la taza casero, muy espeso y poco dulce, con sabor intenso a cacao. Casi de cuchara. Vegano (lleva soja).",
+    "tags": ["chocolate", "caliente", "vegano"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "cocoa", "alcoholic": false, "temperature": "hot", "preparationTime": 10, "caffeineLevel": null, "steepingTime": null, "bestBefore": null },
+    "ingredients": ["200 ml de bebida de soja sin azúcares añadidos", "12 g de cacao puro en polvo (sin azúcar)", "25 g de chocolate negro 85 %", "6 g de maicena (unas 2 cucharaditas rasas)", "1 pizca de sal", "Opcional: una pizca de canela y unas gotas de vainilla"],
+    "steps": [
+      "Separa 40 ml de bebida de soja fría, tamiza el cacao y mézclalo con ellos hasta tener una pasta sin grumos.",
+      "En otro recipiente, disuelve la maicena en 20 ml de bebida de soja fría. No la añadas directamente al líquido caliente: haría grumos.",
+      "Echa en un cazo los 140 ml restantes de bebida de soja con la pasta de cacao y calienta a fuego medio-bajo, removiendo con unas varillas.",
+      "Trocea el chocolate, añádelo y remueve hasta que se derrita y quede liso y brillante.",
+      "Vuelve a remover la maicena y viértela despacio en el cazo sin dejar de remover. Cocina 1-2 min hasta que espese; cuando burbujee suavemente, 20-30 s más y retira del fuego.",
+      "Añade la sal y, si quieres, la canela o la vainilla. Deja reposar un minuto: espesa un poco más al enfriarse."
+    ],
+    "tips": [
+      "Si lo quieres más espeso, usa 7-8 g de maicena en vez de 6. Si te pasas, añade bebida de soja caliente de 10 en 10 ml.",
+      "Si queda amargo, media cucharadita de azúcar o de sirope de arce.",
+      "Para más intensidad, una pizca muy pequeña de café soluble."
+    ],
+    "pairsWith": ["food-tortitas-a-tu-gusto", "food-vasitos-de-galleta"]
+  },
+  {
+    "id": "bev-batido-cremoso-de-vainilla", "name": "Batido cremoso de vainilla", "category": "beverage",
+    "description": "Batido espeso y cremoso de vainilla, como el de una tienda de smoothies. Plátano congelado y proteína vegana, sin helado. Hay que tener el plátano congelado del día anterior.",
+    "tags": ["batido", "cremoso", "vegano", "frío"], "availability": "planned", "kind": "prepare",
+    "details": { "type": "shake", "alcoholic": false, "temperature": "cold", "preparationTime": 5, "caffeineLevel": "none", "steepingTime": null, "bestBefore": null },
+    "variants": [
+      {
+        "id": "clasico", "name": "Clásico",
+        "ingredients": ["30 g de proteína vegana sabor vainilla (1 cacito)", "½-1 plátano congelado", "2 cucharadas de yogur de soja natural cremoso", "100-150 ml de bebida vegetal (soja, avena o almendra)", "2-3 cubitos de hielo", "Opcional: una pizca de canela y unas gotas de extracto de vainilla"]
+      },
+      {
+        "id": "extra-cremoso", "name": "Extra cremoso (parecido a un helado)",
+        "ingredients": ["30 g de proteína vegana sabor vainilla", "100 g de plátano congelado", "100 g de yogur de soja natural", "80-100 ml de bebida de soja", "Opcional: canela o vainilla (sin hielo)"]
+      }
+    ],
+    "steps": [
+      "Pon en la batidora primero la bebida vegetal, luego la proteína, el yogur, el plátano congelado y el hielo.",
+      "Tritura a máxima potencia hasta que quede homogéneo, cremoso y espeso.",
+      "Si queda muy líquido, añade más plátano congelado. Si queda tan espeso que la batidora no puede, añade bebida vegetal de una cucharada en una.",
+      "Sírvelo enseguida, bien frío."
+    ],
+    "tips": [
+      "Congela el plátano antes: es lo que da la textura de milkshake.",
+      "Empieza con poco líquido, porque es más fácil aflojar que espesar.",
+      "No batas demasiado tiempo, para que no se caliente."
+    ]
+  },
+  {
+    "id": "bev-te-blanco-gracia-blend", "name": "Té blanco Gracia Blend", "category": "beverage", "active": false,
+    "description": "Té blanco aromatizado de Tea Shop.",
+    "tags": ["té", "con cafeína", "té blanco"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2024-08-31" },
+    "serveTip": "Solo, sin leche ni endulzante."
+  },
+  {
+    "id": "bev-oolong-de-panettone", "name": "Oolong de panettone", "category": "beverage",
+    "description": "Té oolong aromatizado con panettone, de Tea Shop.",
+    "tags": ["té", "con cafeína", "oolong"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2027-04-30" },
+    "serveTip": "Solo, sin leche ni endulzante.",
+    "pairsWith": ["food-vasitos-de-galleta", "food-mugcake", "food-flan-expres"]
+  },
+  {
+    "id": "bev-rooibos-de-vainilla", "name": "Rooibos de vainilla", "category": "beverage",
+    "description": "Rooibos con aroma a vainilla. Sin cafeína.",
+    "tags": ["infusión", "rooibos", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-02-28" },
+    "serveTip": "Con un chorrito de bebida de avena, de almendra o leche sin lactosa. Agave o miel clara, si quieres.",
+    "pairsWith": ["food-vasitos-de-galleta", "food-mugcake", "food-flan-expres", "food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
+  },
+  {
+    "id": "bev-armonia-interior", "name": "Armonía interior (Yogi Tea)", "category": "beverage",
+    "description": "Infusión ayurvédica de melisa, rooibos y canela, con un toque de regaliz, cáscara de cacao, menta y lavanda, pensada para un momento de calma. Sin cafeína.",
+    "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-02-28" },
+    "serveTip": "Sola, en un momento de calma. 250 ml de agua recién hervida y 5 minutos de infusión."
+  },
+  {
+    "id": "bev-te-rojo-de-choco-turron", "name": "Té rojo de choco-turrón", "category": "beverage",
+    "description": "Té rojo aromatizado con chocolate y turrón, de Tea Shop. Lleva cafeína.",
+    "tags": ["té", "con cafeína", "té rojo"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2026-07-31" },
+    "serveTip": "Con un chorrito de bebida de avellanas, de avena o leche sin lactosa. No hace falta endulzar.",
+    "pairsWith": ["food-vasitos-de-galleta", "food-mugcake", "food-flan-expres"]
+  },
+  {
+    "id": "bev-rooibos-red-velvet", "name": "Rooibos Red Velvet", "category": "beverage",
+    "description": "Rooibos con aroma a tarta red velvet, de Tea Shop. Sin cafeína.",
+    "tags": ["infusión", "rooibos", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-07-31" },
+    "serveTip": "Con bebida de avena, de almendra o leche sin lactosa. No hace falta endulzar.",
+    "pairsWith": ["food-vasitos-de-galleta", "food-mugcake", "food-flan-expres", "food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
+  },
+  {
+    "id": "bev-te-rojo-de-praline", "name": "Té rojo de praliné", "category": "beverage",
+    "description": "Té rojo aromatizado con praliné, de Tea Shop. Lleva cafeína.",
+    "tags": ["té", "con cafeína", "té rojo"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2026-07-31" },
+    "serveTip": "Con un chorrito de bebida de avellanas, de avena o leche sin lactosa. No hace falta endulzar.",
+    "pairsWith": ["food-vasitos-de-galleta", "food-mugcake", "food-flan-expres"]
+  },
+  {
+    "id": "bev-rosa-mosqueta", "name": "Rosa mosqueta", "category": "beverage",
+    "description": "Infusión de rosa mosqueta (Hornimans). Sin cafeína.",
+    "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-09-30" },
+    "serveTip": "Sola, con un poco de miel clara si quieres."
+  },
+  {
+    "id": "bev-rooibos-clasico", "name": "Rooibos clásico (Conca)", "category": "beverage",
+    "description": "Rooibos de siempre, de Conca. Sin cafeína.",
+    "tags": ["infusión", "rooibos", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-11-30" },
+    "serveTip": "Sola o con un chorrito de leche. Miel oscura o agave, si quieres.",
+    "pairsWith": ["food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
+  },
+  {
+    "id": "bev-inmuno", "name": "Inmuno (Conca)", "category": "beverage",
+    "description": "Infusión ecológica de equinácea, ajedrea, romero, citronela, hoja de olivo y caléndula. Sin cafeína.",
+    "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-02-28" },
+    "serveTip": "Sola, sin añadir nada, para notar su sabor. 200 ml de agua a 100 °C y 4-5 minutos de infusión; cada bolsita se puede usar hasta tres veces."
+  },
+  {
+    "id": "bev-felicita", "name": "Felicita (Yogi Tea)", "category": "beverage",
+    "description": "Infusión ayurvédica de canela, jengibre y cáscara de naranja, con lúpulo, hinojo, regaliz, anís y cardamomo. Especiada y afrutada. Sin cafeína.",
+    "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-07-31" },
+    "serveTip": "Sola, para notar su sabor especiado y afrutado. 250 ml de agua recién hervida y 5-6 minutos de infusión."
+  },
+  {
+    "id": "bev-duerme-bien", "name": "Duerme bien (Conca)", "category": "beverage",
+    "description": "Infusión de Conca pensada para la noche. Sin cafeína.",
+    "tags": ["infusión", "sin cafeína", "noche"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-08-31" },
+    "serveTip": "Sola, con un poco de miel clara si quieres."
+  },
+  {
+    "id": "bev-oolong-de-china", "name": "Oolong de China", "category": "beverage",
+    "description": "Té oolong de China. Lleva cafeína.",
+    "tags": ["té", "con cafeína", "oolong"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2027-11-30" },
+    "serveTip": "Solo, sin leche ni endulzante."
+  },
+  {
+    "id": "bev-rooibos-zulu-de-granada", "name": "Rooibos zulú de granada", "category": "beverage",
+    "description": "Rooibos zulú con granada. Sin cafeína.",
+    "tags": ["infusión", "rooibos", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-12-31" },
+    "serveTip": "Sin leche. Agave, si quieres.",
+    "pairsWith": ["food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
+  },
+  {
+    "id": "bev-matcha-premium", "name": "Matcha premium", "category": "beverage",
+    "description": "Té verde en polvo, para tomar solo o como latte. Lleva cafeína.",
+    "tags": ["té", "con cafeína", "matcha"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2027-12-31" },
+    "serveTip": "Solo o como latte con bebida de avena o de almendra. Agave, si quieres."
+  },
+  {
+    "id": "bev-manzanilla", "name": "Manzanilla", "category": "beverage",
+    "description": "La infusión de siempre. Sin cafeína.",
+    "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2028-01-31" },
+    "serveTip": "Sola, con miel clara."
+  },
+  {
+    "id": "bev-poleo-menta", "name": "Poleo menta", "category": "beverage",
+    "description": "Infusión de poleo y menta. Sin cafeína.",
+    "tags": ["infusión", "sin cafeína", "menta"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2028-04-30" },
+    "serveTip": "Sola, con un poco de miel clara si quieres."
+  },
+  {
+    "id": "bev-infusion-fria-de-frutos-rojos", "name": "Infusión fría de frutos rojos (Pompadour)", "category": "beverage",
+    "description": "Infusión de frutos rojos para tomar fría (Pompadour). Sin cafeína.",
+    "tags": ["infusión", "sin cafeína", "fría", "frutos rojos"], "availability": "quick", "kind": "consume",
+    "details": { "type": "infusion", "alcoholic": false, "temperature": "cold", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2028-07-31" },
+    "serveTip": "Fría, con agave si quieres."
+  },
+  {
+    "id": "bev-chai-latte-de-curcuma", "name": "Chai latte de cúrcuma", "category": "beverage",
+    "description": "Chai latte de cúrcuma en polvo, para tomar frío o caliente. Lleva cafeína.",
+    "tags": ["té", "con cafeína", "chai", "latte"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2029-03-31" },
+    "ingredients": ["1-2 cucharaditas de chai latte de cúrcuma en polvo", "Bebida vegetal o leche (sin lactosa también vale)"],
+    "steps": ["Pon 1 o 2 cucharaditas del polvo en el vaso.", "Añade la bebida, caliente o fría, y remueve hasta que se disuelva."],
+    "serveTip": "Con bebida vegetal o leche, frío o caliente. Miel oscura o agave, si quieres.",
+    "pairsWith": ["food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
+  },
+  {
+    "id": "bev-te-verde-con-hierbabuena-en-frio", "name": "Té verde con hierbabuena, en frío (Pompadour)", "category": "beverage",
+    "description": "Té verde con hierbabuena para tomar frío (Pompadour). Lleva cafeína.",
+    "tags": ["té", "con cafeína", "té verde", "frío"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "cold", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2029-06-30" },
+    "serveTip": "Frío, con miel clara o agave si quieres."
+  },
+  {
+    "id": "bev-te-blanco-de-moras-y-jazmin", "name": "Té blanco de moras y jazmín", "category": "beverage",
+    "description": "Té blanco Pai Mu Tan con trozos de papaya y moras, flores de jazmín, caléndula y aciano, y aroma de moras. Lleva cafeína.",
+    "tags": ["té", "con cafeína", "té blanco", "floral"], "availability": "quick", "kind": "consume",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2027-10-31", "bestBeforeEstimated": true },
+    "serveTip": "Sin leche. Sin endulzar, o con muy poco agave."
+  }
+]

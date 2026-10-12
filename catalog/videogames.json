@@ -1,0 +1,248 @@
+[
+  {
+    "id": "vg-bloody-roar-2", "name": "Bloody Roar 2", "category": "videogame",
+    "description": "Lucha uno contra uno en la que los luchadores se transforman en bestias a mitad del combate.",
+    "tags": ["lucha", "clásico", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS1"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-dbz-budokai-tenkaichi-3", "name": "Dragon Ball Z: Budokai Tenkaichi 3", "category": "videogame",
+    "description": "Combates 3D de Dragon Ball con una plantilla enorme de personajes, transformaciones y ataques especiales.",
+    "tags": ["lucha", "anime", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-naruto-ultimate-ninja-5", "name": "Naruto Shippuden: Ultimate Ninja 5", "category": "videogame",
+    "description": "Lucha de Naruto con jutsus y transformaciones.",
+    "tags": ["lucha", "anime", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-battle-stadium-don", "name": "Battle Stadium D.O.N.", "category": "videogame",
+    "description": "Cruce de lucha entre Dragon Ball Z, One Piece y Naruto. Sin multitap solo juegan dos a la vez.",
+    "tags": ["lucha", "anime", "crossover"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-tekken-5", "name": "Tekken 5", "category": "videogame",
+    "description": "Lucha de artes marciales con combos y una plantilla muy variada.",
+    "tags": ["lucha", "clásico", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-killzone", "name": "Killzone", "category": "videogame",
+    "description": "Shooter de ciencia ficción en primera persona; a dos se juega en versus, con pantalla dividida.",
+    "tags": ["acción", "shooter", "pantalla dividida"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-burnout-3-takedown", "name": "Burnout 3: Takedown", "category": "videogame",
+    "description": "Carreras arcade en las que chocar con los rivales forma parte del juego, y un modo Crash para provocar el mayor destrozo posible.",
+    "tags": ["carreras", "arcade", "pantalla dividida"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-burnout-dominator", "name": "Burnout Dominator", "category": "videogame",
+    "description": "Carreras arcade en las que puntúa jugársela: derrapes, tráfico de cara y turbos encadenados. Pantalla dividida para dos y, por turnos, un modo fiesta de hasta cuatro.",
+    "tags": ["carreras", "arcade", "pantalla dividida"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-sled-storm", "name": "Sled Storm", "category": "videogame",
+    "description": "Carreras arcade en moto de nieve, con acrobacias, siete circuitos y modo campeonato. Pantalla dividida para dos.",
+    "tags": ["carreras", "deportes", "pantalla dividida"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-gta-san-andreas", "name": "Grand Theft Auto: San Andreas", "category": "videogame",
+    "description": "Mundo abierto de acción y crimen. Dos jugadores pueden jugar juntos en mundo libre, pero no en la historia principal. Juego adulto.",
+    "tags": ["mundo abierto", "acción", "adulto"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  },
+  {
+    "id": "vg-singstar", "name": "SingStar", "category": "videogame",
+    "description": "Karaoke con vídeos y puntuación: cantan dos a la vez con los micros. Hay ocho discos: Party, Latino, Legends, Pop Hits, Clásicos, La Edad de Oro del Pop Español, Rocks! y 90s.",
+    "tags": ["música", "karaoke", "fiesta"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+  },
+  {
+    "id": "vg-street-fighter-ii", "name": "Street Fighter II", "category": "videogame",
+    "description": "El clásico de lucha de las recreativas.",
+    "tags": ["lucha", "clásico", "duelo", "retro"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-super-mario-world", "name": "Super Mario World", "category": "videogame",
+    "description": "Plataformas clásico. Dos jugadores se turnan: uno es Mario y el otro Luigi.",
+    "tags": ["plataformas", "clásico", "retro", "por turnos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["casual"] }
+  },
+  {
+    "id": "vg-donkey-kong-country", "name": "Donkey Kong Country", "category": "videogame",
+    "description": "Plataformas de Donkey y Diddy Kong. Con dos jugadores, o competís por turnos para ver quién acaba antes cada nivel, o jugáis en relevo como un equipo.",
+    "tags": ["plataformas", "clásico", "retro", "por turnos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "competitive"] }
+  },
+  {
+    "id": "vg-stunt-race-fx", "name": "Stunt Race FX", "category": "videogame",
+    "description": "Carreras en 3D de los años 90, con un modo cara a cara para dos.",
+    "tags": ["carreras", "retro", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-dragon-bruce-lee-story", "name": "Dragon: The Bruce Lee Story", "category": "videogame",
+    "description": "Lucha uno contra uno basada en la película; en el modo versus siempre se juega con Bruce Lee.",
+    "tags": ["lucha", "retro", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-wii-sports", "name": "Wii Sports", "category": "videogame",
+    "description": "Los deportes de siempre con el mando: tenis, bolos, golf, béisbol y boxeo.",
+    "tags": ["deportes", "familiar", "movimiento"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive", "casual"] }
+  },
+  {
+    "id": "vg-wii-sports-resort", "name": "Wii Sports Resort", "category": "videogame",
+    "description": "Más deportes con el mando (con MotionPlus): espada, tiro con arco, ping-pong, baloncesto y más.",
+    "tags": ["deportes", "familiar", "movimiento"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive", "casual"] }
+  },
+  {
+    "id": "vg-mario-party-9", "name": "Mario Party 9", "category": "videogame",
+    "description": "Minijuegos con tablero, donde todos van en el mismo coche y se compite por las estrellas.",
+    "tags": ["fiesta", "minijuegos", "pique"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+  },
+  {
+    "id": "vg-wii-party", "name": "Wii Party", "category": "videogame",
+    "description": "Minijuegos y juegos de tablero para jugar en grupo.",
+    "tags": ["fiesta", "minijuegos", "familiar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+  },
+  {
+    "id": "vg-mario-kart-wii", "name": "Mario Kart Wii", "category": "videogame",
+    "description": "Carreras con objetos para fastidiar a los rivales.",
+    "tags": ["carreras", "objetos", "pique"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-mario-strikers-charged", "name": "Mario Strikers Charged Football", "category": "videogame",
+    "description": "Fútbol a lo bestia con personajes de Mario, sin faltas y con superdisparos.",
+    "tags": ["fútbol", "deportes", "pique"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-super-mario-galaxy-2", "name": "Super Mario Galaxy 2", "category": "videogame",
+    "description": "Plataformas por el espacio. Un segundo jugador puede ayudar a Mario, pero no controla un personaje libre.",
+    "tags": ["plataformas", "aventura", "cooperativo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  },
+  {
+    "id": "vg-naruto-clash-of-ninja-revolution", "name": "Naruto: Clash of Ninja Revolution", "category": "videogame",
+    "description": "Lucha de Naruto, para hasta cuatro.",
+    "tags": ["lucha", "anime"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-smash-bros-brawl", "name": "Super Smash Bros. Brawl", "category": "videogame",
+    "description": "Pelea de personajes de Nintendo y otras sagas: gana quien expulsa a los demás del escenario.",
+    "tags": ["lucha", "pique", "grupos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-pokemon-battle-revolution", "name": "Pokémon Battle Revolution", "category": "videogame",
+    "description": "Combates Pokémon en 3D contra tus amigos.",
+    "tags": ["Pokémon", "combates", "estrategia"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-just-dance", "name": "Just Dance", "category": "videogame",
+    "description": "Baila imitando a la pantalla. Cuatro entregas (2, 3, Disney Party y Greatest Hits); bailan hasta cuatro a la vez, y en Just Dance 2 el modo Dance Battle llega a 8 en dos equipos que se turnan.",
+    "tags": ["baile", "música", "fiesta"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+  },
+  {
+    "id": "vg-michael-jackson-the-experience", "name": "Michael Jackson: The Experience", "category": "videogame",
+    "description": "Baile con las canciones de Michael Jackson.",
+    "tags": ["baile", "música", "fiesta"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+  },
+  {
+    "id": "vg-mario-kart-8-deluxe", "name": "Mario Kart 8 Deluxe", "category": "videogame",
+    "description": "Carreras con objetos, para hasta cuatro en la misma pantalla.",
+    "tags": ["carreras", "objetos", "pique"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-super-mario-bros-wonder", "name": "Super Mario Bros. Wonder", "category": "videogame",
+    "description": "Plataformas para hasta cuatro, con \"flores maravilla\" que cambian el nivel.",
+    "tags": ["plataformas", "cooperativo", "familiar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "casual"] }
+  },
+  {
+    "id": "vg-super-mario-3d-world-bowsers-fury", "name": "Super Mario 3D World + Bowser's Fury", "category": "videogame",
+    "description": "Plataformas en 3D para hasta cuatro; Bowser's Fury, la segunda parte, es para uno o dos.",
+    "tags": ["plataformas", "cooperativo", "familiar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "casual"] }
+  },
+  {
+    "id": "vg-smash-bros-ultimate", "name": "Super Smash Bros. Ultimate", "category": "videogame",
+    "description": "Pelea con todos los personajes de Nintendo y muchos más: gana quien expulsa a los demás. Hasta 8 con los mandos de los invitados.",
+    "tags": ["lucha", "pique", "grupos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 8, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-brawlhalla", "name": "Brawlhalla", "category": "videogame",
+    "description": "Lucha de plataformas al estilo Smash, hasta 8 en local con los mandos de los invitados.",
+    "tags": ["lucha", "pique", "grupos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 8, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-pokken-tournament-dx", "name": "Pokkén Tournament DX", "category": "videogame",
+    "description": "Lucha 3D con Pokémon.",
+    "tags": ["lucha", "Pokémon", "duelo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+  },
+  {
+    "id": "vg-boomerang-fu", "name": "Boomerang Fu", "category": "videogame",
+    "description": "Combates de arena a bumeranazos, hasta 6 con los mandos de los invitados.",
+    "tags": ["fiesta", "caos", "pique"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 6, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["party", "competitive"] }
+  },
+  {
+    "id": "vg-luigis-mansion-3", "name": "Luigi's Mansion 3", "category": "videogame",
+    "description": "Aventura de cazafantasmas en un hotel encantado; un segundo jugador controla a Gooigi.",
+    "tags": ["aventura", "cooperativo", "terror suave"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  },
+  {
+    "id": "vg-pico-park", "name": "PICO PARK", "category": "videogame",
+    "description": "Puzles cooperativos: todos tienen que llegar juntos a la meta, y cada fallo es de todos. De 2 a 8 con los mandos de los invitados.",
+    "tags": ["cooperativo", "caos", "risas", "grupos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 8, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  },
+  {
+    "id": "vg-overcooked", "name": "Overcooked! (1 y 2)", "category": "videogame",
+    "description": "Cocina caótica en equipo: cortar, cocinar y servir antes de que se acabe el tiempo. Dos entregas en una ficha.",
+    "tags": ["cooperativo", "caos", "risas"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "party"] }
+  },
+  {
+    "id": "vg-pizza-possum", "name": "Pizza Possum", "category": "videogame",
+    "description": "Eres una zarigüeya que roba toda la comida que puede mientras esquiva a los perros guardianes del pueblo, escondiéndose entre los arbustos. Cooperativo local para dos.",
+    "tags": ["cooperativo", "acción"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  },
+  {
+    "id": "vg-bread-and-fred", "name": "Bread & Fred", "category": "videogame",
+    "description": "Plataformas cooperativas para dos, atados por una cuerda.",
+    "tags": ["cooperativo", "plataformas", "dos jugadores"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  },
+  {
+    "id": "vg-trine-4", "name": "Trine 4: The Nightmare Prince", "category": "videogame",
+    "description": "Plataformas y puzles con tres héroes (mago, ladrón y caballero), para hasta cuatro.",
+    "tags": ["cooperativo", "puzles", "aventura"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+  }
+]

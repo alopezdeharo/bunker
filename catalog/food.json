@@ -1,0 +1,297 @@
+[
+  {
+    "id": "food-tortilla-de-papote", "name": "Tortilla de Papote", "category": "food",
+    "description": "Tortilla comprada, solo hay que calentarla. La sirve siempre un amigo: Papote.",
+    "tags": ["contundente", "para compartir"], "availability": "quick", "kind": "consume",
+    "details": { "type": ["hearty"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null }
+  },
+  {
+    "id": "food-pizza", "name": "¡Pizza!", "category": "food",
+    "description": "Pizza preparada para el horno, en tres versiones.",
+    "tags": ["contundente", "horno"], "availability": "quick", "kind": "consume",
+    "details": { "type": ["hearty"], "preparationTime": null, "servings": null, "vegetarian": false, "bestBefore": null },
+    "variants": [
+      { "id": "6-quesos", "name": "6 quesos" },
+      { "id": "americana", "name": "Americana" },
+      { "id": "jamon-y-queso", "name": "Jamón y queso" }
+    ]
+  },
+  {
+    "id": "food-gyozas-doradas", "name": "Gyozas doradas", "category": "food",
+    "description": "Gyozas congeladas, doradas a la sartén. De pollo o de setas.",
+    "tags": ["contundente", "sartén"], "availability": "quick", "kind": "consume",
+    "details": { "type": ["hearty"], "preparationTime": null, "servings": null, "vegetarian": false, "bestBefore": null },
+    "variants": [
+      { "id": "pollo", "name": "Pollo" },
+      { "id": "setas", "name": "Setas" }
+    ]
+  },
+  {
+    "id": "food-palomitas-de-cine", "name": "Palomitas de cine", "category": "food",
+    "description": "Palomitas hechas en la palomitera, con saborizante.",
+    "tags": ["picar", "peli"], "availability": "quick", "kind": "consume",
+    "details": { "type": ["snack"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null }
+  },
+  {
+    "id": "food-tequenos-con-mermelada", "name": "Tequeños con mermelada", "category": "food",
+    "description": "Tequeños para mojar en mermelada.",
+    "tags": ["picar"], "availability": "quick", "kind": "consume",
+    "details": { "type": ["snack"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null }
+  },
+  {
+    "id": "food-nachos-con-salsa", "name": "Nachos con salsa", "category": "food",
+    "description": "Nachos con guacamole o con salsa picante.",
+    "tags": ["picar", "sin esfuerzo"], "availability": "ready", "kind": "consume",
+    "details": { "type": ["snack"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null },
+    "variants": [
+      { "id": "guacamole", "name": "Guacamole" },
+      { "id": "salsa-picante", "name": "Salsa picante" }
+    ]
+  },
+  {
+    "id": "food-bolsas-de-picoteo", "name": "Bolsas de picoteo", "category": "food",
+    "description": "Bolsas para picar: Cheetos, patatas fritas, jumpers de maíz, ruffles de jamón, ruffles campesinas y palomitas de mostaza y ketchup.",
+    "tags": ["picar", "sin esfuerzo"], "availability": "ready", "kind": "consume",
+    "details": { "type": ["snack"], "preparationTime": null, "servings": null, "vegetarian": false, "bestBefore": null },
+    "variants": [
+      { "id": "cheetos", "name": "Cheetos" },
+      { "id": "patatas-fritas", "name": "Patatas fritas" },
+      { "id": "jumpers-de-maiz", "name": "Jumpers de maíz" },
+      { "id": "ruffles-de-jamon", "name": "Ruffles de jamón" },
+      { "id": "ruffles-campesinas", "name": "Ruffles campesinas" },
+      { "id": "palomitas-mostaza-y-ketchup", "name": "Palomitas de mostaza y ketchup" }
+    ]
+  },
+  {
+    "id": "food-picoteo-sano", "name": "Picoteo sano", "category": "food",
+    "description": "Aceitunas, frutos secos y fruta deshidratada para picar.",
+    "tags": ["picar", "sin esfuerzo"], "availability": "ready", "kind": "consume",
+    "details": { "type": ["snack"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null }
+  },
+  {
+    "id": "food-cereales-con-extras", "name": "Cereales con extras", "category": "food",
+    "description": "Cereales con los extras que quieras por encima.",
+    "tags": ["dulce", "sin esfuerzo"], "availability": "ready", "kind": "consume",
+    "details": { "type": ["sweet"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null },
+    "toppings": ["Miel", "Lacasitos", "Cookies", "Chips de coco", "Coco rallado", "Fruta"]
+  },
+  {
+    "id": "food-tortitas-a-tu-gusto", "name": "Tortitas a tu gusto", "category": "food",
+    "description": "Tortitas esponjosas de harina de almendras, hechas en el momento. Tú pones los toppings.",
+    "tags": ["dulce", "toppings"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": 20, "servings": 2, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["180 g de harina de almendras", "3 huevos (a temperatura ambiente)", "2 cucharadas de aceite de coco", "Endulzante: 3 cucharadas de miel o 1 plátano mediano muy maduro (100-120 g sin piel)", "1 cucharadita de aroma de vainilla", "1 cucharadita de bicarbonato", "1 pizca de sal", "Bebida vegetal sin azúcar, la necesaria"],
+    "steps": [
+      "Mezcla todo en un bol, echando la bebida vegetal poco a poco hasta tener una masa cremosa y algo espesa. Déjala reposar 5-10 min.",
+      "Calienta una sartén engrasada a fuego medio.",
+      "Vierte un par de cucharadas de masa por tortita. Cuando los bordes estén cuajados, dale la vuelta y cocina el otro lado.",
+      "Repite con el resto de la masa."
+    ],
+    "toppings": ["Chocolate derretido", "Conguitos", "Pepitas de chocolate", "Yogur", "Helado", "Miel", "Crema de almendras", "Sirope de agave", "Fruta fresca", "Plátano en rodajas", "Frutos rojos", "Nueces", "Virutas de chocolate negro"],
+    "tips": [
+      "Si usas plátano en la masa, empieza con poca bebida vegetal: el plátano ya aporta humedad.",
+      "Se guardan hasta 3 días en la nevera en un recipiente hermético, o se congelan."
+    ]
+  },
+  {
+    "id": "food-mugcake", "name": "Mugcake", "category": "food",
+    "description": "Bizcocho de taza hecho en el microondas en pocos minutos. Elige tu sabor.",
+    "tags": ["dulce", "microondas", "toppings"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": null, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "variants": [
+      {
+        "id": "choco-platano-ligero", "name": "Choco-plátano ligero",
+        "description": "Sin harina, solo plátano, clara y cacao. Es el más ligero.",
+        "ingredients": ["80 g de plátano (1 unidad; reserva unas rodajas)", "35 g de clara de huevo (1 unidad)", "15 g de cacao en polvo (3 cucharaditas)", "Para decorar: 10 g de nuez y 5 g de chocolate 92 %"],
+        "steps": ["Tritura la clara con casi todo el plátano.", "Añade el cacao.", "Pásalo a una taza mediana y al microondas 3 min.", "Decora con las rodajas reservadas, la nuez picada y el chocolate derretido."]
+      },
+      {
+        "id": "coulant-de-choco-platano", "name": "Coulant de choco-plátano",
+        "description": "Plátano, huevo, avena, cacao y chocolate. 1 min 30 s para que quede tipo coulant, 2 min si lo prefieres bien hecho.",
+        "ingredients": ["90 g de plátano", "1 huevo (50 g)", "15 g de harina de avena (1½ cucharadas)", "10 g de cacao en polvo (2 cucharaditas)", "5 g de levadura química (1 cucharadita)", "5 ml de aceite de oliva virgen extra (para engrasar la taza)", "10 g de chocolate 85 % (1 onza)", "15 g de nueces (para emplatar)"],
+        "steps": ["Bate el huevo con el cacao, la levadura, medio plátano machacado y la harina.", "Engrasa la taza con el aceite y vierte la mezcla.", "Microondas a máxima potencia: 1 min 30 s para que quede tipo coulant, 2 min si lo prefieres bien hecho.", "Desmolda y emplata con el resto del plátano, las nueces y la onza de chocolate derretida al microondas."]
+      },
+      {
+        "id": "platano-y-cacao", "name": "Plátano y cacao",
+        "description": "La más rápida y sencilla. No lleva levadura.",
+        "ingredients": ["90 g de plátano", "1 huevo (60 g)", "10 g de cacao puro (1 cucharada)", "10 g de harina de trigo sarraceno (1 cucharada); vale cualquier harina que tengas"],
+        "steps": ["Machaca el plátano en la taza, añade el huevo y bate.", "Incorpora los secos hasta tener una masa homogénea. Si queda muy espesa, un chorrito de leche.", "2 min al microondas a máxima potencia."]
+      },
+      {
+        "id": "brownie-de-taza", "name": "Brownie de taza",
+        "description": "Un brownie rápido de avena y cacao, con nueces.",
+        "ingredients": ["1 huevo (50 g)", "30 g de harina de avena (3 cucharadas)", "5 g de cacao en polvo (1 cucharadita)", "5 g de levadura química (1 cucharadita)", "Unos frutos secos (nueces) para decorar", "Opcional, para endulzar: 1 plátano o pasta de dátiles"],
+        "steps": ["Mezcla todo en una taza grande.", "Decora con nueces.", "2 min al microondas. Añade el topping que quieras."]
+      },
+      {
+        "id": "almendra-y-cacao", "name": "Almendra y cacao",
+        "description": "Harina de almendra y cacao, con una onza de chocolate en el centro.",
+        "ingredients": ["1 huevo (50 g)", "20 g de harina de almendra cruda (2 cucharadas)", "7 g de cacao en polvo (1 cucharada)", "10 g de chocolate 85 % (1 onza)", "4 g de levadura química o polvo de hornear (1 cucharadita)", "1 g de aroma de vainilla", "Topping: 3 g de crema de anacardos (1 cucharada); opcional, chocolate blanco rallado"],
+        "steps": ["Mezcla todo menos la crema de anacardos.", "Vierte en un molde engrasado apto para microondas y pon la onza de chocolate en el centro.", "1 min a máxima potencia. Comprueba, y si hace falta, 30 s más.", "Corona con la crema de anacardos."]
+      },
+      {
+        "id": "doble-kinder", "name": "Doble Kinder",
+        "description": "Plátano, avena, avellanas y cacao, en dos mitades. Vegano: no lleva huevo ni lácteos.",
+        "ingredients": ["90 g de plátano", "40 g de harina de avena (4 cucharadas; sin gluten si hace falta)", "30 g de avellanas tostadas sin sal (un puñado)", "10 g de cacao en polvo (2 cucharaditas)", "10 ml de bebida vegetal de avena (1 cucharada)", "5 g de levadura química (1 cucharadita)", "Para decorar: 10 g de chocolate 85 % (1 onza)"],
+        "steps": ["Tritura todo menos el cacao y las avellanas.", "Divide la masa en dos mitades. A una añádele el cacao y a la otra las avellanas troceadas (guarda unas pocas para decorar).", "Vierte en la taza alternando una mezcla y otra.", "3 min a máxima potencia.", "Derrite el chocolate en el microondas (intervalos de 30 s) o en un cazo, y decora con el chocolate y las avellanas reservadas."]
+      }
+    ],
+    "toppings": ["Pepitas de chocolate", "Fideos de chocolate", "Lacasitos", "Conguitos", "Cookies", "Miel", "Almendra triturada", "Coco", "Crema de almendras", "Chocolate fundido", "Plátano en rodajas", "Nueces", "Avellanas", "Aroma de vainilla"],
+    "tips": [
+      "Usa una taza grande apta para microondas, para que no rebose.",
+      "Cada microondas es distinto: la primera vez conviene comprobar el punto."
+    ]
+  },
+  {
+    "id": "food-helado-expres", "name": "Helado exprés", "category": "food",
+    "description": "Helado cremoso hecho al momento con fruta congelada y yogur. Sin heladera ni esperas.",
+    "tags": ["dulce", "helado", "toppings"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": 10, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "variants": [
+      {
+        "id": "mango", "name": "Mango",
+        "ingredients": ["150 g de mango congelado", "100-125 g de yogur (griego natural, de coco o vegetal)", "Opcional en la masa: 1 cucharadita de miel, un chorrito de zumo de lima, ½ cucharadita de vainilla"],
+        "steps": ["Tritura el mango congelado con el yogur hasta que esté cremoso.", "Con mango fresco queda más líquido: congélalo un poco antes o déjalo reposar en el congelador tras triturar."]
+      },
+      {
+        "id": "mango-y-coco", "name": "Mango y coco",
+        "description": "Más espeso, como un bol.",
+        "ingredients": ["1 taza de mango congelado", "½ plátano congelado", "½ taza de yogur griego natural sin azúcar", "¼ de taza de leche de coco light (o de almendra)", "1 cucharada de chía"],
+        "steps": ["Tritura todo hasta que quede espeso.", "Sírvelo en un bol."]
+      },
+      {
+        "id": "choco-platano", "name": "Choco-plátano",
+        "ingredients": ["1 plátano congelado", "1 taza de yogur griego natural", "1 cucharada de cacao en polvo sin azúcar", "Opcional: 1 cucharadita de miel y 1 cucharadita de vainilla", "Para 3 plátanos: 2 tazas de yogur y ¼ de taza de cacao"],
+        "steps": ["Tritura hasta que quede suave y bien integrado.", "Sirve al momento."]
+      },
+      {
+        "id": "platano-y-cacahuete", "name": "Plátano y cacahuete",
+        "ingredients": ["3 plátanos congelados", "125 g de yogur griego sin azúcar", "2 cucharadas de mantequilla de cacahuete (o de almendra)", "Topping: nueces"],
+        "steps": ["Tritura los plátanos congelados con el yogur y la mantequilla hasta integrar.", "Decora con nueces."]
+      },
+      {
+        "id": "pistacho-y-platano", "name": "Pistacho y plátano",
+        "ingredients": ["80 g de pistachos sin sal", "½ plátano congelado", "125 g de yogur griego sin azúcar", "1 cucharada de miel", "Un chorrito de bebida vegetal", "Topping: pistachos"],
+        "steps": ["Tritura todo hasta que quede cremoso y homogéneo.", "Sirve con pistachos por encima."]
+      },
+      {
+        "id": "matcha-y-platano", "name": "Matcha y plátano",
+        "description": "Sin yogur.",
+        "ingredients": ["3 plátanos congelados", "⅓ de taza de leche de almendras", "½ cucharada de matcha en polvo", "1 cucharadita de miel"],
+        "steps": ["Tritura todo en una batidora hasta que quede cremoso y homogéneo.", "Sirve de inmediato."]
+      }
+    ],
+    "toppings": ["Chocolate rallado o fundido (85-90 %)", "Crema de cacahuete", "Hoja de menta", "Coco rallado", "Cubos de mango", "Semillas de calabaza", "Granola sin azúcar", "Nueces", "Pistachos"],
+    "tips": [
+      "Si lo quieres más firme, vuelve a congelarlo un rato. En moldes pequeños, 10-15 min y no más, porque se forman cristales de hielo.",
+      "Yogur y bebida vegetal se pueden intercambiar según la variante."
+    ]
+  },
+  {
+    "id": "food-helado-de-ron-con-pasas", "name": "Helado de ron con pasas", "category": "food",
+    "description": "Helado cremoso de coco con pasas maceradas en ron. Se prepara el día anterior. Lleva alcohol (ron), sin gluten y sin lácteos; lleva huevo.",
+    "tags": ["dulce", "helado", "lleva alcohol", "sin gluten", "sin lácteos"], "availability": "planned", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": 15, "servings": 4, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["100 g de pasas, maceradas en 60 ml de ron añejo", "4 yemas de huevo", "400 ml de leche de coco (lata, alta en grasa)", "70 g de sirope de ágave o azúcar de coco", "1 cucharadita de extracto de vainilla", "1 pizca de sal"],
+    "steps": [
+      "Deja las pasas en el ron caliente al menos 30 min.",
+      "En el vaso de la Thermomix pon las yemas, la leche de coco, el sirope, la vainilla y la sal. Programa 7 min / 80 °C / vel 3. Así se espesa y se pasteuriza la yema sin que cuaje.",
+      "Vierte la crema en cubiteras o en un molde bajo, déjala enfriar del todo a temperatura ambiente y llévala al congelador al menos 6 h.",
+      "Pon los cubitos congelados en el vaso y tritura 20 s / vel 6. Coloca la mariposa y bate 1 min / vel 3,5 para que quede lo más cremoso posible.",
+      "Incorpora las pasas escurridas con movimientos envolventes y sirve de inmediato."
+    ],
+    "tips": ["Las yemas aportan grasa y lecitina, lo que evita los cristales de hielo. El helado se mantiene blando y cremoso varios días en el congelador."]
+  },
+  {
+    "id": "food-pudding-de-chia", "name": "Pudding de chía", "category": "food",
+    "description": "Pudding de chía hidratada con leche, con capas y toppings. Varios sabores. Hay que prepararlo con antelación (mínimo 4 h en la nevera o de un día para otro).",
+    "tags": ["dulce", "con antelación", "toppings"], "availability": "planned", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": null, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "variants": [
+      {
+        "id": "manzana-y-canela", "name": "Manzana y canela",
+        "ingredients": ["2 cucharadas de chía", "1 taza de leche", "1 cucharadita de vainilla", "½ manzana en cubos", "½ cucharadita de canela"],
+        "steps": ["Cocina la manzana con la canela 5 min.", "Mezcla la chía, la leche y la vainilla, y refrigera.", "Pon la manzana encima."]
+      },
+      {
+        "id": "mango", "name": "Mango",
+        "ingredients": ["3 cucharadas de chía", "1 taza de leche", "1-2 cucharadas de miel", "1 cucharadita de extracto de vainilla", "1 taza de mango maduro en trozos", "Toppings: cubos de mango fresco y copos de coco"],
+        "steps": ["Mezcla la chía, la leche, la miel y la vainilla, y refrigera.", "Monta en vaso alternando capas de pudding y de mango.", "Decora."]
+      },
+      {
+        "id": "choco-y-platano", "name": "Choco y plátano",
+        "ingredients": ["2 cucharadas de chía", "1 taza de leche de almendra", "1 cucharada de cacao en polvo", "1 cucharadita de crema de cacahuete", "Opcional: 1 scoop de proteína de vainilla", "Toppings: plátano y cacao nibs"],
+        "steps": ["Mezcla todo menos los toppings.", "Refrigera mínimo 4 h o toda la noche.", "Añade el plátano y los nibs antes de servir."]
+      },
+      {
+        "id": "tiramisu", "name": "Tiramisú",
+        "ingredients": ["2 cucharadas de chía", "1 taza de leche", "½ taza de café frío", "2 cucharadas de yogur griego", "1 cucharadita de cacao en polvo", "Endulzante al gusto"],
+        "steps": ["Mezcla la chía, la leche y el café, y refrigera.", "Añade una capa de yogur y espolvorea cacao por encima."]
+      }
+    ],
+    "tips": ["La base es chía hidratada en leche (vegetal o normal) y refrigerada: 2 cucharadas de chía por taza de leche en la mayoría, y 3 en la de mango."]
+  },
+  {
+    "id": "food-granizado-de-vaso", "name": "Granizado de vaso", "category": "food",
+    "description": "Granizado al instante: echas el líquido que quieras en el vaso, aprietas y sueltas, y se hace solo. El vaso especial tiene que estar guardado en el congelador.",
+    "tags": ["dulce", "fresco", "frío"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": null, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["Cualquier líquido: zumo (por ejemplo, de uva), bebida vegetal (por ejemplo, de avellana), café, siropes…"],
+    "steps": ["Saca del congelador el vaso de granizado.", "Echa dentro el líquido que quieras.", "Aprieta y suelta el vaso varias veces hasta que se forme el granizado."]
+  },
+  {
+    "id": "food-sandwich-a-la-plancha", "name": "Sándwich a la plancha", "category": "food",
+    "description": "Pan tostado a la plancha con el relleno que apetezca ese día. No hay receta fija.",
+    "tags": ["contundente", "plancha"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["hearty"], "preparationTime": null, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "variants": [
+      { "id": "hummus", "name": "Hummus", "description": "Hummus untado en el pan tostado." },
+      { "id": "nueces-con-miel", "name": "Nueces con miel", "description": "Nueces trituradas con miel." },
+      { "id": "hummus-y-aguacate", "name": "Hummus y aguacate", "description": "Hummus y aguacate." },
+      { "id": "hummus-y-queso", "name": "Hummus y queso", "description": "Hummus con queso." },
+      { "id": "aguacate-y-huevo", "name": "Aguacate y huevo", "description": "Aguacate con huevo." },
+      { "id": "queso-de-cabra-miel-y-nueces", "name": "Queso de cabra con miel y nueces", "description": "Queso de cabra, miel y nueces." }
+    ],
+    "steps": ["Unta un poco de aceite o mantequilla por fuera del pan y tóstalo a la plancha hasta que se dore.", "Monta el relleno y cierra el sándwich."],
+    "tips": ["Pon mucho hummus para que no quede seco, y combina algo blando con algo crujiente."]
+  },
+  {
+    "id": "food-flan-expres", "name": "Flan exprés", "category": "food",
+    "description": "Flan de taza hecho en el microondas, con pasta de dátil como caramelo.",
+    "tags": ["dulce", "microondas"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": 7, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["100 ml de leche semidesnatada", "1 huevo (63 g)", "15 g de pasta de dátil (3 cucharaditas)", "3 g de aroma de vainilla"],
+    "steps": [
+      "Bate el huevo con la leche, la vainilla y 1 cucharadita de pasta de dátil. Usa un huevo L o reduce un poco la leche.",
+      "Pon otra cucharadita de pasta de dátil en el fondo de una taza y vierte encima el huevo batido.",
+      "Microondas 5 min a potencia baja (300 W).",
+      "Voltea la taza sobre un plato y cubre con más pasta de dátil."
+    ]
+  },
+  {
+    "id": "food-natillas-de-caqui", "name": "Natillas de caqui", "category": "food",
+    "description": "Natillas rápidas de caqui con yogur, cacao y canela. De temporada: otoño.",
+    "tags": ["dulce", "otoño", "sin horno"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": null, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["1 caqui mediano, pelado y troceado", "1 yogur griego natural entero (si las quieres más cremosas, añade medio más)", "2 cucharadas rasas de cacao puro en polvo (sin azúcar)", "Canela en polvo al gusto", "Opcional, por encima: chocolate negro rallado (≥ 70 %)"],
+    "steps": ["Pela y trocea el caqui y échalo al vaso de la batidora.", "Añade el yogur entero y el cacao.", "Añade un toque de canela, bate bien y sirve."]
+  },
+  {
+    "id": "food-vasitos-de-galleta", "name": "Vasitos de galleta", "category": "food",
+    "description": "Galleta de almendra hecha en el microondas, con forma de vasito para rellenar de yogur o helado.",
+    "tags": ["dulce", "microondas"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["sweet"], "preparationTime": 5, "servings": 1, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["3 cucharadas de harina de almendras", "1 cucharada de miel", "1 cucharada de mantequilla de almendras (o mantequilla normal) a temperatura ambiente", "1 yema de huevo", "Unas gotas de esencia de vainilla", "Nibs (chips) de chocolate negro"],
+    "steps": [
+      "Mezcla en un bol la miel, la yema, la vainilla y la mantequilla.",
+      "Añade la harina de almendras y sigue mezclando hasta tener una masa pegajosa.",
+      "Recorta un papel vegetal del tamaño del plato del microondas, vierte la masa encima y extiéndela con una cuchara en forma redonda y de algo menos de 1 cm de altura.",
+      "Microondas a máxima potencia 1 min. Saca, reparte los chips de chocolate y cocina 1 min más.",
+      "Deja enfriar y despega la galleta del papel."
+    ],
+    "tips": [
+      "De chocolate: añade 1 cucharada de cacao en polvo a la masa.",
+      "Vasito: da forma de vasito a la masa, cocínala y sella el interior con chocolate fundido. Rellena con yogur, helado o lo que prefieras."
+    ]
+  }
+]

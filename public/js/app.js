@@ -19,9 +19,35 @@ const AVAILABILITY_LABELS = {
 };
 
 const BEVERAGE_TYPES = {
-  tea: 'Té', cocktail: 'Cóctel', beer: 'Cerveza', juice: 'Zumo',
-  soft: 'Refresco', water: 'Agua', hot: 'Bebida caliente', other: 'Otra',
+  tea: 'Té', infusion: 'Infusión', coffee: 'Café', cocoa: 'Cacao y chocolate', shake: 'Batido',
+  water: 'Agua', soft: 'Refresco', mocktail: 'Mocktail', cocktail: 'Cóctel',
 };
+
+const CAFFEINE_LABELS = {
+  none: '🌙 Sin cafeína', some: 'Algo de cafeína', high: 'Con cafeína',
+};
+
+const BEVERAGE_BLOCKS = [
+  { key: 'tea',      label: 'Tés',                   emoji: '🍵', hint: 'Con cafeína', types: ['tea'] },
+  { key: 'infusion', label: 'Infusiones',            emoji: '🌿', hint: 'Sin cafeína', types: ['infusion'] },
+  { key: 'coffee',   label: 'Café, cacao y batidos', emoji: '☕', hint: '',            types: ['coffee', 'cocoa', 'shake'] },
+  { key: 'water',    label: 'Agua y refrescos',      emoji: '🥤', hint: '',            types: ['water', 'soft'] },
+  { key: 'mocktail', label: 'Mocktails',             emoji: '🍹', hint: 'Sin alcohol', types: ['mocktail'] },
+  { key: 'cocktail', label: 'Cócteles',              emoji: '🍸', hint: 'Con alcohol', types: ['cocktail'] },
+];
+
+const BEVERAGE_OTHER = { key: 'other', label: 'Más ideas', emoji: '🍹', hint: '', types: null };
+
+const BEVERAGE_LIST_MAX = 12;
+
+const SPEND_DAYS = 180;
+const SPEND_MAX  = 3;
+const FINISH_DAYS = 60;
+const DAY_MS = 86400000;
+
+const TOURNAMENT_RULE =
+  '🏆 Torneo: los juegos competitivos valen para más gente de la que cabe en pantalla. ' +
+  'Echad a suertes quién empieza; el ganador se queda y al perdedor lo sustituye otro.';
 
 function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => (
@@ -134,6 +160,7 @@ function renderHome() {
 
 async function renderCategory(cat, section) {
   if (cat === 'food' && section) return renderFoodSection(section);
+  if (cat === 'beverage')        return section ? renderBeverageBlock(section) : renderBeverageHome();
 
   const catInfo = CATEGORIES[cat] ?? { label: 'Categoría', emoji: '📦' };
 
@@ -144,6 +171,7 @@ async function renderCategory(cat, section) {
         <span>${catInfo.emoji}</span>
         <h2>${catInfo.label}</h2>
       </header>
+      <div id="intro"></div>
       <div id="chips"></div>
       <div id="content">
         <div class="loading"><div class="spinner"></div></div>
@@ -154,33 +182,220 @@ async function renderCategory(cat, section) {
   bindBack('#home');
 
   try {
-    const items      = await loadItems([cat]);
-    const ratingsMap = await loadRatings(items.map(i => i.id));
+    const items = await withRatings(await loadItems([cat]));
 
-    const enriched = items.map(item => ({
-      ...item,
-      _avg:   ratingsMap[item.id]?.avg   ?? 0,
-      _votes: ratingsMap[item.id]?.count ?? 0,
-    }));
+    if (cat === 'videogame' && items.some(isTournament))
+      document.getElementById('intro').innerHTML = `<p class="screen-intro">${esc(TOURNAMENT_RULE)}</p>`;
 
-    const ordered = orderByMemory(cat, enriched);
-    const active  = filterMemory.get(cat) ?? new Set();
-    filterMemory.set(cat, active);
-
-    const state = {
-      cat,
-      items:   ordered,
-      groups:  buildFilterGroups(cat, ordered),
-      active,
-      showAll: false,
-    };
-
-    renderChips(state);
-    renderResults(state);
+    showList(cat, cat, items);
   } catch (err) {
     console.error(err);
     document.getElementById('content').innerHTML =
       `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
+}
+
+async function withRatings(items) {
+  const ratings = await loadRatings(items.map(i => i.id));
+  return items.map(item => ({
+    ...item,
+    _avg:   ratings[item.id]?.avg   ?? 0,
+    _votes: ratings[item.id]?.count ?? 0,
+  }));
+}
+
+function showList(cat, memoryKey, items, extra = {}) {
+  const ordered = orderByMemory(memoryKey, items);
+  const active  = filterMemory.get(memoryKey) ?? new Set();
+  filterMemory.set(memoryKey, active);
+
+  const state = {
+    cat,
+    items:   ordered,
+    groups:  buildFilterGroups(cat, ordered),
+    active,
+    showAll: false,
+    ...extra,
+  };
+
+  renderChips(state);
+  renderResults(state);
+}
+
+// ── Bebidas ──
+
+function blockItems(items, block) {
+  if (block.types) return items.filter(i => block.types.includes(i.details?.type));
+  const known = new Set(BEVERAGE_BLOCKS.flatMap(b => b.types));
+  return items.filter(i => !known.has(i.details?.type));
+}
+
+function blockKeyFor(item) {
+  const block = BEVERAGE_BLOCKS.find(b => b.types.includes(item.details?.type));
+  return block ? block.key : BEVERAGE_OTHER.key;
+}
+
+function bestBeforeDate(item) {
+  const raw = item.details?.bestBefore;
+  if (!raw) return null;
+  const date = typeof raw.toDate === 'function' ? raw.toDate() : new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function daysToBestBefore(item) {
+  const date = bestBeforeDate(item);
+  if (!date) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.floor((date - today) / DAY_MS);
+}
+
+function needsFinishing(item) {
+  const days = daysToBestBefore(item);
+  return days != null && days <= FINISH_DAYS;
+}
+
+function expiryNote(item) {
+  const days = daysToBestBefore(item);
+  if (days == null) return '';
+  if (days < 0)            return 'Pasó su fecha de consumo preferente; lo huelo antes de prepararlo.';
+  if (days <= FINISH_DAYS) return 'Caduca pronto.';
+  return '';
+}
+
+function spendUrgency(item) {
+  const days = daysToBestBefore(item);
+  if (days == null) return 0;
+  if (days < 0)     return 1;
+  return Math.max(0, 1 - days / 365);
+}
+
+const spendFactor = item => 1 + 3 * spendUrgency(item);
+
+function seasonFactor(item) {
+  const month = new Date().getMonth();
+  const temp  = item.details?.temperature;
+  if (temp === 'cold' && month >= 5 && month <= 8)         return 3;
+  if (temp === 'hot'  && (month >= 11 || month <= 2))      return 3;
+  return 1;
+}
+
+function pickSpendItems(items) {
+  const eligible = items.filter(i => {
+    const days = daysToBestBefore(i);
+    return days != null && days <= SPEND_DAYS;
+  });
+  if (!eligible.length) return [];
+
+  const known = orderMemory.get('beverage/spend');
+  if (known) {
+    const byId = new Map(eligible.map(i => [i.id, i]));
+    const kept = known.map(id => byId.get(id)).filter(Boolean);
+    if (kept.length) return kept;
+  }
+
+  const picked = weightedOrder(eligible, spendFactor).slice(0, SPEND_MAX);
+  orderMemory.set('beverage/spend', picked.map(i => i.id));
+  return picked;
+}
+
+function buildBlockCard(block) {
+  const n = block.items.length;
+  return `
+    <a class="item-card" href="#category/beverage/${esc(block.key)}">
+      <div class="item-thumb item-thumb--fallback" data-cat="beverage">${block.emoji}</div>
+      <div class="item-body">
+        <p class="item-name">${esc(block.label)}</p>
+        <p class="item-meta">${n} ${n === 1 ? 'opción' : 'opciones'}${block.hint ? ` · ${esc(block.hint)}` : ''}</p>
+      </div>
+    </a>
+  `;
+}
+
+async function renderBeverageHome() {
+  const info = CATEGORIES.beverage;
+
+  getApp().innerHTML = `
+    <div class="screen">
+      <button class="back-btn" id="back-btn">← Volver</button>
+      <header class="cat-screen-header">
+        <span>${info.emoji}</span>
+        <h2>${info.label}</h2>
+      </header>
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack('#home');
+
+  const content = document.getElementById('content');
+
+  try {
+    const items  = await withRatings(await loadItems(['beverage']));
+    const blocks = [...BEVERAGE_BLOCKS, BEVERAGE_OTHER]
+      .map(b => ({ ...b, items: blockItems(items, b) }))
+      .filter(b => b.items.length);
+
+    if (!blocks.length) {
+      content.innerHTML = `<p class="msg-empty">Todavía no hay nada aquí.</p>`;
+      return;
+    }
+
+    const spend = pickSpendItems(items);
+
+    content.innerHTML = `
+      <section class="item-group">
+        <h3 class="item-group-title">¿Qué te apetece?</h3>
+        <div class="items-list">${blocks.map(buildBlockCard).join('')}</div>
+      </section>
+      ${spend.length ? `
+        <section class="item-group">
+          <h3 class="item-group-title">Ayúdame a gastar</h3>
+          <p class="result-count">Se les acaba el tiempo. Si te apetece alguna, me haces un favor.</p>
+          <div class="items-list">${spend.map(buildItemCard).join('')}</div>
+        </section>` : ''}
+    `;
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
+}
+
+async function renderBeverageBlock(key) {
+  const block = [...BEVERAGE_BLOCKS, BEVERAGE_OTHER].find(b => b.key === key);
+
+  getApp().innerHTML = `
+    <div class="screen">
+      <button class="back-btn" id="back-btn">← Volver</button>
+      <header class="cat-screen-header">
+        <span>${block ? block.emoji : CATEGORIES.beverage.emoji}</span>
+        <h2>${esc(block ? block.label : 'Bebidas')}</h2>
+      </header>
+      <div id="chips"></div>
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack('#category/beverage');
+
+  const content = document.getElementById('content');
+
+  if (!block) {
+    content.innerHTML = `
+      <p class="msg-empty">No hemos encontrado esto.</p>
+      <a class="btn-see-all" href="#category/beverage">Volver a las bebidas</a>
+    `;
+    return;
+  }
+
+  try {
+    const items = blockItems(await withRatings(await loadItems(['beverage'])), block);
+    showList('beverage', `beverage/${key}`, items, { initial: BEVERAGE_LIST_MAX });
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
   }
 }
 
@@ -194,8 +409,17 @@ function rangeOverlaps(item, minKey, maxKey, lo, hi) {
   return a <= hi && b >= lo;
 }
 
-const playersTest  = (lo, hi) => item => rangeOverlaps(item, 'minPlayers',  'maxPlayers',  lo, hi);
-const durationTest = (lo, hi) => item => rangeOverlaps(item, 'durationMin', 'durationMax', lo, hi);
+const isTournament = item =>
+  item.category === 'videogame' && (item.details?.mode ?? []).includes('competitive');
+
+const playersTest = (lo, hi) => item => {
+  const d = item.details ?? {};
+  if (d.minPlayers == null) return true;
+  if (isTournament(item))   return d.minPlayers <= hi;
+  return rangeOverlaps(item, 'minPlayers', 'maxPlayers', lo, hi);
+};
+const durationTest = (lo, hi) => item =>
+  item.details?.durationMin == null || rangeOverlaps(item, 'durationMin', 'durationMax', lo, hi);
 
 function buildFilterGroups(cat, items) {
   const chip = (group, id, label, test) => ({ key: `${group}:${id}`, label, test });
@@ -220,9 +444,9 @@ function buildFilterGroups(cat, items) {
       const platforms = [...new Set(items.flatMap(i => i.details?.platforms ?? []))].sort();
       groups = [
         { id: 'players', chips: [
-          chip('players', '1',   '1',   playersTest(1, 1)),
           chip('players', '2',   '2',   playersTest(2, 2)),
           chip('players', '3-4', '3–4', playersTest(3, 4)),
+          chip('players', '5+',  '5+',  playersTest(5, Infinity)),
         ]},
         { id: 'platform', chips: platforms.map(p =>
           chip('platform', p, p, item => (item.details?.platforms ?? []).includes(p))
@@ -235,11 +459,17 @@ function buildFilterGroups(cat, items) {
       groups = [
         { id: 'temp', chips: [
           chip('temp', 'hot',  '☕ Caliente', i => ['hot',  'either'].includes(i.details?.temperature)),
-          chip('temp', 'cold', '🧊 Frío',     i => ['cold', 'either'].includes(i.details?.temperature)),
+          chip('temp', 'cold', '🧊 Fría',     i => ['cold', 'either'].includes(i.details?.temperature)),
+        ]},
+        { id: 'caffeine', chips: [
+          chip('caffeine', 'none', '🌙 Sin cafeína', i => i.details?.caffeineLevel === 'none'),
+        ]},
+        { id: 'rooibos', chips: [
+          chip('tag', 'rooibos', 'Rooibos', i => (i.tags ?? []).includes('rooibos')),
         ]},
         { id: 'alcohol', chips: [
           chip('alcohol', 'yes', '🍺 Con alcohol', i => i.details?.alcoholic === true),
-          chip('alcohol', 'no',  '🥤 Sin',         i => i.details?.alcoholic === false),
+          chip('alcohol', 'no',  '🥤 Sin alcohol', i => i.details?.alcoholic === false),
         ]},
       ];
       break;
@@ -257,8 +487,13 @@ function buildFilterGroups(cat, items) {
       break;
   }
 
+  const useful = c => {
+    const n = items.filter(c.test).length;
+    return n > 0 && n < items.length;
+  };
+
   return groups
-    .map(g => ({ ...g, chips: g.chips.filter(c => items.some(c.test)) }))
+    .map(g => ({ ...g, chips: g.chips.filter(useful) }))
     .filter(g => g.chips.length);
 }
 
@@ -327,7 +562,7 @@ function renderResults(state) {
     shownCount = filtered.length;
     listHtml   = sections.map(buildFoodRow).join('');
   } else {
-    const displayed = state.showAll ? filtered : filtered.slice(0, INITIAL_ITEMS);
+    const displayed = state.showAll ? filtered : filtered.slice(0, state.initial ?? INITIAL_ITEMS);
     shownCount = displayed.length;
     listHtml   = `<div class="items-list">${displayed.map(buildItemCard).join('')}</div>`;
   }
@@ -418,13 +653,14 @@ function buildFoodCard(item) {
   const minutes      = item.details?.preparationTime;
   const availability = AVAILABILITY_LABELS[item.availability];
   const votes        = item._votes ?? 0;
+  const metaText     = [minutes > 0 ? `⏱ ${minutes} min` : '', versionsLabel(item)].filter(Boolean).join(' · ');
 
   return `
     <a class="food-card" href="#item/${esc(item.id)}">
       ${foodPhoto(item)}
       <div class="food-card-body">
         <p class="food-card-name">${esc(item.name)}</p>
-        <p class="food-card-meta">${minutes > 0 ? `⏱ ${minutes} min` : '&nbsp;'}</p>
+        <p class="food-card-meta">${metaText ? esc(metaText) : '&nbsp;'}</p>
         ${availability ? `<span class="food-pill is-${esc(item.availability)}">${availability}</span>` : ''}
         ${votes ? `<p class="food-card-rating"><b>★ ${fmtAvg(item._avg)}</b> · ${votes} ${votes === 1 ? 'voto' : 'votos'}</p>` : ''}
       </div>
@@ -578,7 +814,8 @@ function ensurePools(plan) {
 
 function fitsPlayers(item, [lo, hi], strict) {
   const d = item.details ?? {};
-  if (d.minPlayers == null) return false;
+  if (d.minPlayers == null) return true;
+  if (isTournament(item))   return d.minPlayers <= (strict ? lo : hi);
   const max = d.maxPlayers ?? d.minPlayers;
   return strict
     ? d.minPlayers <= lo && max >= (hi === Infinity ? lo : hi)
@@ -617,7 +854,8 @@ function pickFor(plan, kind) {
 
   const currentId = plan.picks[kind]?.item.id;
   const seen      = plan.seen[kind];
-  const others    = weightedOrder(items).filter(i => i.id !== currentId);
+  const others    = weightedOrder(items, kind === 'beverage' ? seasonFactor : undefined)
+    .filter(i => i.id !== currentId);
   const pool      = others.length ? others : items;
   const unseen    = pool.filter(i => !seen.has(i.id));
 
@@ -943,9 +1181,13 @@ async function renderItem(id) {
     if (!snap.exists()) { content.innerHTML = notFound; return; }
 
     const item = { id: snap.id, ...snap.data() };
-    backBtn.dataset.fallback = `#category/${item.category}`;
+    backBtn.dataset.fallback = item.category === 'beverage'
+      ? `#category/beverage/${blockKeyFor(item)}`
+      : `#category/${item.category}`;
     content.innerHTML = buildDetail(item, ratings[id], comments);
     bindDetail(item, content, comments);
+    bindVariants(item, content);
+    loadPairs(item, content);
   } catch (err) {
     console.error(err);
     content.innerHTML = err.code === 'permission-denied'
@@ -982,7 +1224,8 @@ function buildFacts(item) {
       facts.push(
         playersLabel(d), durationLabel(d),
         (d.platforms ?? []).join(' / '),
-        ...(d.mode ?? []).map(m => MODE_LABELS[m] ?? m)
+        ...(d.mode ?? []).map(m => MODE_LABELS[m] ?? m),
+        isTournament(item) ? '🏆 Torneo' : null
       );
       break;
     case 'beverage':
@@ -991,7 +1234,10 @@ function buildFacts(item) {
         BEVERAGE_TYPES[d.type] ?? d.type,
         { hot: '☕ Caliente', cold: '🧊 Frío', either: '☕ / 🧊 Frío o caliente' }[d.temperature],
         d.alcoholic === true ? '🍺 Con alcohol' : d.alcoholic === false ? '🥤 Sin alcohol' : null,
-        d.preparationTime > 0 ? `${d.preparationTime} min` : null
+        CAFFEINE_LABELS[d.caffeineLevel],
+        d.steepingTime > 0 ? `Infusión ${d.steepingTime} min` : null,
+        d.preparationTime > 0 ? `${d.preparationTime} min` : null,
+        needsFinishing(item) ? 'Ayúdame a acabarlo' : null
       );
       break;
     case 'food':
@@ -1008,10 +1254,89 @@ function buildFacts(item) {
   return facts.filter(Boolean);
 }
 
+function versionsLabel(item) {
+  const n = item.variants?.length ?? 0;
+  return n > 1 ? `${n} versiones` : '';
+}
+
+const listHtml = (title, list, ordered) => list?.length
+  ? `<h4>${title}</h4><${ordered ? 'ol' : 'ul'}>${list.map(t => `<li>${esc(t)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
+  : '';
+
+function buildHowTo(item, variant) {
+  const html =
+    listHtml('Ingredientes', variant?.ingredients ?? item.ingredients) +
+    listHtml('Pasos',        variant?.steps       ?? item.steps, true) +
+    listHtml('Toppings',     item.toppings) +
+    listHtml('Trucos',       item.tips);
+
+  return html ? `<section class="detail-section"><h3>Cómo se hace</h3>${html}</section>` : '';
+}
+
+function variantText(item, index) {
+  const total = item.variants.length;
+  return `Versión ${index + 1} de ${total} · ${item.variants[index].name}`;
+}
+
+function buildVariants(item) {
+  const variants = item.variants ?? [];
+  if (!variants.length) return '';
+
+  return `
+    <section class="detail-section" id="variants">
+      <h3>Versiones</h3>
+      <div class="variant-nav">
+        ${variants.length > 1 ? `<button type="button" class="chip" data-dir="-1" aria-label="Versión anterior">‹</button>` : ''}
+        <p class="variant-indicator" id="variant-indicator" role="status" aria-live="polite">${esc(variantText(item, 0))}</p>
+        ${variants.length > 1 ? `<button type="button" class="chip" data-dir="1" aria-label="Versión siguiente">›</button>` : ''}
+      </div>
+      <p class="variant-desc" id="variant-desc">${esc(variants[0].description ?? '')}</p>
+    </section>
+  `;
+}
+
+function bindVariants(item, root) {
+  const variants = item.variants ?? [];
+  const nav = root.querySelector('#variants');
+  if (!nav) return;
+
+  let index = 0;
+  const show = () => {
+    root.querySelector('#variant-indicator').textContent = variantText(item, index);
+    root.querySelector('#variant-desc').textContent = variants[index].description ?? '';
+    root.querySelector('#how-to').innerHTML = buildHowTo(item, variants[index]);
+  };
+
+  nav.addEventListener('click', e => {
+    const btn = e.target.closest('[data-dir]');
+    if (!btn) return;
+    index = (index + Number(btn.dataset.dir) + variants.length) % variants.length;
+    show();
+  });
+}
+
+async function loadPairs(item, root) {
+  const ids = item.pairsWith ?? [];
+  if (!ids.length) return;
+
+  const results = await Promise.allSettled(ids.map(id => getDoc(doc(db, 'items', id))));
+  const items = results
+    .filter(r => r.status === 'fulfilled' && r.value.exists())
+    .map(r => ({ id: r.value.id, ...r.value.data() }))
+    .filter(i => i.active !== false && i.secret !== true);
+  if (!items.length) return;
+
+  const box = root.querySelector('#pairs');
+  if (!box) return;
+  box.querySelector('#pairs-list').innerHTML = items.map(buildItemCard).join('');
+  box.hidden = false;
+}
+
 function buildDetail(item, rating, comments) {
-  const emoji = CATEGORIES[item.category]?.emoji ?? '📦';
-  const cat   = esc(item.category);
-  const facts = buildFacts(item);
+  const emoji  = CATEGORIES[item.category]?.emoji ?? '📦';
+  const cat    = esc(item.category);
+  const facts  = buildFacts(item);
+  const expiry = expiryNote(item);
 
   const hero = item.image
     ? `<img class="detail-hero" src="${esc(item.image)}" alt="${esc(item.name)}"
@@ -1050,6 +1375,14 @@ function buildDetail(item, rating, comments) {
       ${facts.length ? `<div class="detail-facts">${facts.map(f => `<span class="fact">${esc(f)}</span>`).join('')}</div>` : ''}
       <p class="detail-rating" id="detail-rating">${ratingText(rating)}</p>
       ${item.tags?.length ? `<p class="detail-tags">${item.tags.map(esc).join(' · ')}</p>` : ''}
+      ${expiry ? `<p class="detail-note">${esc(expiry)}</p>` : ''}
+      ${item.serveTip ? `<section class="detail-section"><h3>Cómo tomarlo</h3><p>${esc(item.serveTip)}</p></section>` : ''}
+      ${buildVariants(item)}
+      <div id="how-to">${buildHowTo(item, item.variants?.[0])}</div>
+      <section class="detail-section" id="pairs" hidden>
+        <h3>Va bien con</h3>
+        <div class="items-list" id="pairs-list"></div>
+      </section>
       ${notes}
     </article>
   `;
@@ -1243,6 +1576,7 @@ function buildItemCard(item) {
         <p class="item-name">${esc(item.name)}</p>
         ${meta   ? `<p class="item-meta">${esc(meta)}</p>` : ''}
         ${rating}
+        ${needsFinishing(item) ? `<p class="item-meta"><span class="food-pill is-quick">Ayúdame a acabarlo</span></p>` : ''}
       </div>
     </a>
   `;
@@ -1256,12 +1590,14 @@ function buildMeta(item) {
     case 'boardgame':
     case 'videogame':
       parts.push(...[playersLabel(d), durationLabel(d)].filter(Boolean));
+      if (isTournament(item)) parts.push('🏆 Torneo');
       break;
     case 'beverage':
       if (d.type)        parts.push(BEVERAGE_TYPES[d.type] ?? d.type);
       if (d.temperature === 'hot')  parts.push('☕ Caliente');
       if (d.temperature === 'cold') parts.push('🧊 Frío');
-      if (d.alcoholic === false)    parts.push('Sin alcohol');
+      if (d.alcoholic === true)     parts.push('Con alcohol');
+      else if (d.type === 'mocktail') parts.push('Sin alcohol');
       break;
     case 'food':
       if (d.preparationTime) parts.push(`${d.preparationTime} min`);
@@ -1271,6 +1607,8 @@ function buildMeta(item) {
 
   if ((item.category === 'beverage' || item.category === 'food') && AVAILABILITY_LABELS[item.availability])
     parts.unshift(AVAILABILITY_LABELS[item.availability]);
+
+  if (versionsLabel(item)) parts.push(versionsLabel(item));
 
   return parts.join(' · ');
 }
@@ -1323,10 +1661,10 @@ function smoothedAverage(item) {
   return (RATING_PRIOR_MEAN * RATING_PRIOR_VOTES + avg * votes) / (RATING_PRIOR_VOTES + votes);
 }
 
-function weightedOrder(items) {
+function weightedOrder(items, factor = () => 1) {
   const pool = items.map(item => ({
     item,
-    w: Math.pow(smoothedAverage(item), 1.5),
+    w: Math.pow(smoothedAverage(item), 1.5) * factor(item),
   }));
 
   const result = [];

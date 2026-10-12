@@ -19,5 +19,18 @@ key*.json
 DECISIONS.md
 CONTEXT.md
 
+# Borradores y material de trabajo del catálogo (solo se sube lo definitivo: el JSON)
+bebidas.md
+bebidas-borrador.md
+recetario.txt
+recetario-unificado.md
+juegos de mesa.txt
+juegos-borrador.md
+videojuegos.txt
+videojuegos-borrador.md
+
+# Items de Fuera de carta (se importan a Firestore, pero no se suben al repositorio público)
+catalog/local/
+
 # Prototipos desechables
 public/prototipo-*.html

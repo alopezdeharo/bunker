@@ -1,0 +1,170 @@
+[
+  {
+    "id": "bg-pelusas-revolution", "name": "Pelusas Revolution", "category": "boardgame",
+    "description": "Roba cartas y acumula pelusas, pero si repites un número pierdes todo lo del turno. ¿Te plantas o arriesgas? Las cartas especiales permiten robar o proteger pelusas, meter puntos negativos o colar regalos envenenados.",
+    "tags": ["tentar a la suerte", "rápido", "familiar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 6, "durationMin": 20, "durationMax": 20, "setupTime": null, "difficulty": "easy", "type": ["cartas", "tentar a la suerte"] }
+  },
+  {
+    "id": "bg-tres-en-raya-gatos-y-ratones", "name": "Tres en raya de gatos y ratones", "category": "boardgame",
+    "description": "Tres en raya con piezas huecas de tres tamaños (mini, medio y grande): una pieza más grande tapa a una más pequeña y esa casilla pasa a ser tuya. Gana quien alinea tres.",
+    "tags": ["duelo", "dos jugadores", "estrategia"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 5, "durationMax": 15, "setupTime": null, "difficulty": "easy", "type": ["abstracto"] }
+  },
+  {
+    "id": "bg-munchkin", "name": "Munchkin", "category": "boardgame",
+    "description": "Parodia de los juegos de rol: abres puertas, matas monstruos, te llevas el tesoro y ayudas o estorbas a los demás.",
+    "tags": ["humor", "competitivo", "interacción directa", "fantasía", "pique"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 3, "maxPlayers": 6, "durationMin": 60, "durationMax": 90, "setupTime": null, "difficulty": "medium", "type": ["cartas", "aventura", "humor"] }
+  },
+  {
+    "id": "bg-so-clover", "name": "So Clover!", "category": "boardgame",
+    "description": "Cada jugador escribe pistas que conectan pares de palabras; el grupo debe reconstruir qué pistas iban con qué palabras. Se juega en equipo.",
+    "tags": ["cooperativo", "creatividad", "comunicación", "familia", "amigos", "sobremesa"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 3, "maxPlayers": 6, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["cooperativo", "palabras"] }
+  },
+  {
+    "id": "bg-times-up-family", "name": "Time's Up! Family", "category": "boardgame",
+    "description": "Los mismos personajes y cosas, en varias rondas, con restricciones distintas para dar pistas en cada una. Por equipos y con muchas risas.",
+    "tags": ["fiesta", "familiar", "equipos", "risas", "grupos grandes"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 4, "maxPlayers": 12, "durationMin": 30, "durationMax": 40, "setupTime": null, "difficulty": "easy", "type": ["adivinanzas", "equipos"] }
+  },
+  {
+    "id": "bg-exploding-kittens", "name": "Exploding Kittens", "category": "boardgame",
+    "description": "Roba cartas e intenta no sacar el gato explosivo. Otras cartas alteran turnos, dejan mirar el mazo o salvan de la eliminación. Con las expansiones Streaking Kittens e Imploding Kittens se juega hasta 7 personas.",
+    "tags": ["rápido", "humor", "competitivo", "azar", "revancha", "fiesta"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 7, "durationMin": 15, "durationMax": 15, "setupTime": null, "difficulty": "easy", "type": ["cartas"] }
+  },
+  {
+    "id": "bg-arre-unicornio", "name": "¡Arre Unicornio!", "category": "boardgame",
+    "description": "Un manicomio de muy bajo presupuesto, con roles secretos: los pacientes intentan escapar con sus objetos de fuga y los doctores intentan impedirlo, a base de enfermedades, tratamientos chungos y comodines. ¿En quién confías?",
+    "tags": ["cartas", "roles ocultos", "faroleo", "deducción", "humor", "grupos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 8, "durationMin": 20, "durationMax": 40, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+  },
+  {
+    "id": "bg-virus", "name": "Virus!", "category": "boardgame",
+    "description": "Completa un cuerpo sano con cuatro órganos mientras tus rivales te lanzan virus. Protege, cura y roba.",
+    "tags": ["familiar", "rápido", "competitivo", "interacción directa"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 6, "durationMin": 20, "durationMax": 20, "setupTime": null, "difficulty": "easy", "type": ["cartas"] }
+  },
+  {
+    "id": "bg-taco-gato-cabra-queso-pizza", "name": "Taco Gato Cabra Queso Pizza", "category": "boardgame",
+    "description": "Di las palabras de la secuencia mientras sueltas cartas; si la carta coincide con la palabra, todos a la pila: el último en llegar se lleva las cartas.",
+    "tags": ["fiesta", "familiar", "reflejos", "ruido", "rápido"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 3, "maxPlayers": 8, "durationMin": 10, "durationMax": 10, "setupTime": null, "difficulty": "easy", "type": ["cartas", "reflejos"] }
+  },
+  {
+    "id": "bg-pixies", "name": "Pixies", "category": "boardgame",
+    "description": "Coloca cartas de criaturas en una cuadrícula según su número; puntúas por pilas, por la mayor zona de color y por espirales.",
+    "tags": ["estrategia ligera", "familiar", "competitivo", "sobremesa"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 5, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["cartas"] }
+  },
+  {
+    "id": "bg-the-mind", "name": "The Mind", "category": "boardgame",
+    "description": "Hay que jugar las cartas en orden ascendente sin hablar y sin enseñar nada.",
+    "tags": ["cooperativo", "silencio", "tensión", "concentración", "comunicación no verbal"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 4, "durationMin": 20, "durationMax": 20, "setupTime": null, "difficulty": "easy", "type": ["cooperativo"] }
+  },
+  {
+    "id": "bg-ruidiculos", "name": "Ruidículos", "category": "boardgame",
+    "description": "Haz sonidos, sin palabras, para que los demás adivinen el concepto. Tres niveles de dificultad.",
+    "tags": ["social", "humor", "sonidos", "adivinanzas", "creatividad", "fiesta"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 3, "maxPlayers": 8, "durationMin": 15, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["party", "sonidos"] }
+  },
+  {
+    "id": "bg-saboteur", "name": "Saboteur", "category": "boardgame",
+    "description": "Construye caminos en una mina para llegar al oro, pero entre vosotros hay saboteadores.",
+    "tags": ["deducción", "negociación", "roles secretos", "fiesta"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 3, "maxPlayers": 10, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+  },
+  {
+    "id": "bg-invoquemos-demonios", "name": "Invoquemos Demonios", "category": "boardgame",
+    "description": "Tira los dados para activar tus cartas, junta Almas y descarta tres cartas para invocar un demonio. Gana quien invoque tres demonios y mantenga al menos diez Almas. Humor negro y temática sobrenatural, 14+.",
+    "tags": ["humor negro", "cartas", "dados", "azar", "gestión de recursos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 5, "durationMin": 35, "durationMax": 35, "setupTime": null, "difficulty": "easy", "type": ["cartas", "dados"] }
+  },
+  {
+    "id": "bg-maletin-de-poker", "name": "Maletín de póker", "category": "boardgame",
+    "description": "Fichas, cartas y accesorios para jugar al póker (Texas Hold'em u otras variantes).",
+    "tags": ["competición", "estrategia", "probabilidad", "faroleo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 10, "durationMin": 20, "durationMax": 120, "setupTime": null, "difficulty": "medium", "type": ["apuestas"] }
+  },
+  {
+    "id": "bg-pictionary-air", "name": "Pictionary Air", "category": "boardgame",
+    "description": "Dibuja en el aire con un lápiz luminoso; un móvil o tablet con la app gratuita capta el trazo y tu equipo adivina. Dos equipos, del tamaño que quepa en el salón.",
+    "tags": ["fiesta", "creatividad", "equipos", "tecnología"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 4, "maxPlayers": null, "durationMin": 15, "durationMax": 60, "setupTime": null, "difficulty": "easy", "type": ["dibujo", "equipos"] }
+  },
+  {
+    "id": "bg-dany", "name": "Dany", "category": "boardgame",
+    "description": "Hay que hacer adivinar una idea con cartas ilustradas, pero entre vosotros hay un Dany que quiere sabotear al grupo. Cada uno recibe una personalidad oculta y, al final, se vota para desenmascararlo. 14+.",
+    "tags": ["roles ocultos", "creatividad", "comunicación", "deducción"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 3, "maxPlayers": 8, "durationMin": 20, "durationMax": 40, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+  },
+  {
+    "id": "bg-conecta", "name": "Conecta (Charuca)", "category": "boardgame",
+    "description": "Baraja de 67 cartas de preguntas para conoceros mejor entre pareja, amigos o grupo. Sin ganador.",
+    "tags": ["pareja", "amigos", "romper el hielo", "reflexión", "sin ganador"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": null, "durationMin": null, "durationMax": null, "setupTime": null, "difficulty": "easy", "type": ["conversación"] }
+  },
+  {
+    "id": "bg-amigos-amor-con-palabras", "name": "Amig@s (Amor con Palabras)", "category": "boardgame",
+    "description": "Mazo de conversación de la colección \"Momentos inolvidables\", versión para amigos: preguntas para conoceros mejor. Para todos los públicos y sin ganador.",
+    "tags": ["conversación", "recuerdos", "conexión", "sobremesa", "sin ganador"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": null, "maxPlayers": null, "durationMin": null, "durationMax": null, "setupTime": null, "difficulty": "easy", "type": ["conversación"] }
+  },
+  {
+    "id": "bg-7-wonders-duel", "name": "7 Wonders Duel", "category": "boardgame",
+    "description": "Cada jugador desarrolla una civilización con edificios y recursos; se gana por supremacía militar, científica o por puntos. Juego independiente de la misma familia que 7 Wonders, pensado solo para dos.",
+    "tags": ["duelo", "competitivo", "planificación", "estrategia", "rejugable"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "medium", "type": ["estrategia"] }
+  },
+  {
+    "id": "bg-uno", "name": "UNO", "category": "boardgame",
+    "description": "Quédate sin cartas jugando por color, número o símbolo, con cartas especiales.",
+    "tags": ["familiar", "rápido", "competitivo", "azar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 10, "durationMin": 15, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["cartas"] }
+  },
+  {
+    "id": "bg-uno-flip", "name": "UNO Flip!", "category": "boardgame",
+    "description": "UNO con cartas de doble cara: una carta Flip da la vuelta a todo el mazo y el lado oscuro tiene penalizaciones más duras.",
+    "tags": ["familiar", "competitivo", "azar", "interacción directa"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 10, "durationMin": 15, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["cartas"] }
+  },
+  {
+    "id": "bg-jungle-speed-beach", "name": "Jungle Speed Beach", "category": "boardgame",
+    "description": "Revela cartas buscando símbolos iguales; cuando hay duelo, gana quien atrapa antes el tótem.",
+    "tags": ["fiesta", "exterior", "reflejos", "competitivo"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 10, "durationMin": 15, "durationMax": 15, "setupTime": null, "difficulty": "easy", "type": ["reflejos"] }
+  },
+  {
+    "id": "bg-hive", "name": "Hive", "category": "boardgame",
+    "description": "Coloca insectos con movimientos distintos e intenta rodear a la abeja reina rival sin que rodeen la tuya.",
+    "tags": ["duelo", "estrategia profunda", "portátil", "sin azar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 20, "durationMax": 20, "setupTime": null, "difficulty": "easy", "type": ["abstracto"] }
+  },
+  {
+    "id": "bg-hombres-lobo-castronegro-el-pacto", "name": "Los Hombres Lobo de Castronegro: El Pacto", "category": "boardgame",
+    "description": "Roles secretos: los lobos eliminan aldeanos y estos debaten y votan para descubrirlos. Una sola caja con Castronegro, Luna Nueva, Personajes y La Aldea (34 personajes). Hace falta un narrador; desde 6 personas (5 jugadores más el narrador).",
+    "tags": ["grupos grandes", "fiesta", "deducción", "discusión", "roles ocultos"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 6, "maxPlayers": 47, "durationMin": 30, "durationMax": 60, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+  },
+  {
+    "id": "bg-twister-ultimate", "name": "Twister Ultimate", "category": "boardgame",
+    "description": "Pon manos y pies en los colores que indiquen sin caerte. Alfombra gigante (unos 163 × 236 cm); hace falta un espacio despejado.",
+    "tags": ["fiesta", "movimiento", "familiar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": null, "durationMin": 10, "durationMax": 20, "setupTime": null, "difficulty": "easy", "type": ["físico"] }
+  },
+  {
+    "id": "bg-hook-and-ring-toss", "name": "Hook and Ring Toss", "category": "boardgame",
+    "description": "Balancea una anilla atada a una cuerda para engancharla en un gancho. Se juega a la vez: quien engancha la anilla avanza el vaso de chupito un agujero por una tablilla de madera; cuando no quedan agujeros, el rival bebe. También vale sin alcohol.",
+    "tags": ["fiesta", "habilidad", "coordinación", "reto"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": null, "durationMax": null, "setupTime": null, "difficulty": "easy", "type": ["habilidad"] }
+  },
+  {
+    "id": "bg-abalone", "name": "Abalone", "category": "boardgame",
+    "description": "Mueve grupos de canicas en un tablero hexagonal y empuja las del rival fuera: gana quien expulse seis.",
+    "tags": ["duelo", "estrategia", "control espacial", "sin azar"], "availability": "ready", "kind": "play",
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 20, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["abstracto"] }
+  }
+]

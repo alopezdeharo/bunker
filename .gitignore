@@ -28,9 +28,13 @@ juegos de mesa.txt
 juegos-borrador.md
 videojuegos.txt
 videojuegos-borrador.md
+cocteles.txt
 
 # Items de Fuera de carta (se importan a Firestore, pero no se suben al repositorio público)
 catalog/local/
+
+# Originales de las fotos del catálogo (solo se sube el WebP optimizado de public/images/items/)
+assets-src/images/*/
 
 # Prototipos desechables
 public/prototipo-*.html

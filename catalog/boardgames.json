@@ -15,7 +15,7 @@
     "id": "bg-munchkin", "name": "Munchkin", "category": "boardgame",
     "description": "Parodia de los juegos de rol: abres puertas, matas monstruos, te llevas el tesoro y ayudas o estorbas a los demás.",
     "tags": ["humor", "competitivo", "interacción directa", "fantasía", "pique"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 3, "maxPlayers": 6, "durationMin": 60, "durationMax": 90, "setupTime": null, "difficulty": "medium", "type": ["cartas", "aventura", "humor"] }
+    "details": { "minPlayers": 3, "maxPlayers": 6, "durationMin": 60, "durationMax": 90, "setupTime": null, "difficulty": "hard", "type": ["cartas", "aventura", "humor"] }
   },
   {
     "id": "bg-so-clover", "name": "So Clover!", "category": "boardgame",
@@ -39,7 +39,7 @@
     "id": "bg-arre-unicornio", "name": "¡Arre Unicornio!", "category": "boardgame",
     "description": "Un manicomio de muy bajo presupuesto, con roles secretos: los pacientes intentan escapar con sus objetos de fuga y los doctores intentan impedirlo, a base de enfermedades, tratamientos chungos y comodines. ¿En quién confías?",
     "tags": ["cartas", "roles ocultos", "faroleo", "deducción", "humor", "grupos"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 2, "maxPlayers": 8, "durationMin": 20, "durationMax": 40, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+    "details": { "minPlayers": 2, "maxPlayers": 8, "durationMin": 20, "durationMax": 40, "setupTime": null, "difficulty": "medium", "type": ["roles ocultos"] }
   },
   {
     "id": "bg-virus", "name": "Virus!", "category": "boardgame",
@@ -75,7 +75,7 @@
     "id": "bg-saboteur", "name": "Saboteur", "category": "boardgame",
     "description": "Construye caminos en una mina para llegar al oro, pero entre vosotros hay saboteadores.",
     "tags": ["deducción", "negociación", "roles secretos", "fiesta"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 3, "maxPlayers": 10, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+    "details": { "minPlayers": 3, "maxPlayers": 10, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "medium", "type": ["roles ocultos"] }
   },
   {
     "id": "bg-invoquemos-demonios", "name": "Invoquemos Demonios", "category": "boardgame",
@@ -87,7 +87,7 @@
     "id": "bg-maletin-de-poker", "name": "Maletín de póker", "category": "boardgame",
     "description": "Fichas, cartas y accesorios para jugar al póker (Texas Hold'em u otras variantes).",
     "tags": ["competición", "estrategia", "probabilidad", "faroleo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 2, "maxPlayers": 10, "durationMin": 20, "durationMax": 120, "setupTime": null, "difficulty": "medium", "type": ["apuestas"] }
+    "details": { "minPlayers": 2, "maxPlayers": 10, "durationMin": 20, "durationMax": 120, "setupTime": null, "difficulty": "hard", "type": ["apuestas"] }
   },
   {
     "id": "bg-pictionary-air", "name": "Pictionary Air", "category": "boardgame",
@@ -99,7 +99,7 @@
     "id": "bg-dany", "name": "Dany", "category": "boardgame",
     "description": "Hay que hacer adivinar una idea con cartas ilustradas, pero entre vosotros hay un Dany que quiere sabotear al grupo. Cada uno recibe una personalidad oculta y, al final, se vota para desenmascararlo. 14+.",
     "tags": ["roles ocultos", "creatividad", "comunicación", "deducción"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 3, "maxPlayers": 8, "durationMin": 20, "durationMax": 40, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+    "details": { "minPlayers": 3, "maxPlayers": 8, "durationMin": 20, "durationMax": 40, "setupTime": null, "difficulty": "medium", "type": ["roles ocultos"] }
   },
   {
     "id": "bg-conecta", "name": "Conecta (Charuca)", "category": "boardgame",
@@ -117,7 +117,7 @@
     "id": "bg-7-wonders-duel", "name": "7 Wonders Duel", "category": "boardgame",
     "description": "Cada jugador desarrolla una civilización con edificios y recursos; se gana por supremacía militar, científica o por puntos. Juego independiente de la misma familia que 7 Wonders, pensado solo para dos.",
     "tags": ["duelo", "competitivo", "planificación", "estrategia", "rejugable"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "medium", "type": ["estrategia"] }
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 30, "durationMax": 30, "setupTime": null, "difficulty": "hard", "type": ["estrategia"] }
   },
   {
     "id": "bg-uno", "name": "UNO", "category": "boardgame",
@@ -141,13 +141,13 @@
     "id": "bg-hive", "name": "Hive", "category": "boardgame",
     "description": "Coloca insectos con movimientos distintos e intenta rodear a la abeja reina rival sin que rodeen la tuya.",
     "tags": ["duelo", "estrategia profunda", "portátil", "sin azar"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 20, "durationMax": 20, "setupTime": null, "difficulty": "easy", "type": ["abstracto"] }
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 20, "durationMax": 20, "setupTime": null, "difficulty": "hard", "type": ["abstracto"] }
   },
   {
     "id": "bg-hombres-lobo-castronegro-el-pacto", "name": "Los Hombres Lobo de Castronegro: El Pacto", "category": "boardgame",
     "description": "Roles secretos: los lobos eliminan aldeanos y estos debaten y votan para descubrirlos. Una sola caja con Castronegro, Luna Nueva, Personajes y La Aldea (34 personajes). Hace falta un narrador; desde 6 personas (5 jugadores más el narrador).",
     "tags": ["grupos grandes", "fiesta", "deducción", "discusión", "roles ocultos"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 6, "maxPlayers": 47, "durationMin": 30, "durationMax": 60, "setupTime": null, "difficulty": "easy", "type": ["roles ocultos"] }
+    "details": { "minPlayers": 6, "maxPlayers": 47, "durationMin": 30, "durationMax": 60, "setupTime": null, "difficulty": "medium", "type": ["roles ocultos"] }
   },
   {
     "id": "bg-twister-ultimate", "name": "Twister Ultimate", "category": "boardgame",
@@ -165,6 +165,6 @@
     "id": "bg-abalone", "name": "Abalone", "category": "boardgame",
     "description": "Mueve grupos de canicas en un tablero hexagonal y empuja las del rival fuera: gana quien expulse seis.",
     "tags": ["duelo", "estrategia", "control espacial", "sin azar"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 20, "durationMax": 30, "setupTime": null, "difficulty": "easy", "type": ["abstracto"] }
+    "details": { "minPlayers": 2, "maxPlayers": 2, "durationMin": 20, "durationMax": 30, "setupTime": null, "difficulty": "medium", "type": ["abstracto"] }
   }
 ]

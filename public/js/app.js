@@ -67,7 +67,7 @@ function router() {
   ({
     home:     renderHome,
     category: () => renderCategory(param, sub),
-    item:     () => renderItem(param),
+    item:     () => renderItem(param, sub),
     surprise: renderSurprise,
     secret:   renderSecret,
   }[screen] ?? renderHome)();
@@ -159,6 +159,7 @@ function renderHome() {
 }
 
 async function renderCategory(cat, section) {
+  if (cat === 'boardgame')       return section === 'all' ? renderBoardgameGrid() : renderBoardgameList();
   if (cat === 'food' && section) return renderFoodSection(section);
   if (cat === 'beverage')        return section ? renderBeverageBlock(section) : renderBeverageHome();
 
@@ -399,13 +400,542 @@ async function renderBeverageBlock(key) {
   }
 }
 
+// ── Juegos de mesa ──
+
+function topBar(title) {
+  return `
+    <header class="top-bar">
+      <button class="back-icon" id="back-btn" aria-label="Volver">←</button>
+      <h2 id="top-title">${esc(title)}</h2>
+    </header>
+  `;
+}
+
+function boardgameThumb(item, cls) {
+  const emoji = CATEGORIES.boardgame.emoji;
+  if (!item.image) return `<div class="${cls} ${cls}--fallback">${emoji}</div>`;
+
+  return `<img class="${cls}" src="${esc(item.image)}" alt="" loading="lazy"
+    onerror="this.outerHTML='<div class=\\'${cls} ${cls}--fallback\\'>${emoji}</div>'">`;
+}
+
+function buildBoardgameCard(item) {
+  const d     = item.details ?? {};
+  const meta  = [playersLabel(d, true), durationLabel(d)].filter(Boolean).join(' · ');
+  const votes = item._votes ?? 0;
+
+  return `
+    <a class="bg-card" href="#item/${esc(item.id)}">
+      ${boardgameThumb(item, 'bg-thumb')}
+      <div class="bg-card-body">
+        <p class="bg-card-name">${esc(item.name)}</p>
+        ${meta ? `<p class="bg-card-meta">${esc(meta)}</p>` : ''}
+        ${votes ? `<p class="bg-card-rating">★ ${fmtAvg(item._avg)} · ${votes} ${votes === 1 ? 'voto' : 'votos'}</p>` : ''}
+      </div>
+      <span class="bg-card-chevron" aria-hidden="true">›</span>
+    </a>
+  `;
+}
+
+function buildBoardgameTile(item) {
+  const players = playersLabel(item.details ?? {}, true).replace(/jugadores?/, 'jug.');
+  const votes   = item._votes ?? 0;
+
+  return `
+    <a class="bg-tile" href="#item/${esc(item.id)}">
+      ${boardgameThumb(item, 'bg-tile-img')}
+      <p class="bg-tile-name">${esc(item.name)}</p>
+      <p class="bg-tile-meta">${esc(players)}</p>
+      ${votes ? `<p class="bg-tile-rating">★ ${fmtAvg(item._avg)}</p>` : ''}
+    </a>
+  `;
+}
+
+async function renderBoardgameList() {
+  getApp().innerHTML = `
+    <div class="screen">
+      ${topBar(CATEGORIES.boardgame.label)}
+      <div id="chips"></div>
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack('#home');
+
+  try {
+    showBoardgames(orderByMemory('boardgame', await withRatings(await loadItems(['boardgame']))));
+  } catch (err) {
+    console.error(err);
+    document.getElementById('content').innerHTML =
+      `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
+}
+
+// ── Filtros de juegos de mesa ──
+
+const BG_PLAYERS_KEY = 'bunker.boardgame.players';
+
+const BG_FILTERS = [
+  { id: 'players', label: 'Jugadores', title: 'Número de jugadores', options: [
+    ['2', '2 jugadores'], ['3', '3 jugadores'], ['4', '4 jugadores'], ['5', '5 jugadores'], ['6', '6 o más'],
+  ]},
+  { id: 'duration', label: 'Duración', title: 'Duración', options: [
+    ['short', '< 30 min'], ['medium', '30–60 min'], ['long', '60+ min'],
+  ]},
+  { id: 'difficulty', label: 'Dificultad', title: 'Dificultad', options: [
+    ['easy', 'Fácil'], ['medium', 'Media'], ['hard', 'Difícil'],
+  ]},
+];
+
+const BG_TESTS = {
+  players: value => {
+    const n = Number(value);
+    return playersTest(n, n >= 6 ? Infinity : n);
+  },
+  duration: value => ({
+    short:  durationTest(0, 29),
+    medium: durationTest(30, 60),
+    long:   durationTest(60, Infinity),
+  })[value],
+  difficulty: value => item => item.details?.difficulty === value,
+};
+
+function savedBoardgamePlayers() {
+  try {
+    const value = localStorage.getItem(BG_PLAYERS_KEY);
+    return BG_FILTERS[0].options.some(([v]) => v === value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveBoardgamePlayers(value) {
+  try {
+    if (value) localStorage.setItem(BG_PLAYERS_KEY, value);
+    else       localStorage.removeItem(BG_PLAYERS_KEY);
+  } catch {}
+}
+
+let boardgameFilters = null;
+
+function currentBoardgameFilters() {
+  boardgameFilters ??= { players: savedBoardgamePlayers(), duration: null, difficulty: null };
+  return boardgameFilters;
+}
+
+function boardgameGroups() {
+  return BG_FILTERS.map(f => ({
+    id: f.id,
+    chips: f.options.map(([value, label]) => ({
+      key: `${f.id}:${value}`, label, test: BG_TESTS[f.id](value),
+    })),
+  }));
+}
+
+function syncBoardgameActive(state) {
+  state.active.clear();
+  for (const [id, value] of Object.entries(currentBoardgameFilters())) {
+    if (value) state.active.add(`${id}:${value}`);
+  }
+}
+
+function closeFilterSheet() {
+  document.getElementById('bg-sheet-root')?.remove();
+}
+
+function renderBoardgameFilters(state) {
+  const filters = currentBoardgameFilters();
+  const count   = Object.values(filters).filter(Boolean).length;
+
+  const select = f => `
+    <label class="bg-select${filters[f.id] ? ' is-set' : ''}">
+      <select data-filter="${f.id}" aria-label="${esc(f.title)}">
+        <option value="">${esc(f.label)}</option>
+        ${f.options.map(([v, l]) => `<option value="${v}"${filters[f.id] === v ? ' selected' : ''}>${esc(l)}</option>`).join('')}
+      </select>
+    </label>
+  `;
+
+  const el = document.getElementById('chips');
+  el.innerHTML = `
+    <div class="bg-filters">
+      ${select(BG_FILTERS[0])}
+      ${select(BG_FILTERS[1])}
+      <button type="button" class="bg-filter-btn${count ? ' is-set' : ''}" id="bg-open-sheet">
+        Filtros${count ? ` <span class="bg-filter-count">${count}</span>` : ''}
+      </button>
+    </div>
+  `;
+
+  el.querySelectorAll('select').forEach(sel => sel.addEventListener('change', () => {
+    commitBoardgameFilters(state, { ...currentBoardgameFilters(), [sel.dataset.filter]: sel.value || null });
+  }));
+  document.getElementById('bg-open-sheet').addEventListener('click', () => openFilterSheet(state));
+}
+
+function commitBoardgameFilters(state, values) {
+  boardgameFilters = { ...values };
+  saveBoardgamePlayers(boardgameFilters.players);
+  syncBoardgameActive(state);
+  renderBoardgameFilters(state);
+  renderResults(state);
+}
+
+function openFilterSheet(state) {
+  closeFilterSheet();
+  const draft = { ...currentBoardgameFilters() };
+
+  const root = document.createElement('div');
+  root.id = 'bg-sheet-root';
+  document.body.appendChild(root);
+
+  const paint = () => {
+    root.innerHTML = `
+      <div class="sheet-backdrop" data-close></div>
+      <section class="sheet" role="dialog" aria-modal="true" aria-label="Filtros">
+        <header class="sheet-head">
+          <h3>Filtros</h3>
+          <button type="button" class="sheet-close" data-close aria-label="Cerrar">✕</button>
+        </header>
+        ${BG_FILTERS.map(f => `
+          <div class="sheet-group">
+            <p class="sheet-group-title">${esc(f.title)}</p>
+            <div class="sheet-chips">
+              ${f.options.map(([v, l]) => `
+                <button type="button" class="chip" data-filter="${f.id}" data-value="${v}" aria-pressed="${draft[f.id] === v}">${esc(l)}</button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+        <footer class="sheet-actions">
+          <button type="button" class="sheet-clear" id="sheet-clear">Limpiar</button>
+          <button type="button" class="btn-primary" id="sheet-apply">Aplicar filtros</button>
+        </footer>
+      </section>
+    `;
+  };
+  paint();
+
+  root.addEventListener('click', e => {
+    if (e.target.closest('[data-close]')) { closeFilterSheet(); return; }
+
+    const chip = e.target.closest('.chip');
+    if (chip) {
+      const { filter, value } = chip.dataset;
+      draft[filter] = draft[filter] === value ? null : value;
+      paint();
+      return;
+    }
+    if (e.target.closest('#sheet-clear')) {
+      Object.keys(draft).forEach(k => { draft[k] = null; });
+      paint();
+      return;
+    }
+    if (e.target.closest('#sheet-apply')) {
+      closeFilterSheet();
+      commitBoardgameFilters(state, draft);
+    }
+  });
+
+  window.addEventListener('hashchange', closeFilterSheet, { once: true });
+}
+
+function showBoardgames(items) {
+  const state = {
+    cat:     'boardgame',
+    items,
+    groups:  boardgameGroups(),
+    active:  new Set(),
+    showAll: false,
+    onClear: () => commitBoardgameFilters(state, { players: null, duration: null, difficulty: null }),
+  };
+
+  syncBoardgameActive(state);
+  renderBoardgameFilters(state);
+  renderResults(state);
+}
+
+async function renderBoardgameGrid() {
+  getApp().innerHTML = `
+    <div class="screen">
+      ${topBar('Todos los juegos')}
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack('#category/boardgame');
+
+  const content = document.getElementById('content');
+
+  try {
+    const items = orderByMemory('boardgame', await withRatings(await loadItems(['boardgame'])));
+    document.getElementById('top-title').textContent = `Todos los juegos (${items.length})`;
+    content.innerHTML = items.length
+      ? `<div class="bg-grid">${items.map(buildBoardgameTile).join('')}</div>`
+      : `<p class="msg-empty">Todavía no hay nada aquí.</p>`;
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
+}
+
+// ── Ficha de juegos de mesa ──
+
+function playersShort(d) {
+  if (d.minPlayers == null) return '';
+  if (d.maxPlayers == null) return `${d.minPlayers} o más`;
+  return d.maxPlayers === d.minPlayers ? `${d.minPlayers}` : `${d.minPlayers}–${d.maxPlayers}`;
+}
+
+function relativeTime(createdAt) {
+  const seconds = createdAt?.seconds;
+  if (!seconds) return 'Ahora mismo';
+
+  const diff = Math.max(0, Date.now() / 1000 - seconds);
+  const ago  = (n, one, many) => `Hace ${n} ${n === 1 ? one : many}`;
+  const DAY  = 86400;
+
+  if (diff < 60)        return 'Ahora mismo';
+  if (diff < 3600)      return ago(Math.floor(diff / 60), 'minuto', 'minutos');
+  if (diff < DAY)       return ago(Math.floor(diff / 3600), 'hora', 'horas');
+  if (diff < DAY * 7)   return ago(Math.floor(diff / DAY), 'día', 'días');
+  if (diff < DAY * 30)  return ago(Math.floor(diff / (DAY * 7)), 'semana', 'semanas');
+  if (diff < DAY * 365) return ago(Math.floor(diff / (DAY * 30)), 'mes', 'meses');
+  return ago(Math.floor(diff / (DAY * 365)), 'año', 'años');
+}
+
+function buildBoardgameDetail(item, rating, noteCount) {
+  const d = item.details ?? {};
+
+  const stats = [
+    ['👥', playersShort(d),                'Jugadores'],
+    ['⏱️', durationLabel(d),               'Duración'],
+    ['🧠', DIFFICULTY_LABELS[d.difficulty], 'Dificultad'],
+  ].filter(([, value]) => value);
+
+  return `
+    <article class="detail">
+      ${boardgameThumb(item, 'bg-hero')}
+      <h2 class="bg-detail-name">${esc(item.name)}</h2>
+      <p class="detail-rating" id="detail-rating">${ratingText(rating)}</p>
+      ${item.description ? `<p class="detail-desc">${esc(item.description)}</p>` : ''}
+      ${stats.length ? `
+        <div class="bg-stats">
+          ${stats.map(([icon, value, label]) => `
+            <div class="bg-stat">
+              <span class="bg-stat-icon" aria-hidden="true">${icon}</span>
+              <span class="bg-stat-value">${esc(value)}</span>
+              <span class="bg-stat-label">${label}</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+      ${item.tags?.length ? `<p class="detail-tags">${item.tags.map(esc).join(' · ')}</p>` : ''}
+
+      <section class="bg-vote">
+        <p class="vote-label">¿Qué te pareció?</p>
+        <div class="stars" role="group" aria-label="Tu valoración">
+          ${[1, 2, 3, 4, 5].map(n =>
+            `<button type="button" class="star" data-stars="${n}" aria-label="${n} de 5" aria-pressed="false">★</button>`
+          ).join('')}
+        </div>
+        <p class="vote-msg" id="vote-msg" role="status"></p>
+      </section>
+
+      <a class="bg-notes-link" href="#item/${esc(item.id)}/notes">
+        <span>💬 Notas${noteCount ? ` (${noteCount})` : ''}</span>
+        <span class="bg-card-chevron" aria-hidden="true">›</span>
+      </a>
+    </article>
+  `;
+}
+
+function bindBoardgameStars(item, root) {
+  const stars   = root.querySelector('.stars');
+  const voteMsg = root.querySelector('#vote-msg');
+
+  loadMyRating(item.id)
+    .then(mine => paintStars(stars, mine))
+    .catch(() => {});
+
+  stars.addEventListener('click', async e => {
+    const btn = e.target.closest('.star');
+    if (!btn) return;
+
+    const value = Number(btn.dataset.stars);
+    voteMsg.textContent = '';
+    paintStars(stars, value);
+
+    try {
+      await saveRating(item.id, value);
+      voteMsg.textContent = 'Guardado. Gracias.';
+      const ratings = await loadRatings([item.id]);
+      root.querySelector('#detail-rating').textContent = ratingText(ratings[item.id]);
+    } catch (err) {
+      console.error(err);
+      voteMsg.textContent = 'No se pudo guardar. Prueba otra vez.';
+      loadMyRating(item.id).then(mine => paintStars(stars, mine)).catch(() => {});
+    }
+  });
+}
+
+function showBoardgameDetail(item, rating, comments) {
+  getApp().innerHTML = `
+    <div class="screen">
+      ${topBar('')}
+      <div id="content"></div>
+    </div>
+  `;
+  bindBack('#category/boardgame');
+
+  const content = document.getElementById('content');
+  content.innerHTML = buildBoardgameDetail(item, rating, comments.length);
+  bindBoardgameStars(item, content);
+}
+
+async function loadStarsByUser(itemId) {
+  try {
+    const snap = await getDocs(query(collection(db, 'ratings'), where('itemId', '==', itemId)));
+    return new Map(snap.docs.map(d => [d.data().uid, d.data().stars]));
+  } catch (err) {
+    console.warn('Valoraciones no disponibles:', err.code ?? err.message);
+    return new Map();
+  }
+}
+
+function buildBoardgameNote(c, stars) {
+  const name = c.name || 'Alguien del búnker';
+
+  return `
+    <article class="bg-note">
+      <div class="bg-avatar" aria-hidden="true">${esc(name.trim().charAt(0).toUpperCase())}</div>
+      <div class="bg-note-body">
+        <header class="bg-note-head">
+          <span class="bg-note-name">${esc(name)}</span>
+          <span class="bg-note-time">${esc(relativeTime(c.createdAt))}</span>
+        </header>
+        ${stars ? `<p class="bg-note-stars" aria-label="${stars} de 5">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)}</p>` : ''}
+        <p class="bg-note-text">${esc(c.text)}</p>
+      </div>
+    </article>
+  `;
+}
+
+function closeNoteSheet() {
+  document.getElementById('note-sheet-root')?.remove();
+}
+
+function openNoteSheet(item, onSaved) {
+  closeNoteSheet();
+
+  const root = document.createElement('div');
+  root.id = 'note-sheet-root';
+  root.innerHTML = `
+    <div class="sheet-backdrop" data-close></div>
+    <section class="sheet" role="dialog" aria-modal="true" aria-label="Dejar una nota">
+      <header class="sheet-head">
+        <h3>Dejar una nota</h3>
+        <button type="button" class="sheet-close" data-close aria-label="Cerrar">✕</button>
+      </header>
+      <div class="note-form">
+        <textarea id="note-text" rows="4" maxlength="500" placeholder="Qué tal estuvo, con cuánta gente jugasteis…"></textarea>
+        <input id="note-name" type="text" maxlength="40" placeholder="Tu nombre (opcional)" autocomplete="off">
+        <button type="button" class="btn-primary" id="btn-note" disabled>Publicar nota</button>
+        <p class="note-msg" id="note-msg" role="status"></p>
+      </div>
+    </section>
+  `;
+  document.body.appendChild(root);
+
+  const text    = root.querySelector('#note-text');
+  const name    = root.querySelector('#note-name');
+  const noteBtn = root.querySelector('#btn-note');
+  const msg     = root.querySelector('#note-msg');
+
+  name.value = savedName();
+  text.addEventListener('input', () => { noteBtn.disabled = !text.value.trim(); });
+  root.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeNoteSheet(); });
+
+  noteBtn.addEventListener('click', async () => {
+    const body = text.value.trim();
+    if (!body) return;
+
+    noteBtn.disabled = true;
+    msg.textContent  = '';
+
+    try {
+      const author = name.value.trim().slice(0, 40);
+      saveName(author);
+      await saveNote(item.id, author, body.slice(0, 500));
+      closeNoteSheet();
+      onSaved();
+    } catch (err) {
+      console.error(err);
+      msg.textContent = 'No se pudo guardar. Prueba otra vez.';
+      noteBtn.disabled = false;
+    }
+  });
+
+  window.addEventListener('hashchange', closeNoteSheet, { once: true });
+  text.focus();
+}
+
+async function renderBoardgameNotes(id) {
+  getApp().innerHTML = `
+    <div class="screen">
+      ${topBar('Notas')}
+      <div id="content">
+        <div class="loading"><div class="spinner"></div></div>
+      </div>
+    </div>
+  `;
+  bindBack(`#item/${id}`);
+
+  const content = document.getElementById('content');
+
+  try {
+    const snap = id ? await getDoc(doc(db, 'items', id)) : null;
+    if (!snap?.exists() || snap.data().category !== 'boardgame') {
+      location.replace(`#item/${id ?? ''}`);
+      return;
+    }
+
+    const item = { id: snap.id, ...snap.data() };
+
+    const paint = async () => {
+      const [comments, byUser, ratings] = await Promise.all([
+        loadComments(id),
+        loadStarsByUser(id),
+        loadRatings([id]).catch(() => ({})),
+      ]);
+
+      content.innerHTML = `
+        <p class="notes-sub">${esc(item.name)}${ratings[id] ? ` · ${esc(ratingText(ratings[id]))}` : ''}</p>
+        ${comments.length
+          ? `<div class="bg-notes">${comments.map(c => buildBoardgameNote(c, byUser.get(c.uid))).join('')}</div>`
+          : `<p class="notes-empty">Todavía nadie ha dejado una nota. ¿Empiezas tú?</p>`}
+        <button type="button" class="btn-primary bg-notes-add" id="btn-add-note">Dejar una nota</button>
+      `;
+      content.querySelector('#btn-add-note').addEventListener('click', () => openNoteSheet(item, paint));
+    };
+
+    await paint();
+  } catch (err) {
+    console.error(err);
+    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
+  }
+}
+
 // ── Filtros rápidos ──
 
 function rangeOverlaps(item, minKey, maxKey, lo, hi) {
   const d = item.details ?? {};
   const a = d[minKey];
   if (a == null) return false;
-  const b = d[maxKey] ?? a;
+  const openEnded = item.category === 'boardgame' && minKey === 'minPlayers';
+  const b = d[maxKey] ?? (openEnded ? Infinity : a);
   return a <= hi && b >= lo;
 }
 
@@ -546,6 +1076,7 @@ function renderResults(state) {
       <button class="btn-see-all" id="btn-clear">Quitar filtros</button>
     `;
     document.getElementById('btn-clear').addEventListener('click', () => {
+      if (state.onClear) { state.onClear(); return; }
       state.active.clear();
       document.querySelectorAll('#chips .chip')
         .forEach(b => b.setAttribute('aria-pressed', 'false'));
@@ -562,20 +1093,22 @@ function renderResults(state) {
     shownCount = filtered.length;
     listHtml   = sections.map(buildFoodRow).join('');
   } else {
-    const displayed = state.showAll ? filtered : filtered.slice(0, state.initial ?? INITIAL_ITEMS);
+    const filtering = state.cat === 'boardgame' && state.active.size > 0;
+    const displayed = state.showAll || filtering ? filtered : filtered.slice(0, state.initial ?? INITIAL_ITEMS);
     shownCount = displayed.length;
-    listHtml   = `<div class="items-list">${displayed.map(buildItemCard).join('')}</div>`;
+    listHtml   = `<div class="items-list">${displayed.map(state.cat === 'boardgame' ? buildBoardgameCard : buildItemCard).join('')}</div>`;
   }
 
-  const hasMore = filtered.length > shownCount;
+  const isBoard = state.cat === 'boardgame';
+  const hasMore = isBoard ? !state.active.size && state.items.length > shownCount : filtered.length > shownCount;
 
   content.innerHTML = `
-    <p class="result-count">${filtered.length} ${filtered.length === 1 ? 'opción' : 'opciones'}</p>
+    ${isBoard ? '' : `<p class="result-count">${filtered.length} ${filtered.length === 1 ? 'opción' : 'opciones'}</p>`}
     ${listHtml}
-    ${hasMore ? `<button class="btn-see-all" id="btn-see-all">Ver todas (${filtered.length})</button>` : ''}
+    ${hasMore ? (isBoard ? `<a class="btn-see-all" href="#category/boardgame/all">Ver todos (${state.items.length})</a>` : `<button class="btn-see-all" id="btn-see-all">Ver todas (${filtered.length})</button>`) : ''}
   `;
 
-  if (hasMore) {
+  if (hasMore && !isBoard) {
     document.getElementById('btn-see-all').addEventListener('click', () => {
       state.showAll = true;
       renderResults(state);
@@ -816,7 +1349,7 @@ function fitsPlayers(item, [lo, hi], strict) {
   const d = item.details ?? {};
   if (d.minPlayers == null) return true;
   if (isTournament(item))   return d.minPlayers <= (strict ? lo : hi);
-  const max = d.maxPlayers ?? d.minPlayers;
+  const max = d.maxPlayers ?? (item.category === 'boardgame' ? Infinity : d.minPlayers);
   return strict
     ? d.minPlayers <= lo && max >= (hi === Infinity ? lo : hi)
     : d.minPlayers <= hi && max >= lo;
@@ -1138,8 +1671,9 @@ const MODE_LABELS = {
 
 const fmtAvg = n => n.toFixed(1).replace('.', ',');
 
-function playersLabel(d) {
+function playersLabel(d, openEnded = false) {
   if (d.minPlayers == null) return '';
+  if (openEnded && d.maxPlayers == null) return `${d.minPlayers} jugadores o más`;
   const max = d.maxPlayers ?? d.minPlayers;
   if (max === d.minPlayers) return `${max} ${max === 1 ? 'jugador' : 'jugadores'}`;
   return `${d.minPlayers}–${max} jugadores`;
@@ -1152,7 +1686,9 @@ function durationLabel(d) {
     : `${d.durationMin} min`;
 }
 
-async function renderItem(id) {
+async function renderItem(id, sub) {
+  if (sub === 'notes') return renderBoardgameNotes(id);
+
   getApp().innerHTML = `
     <div class="screen">
       <button class="back-btn" id="back-btn">← Volver</button>
@@ -1181,6 +1717,7 @@ async function renderItem(id) {
     if (!snap.exists()) { content.innerHTML = notFound; return; }
 
     const item = { id: snap.id, ...snap.data() };
+    if (item.category === 'boardgame') { showBoardgameDetail(item, ratings[id], comments); return; }
     backBtn.dataset.fallback = item.category === 'beverage'
       ? `#category/beverage/${blockKeyFor(item)}`
       : `#category/${item.category}`;
@@ -1218,7 +1755,7 @@ function buildFacts(item) {
 
   switch (item.category) {
     case 'boardgame':
-      facts.push(playersLabel(d), durationLabel(d), DIFFICULTY_LABELS[d.difficulty]);
+      facts.push(playersLabel(d, true), durationLabel(d), DIFFICULTY_LABELS[d.difficulty]);
       break;
     case 'videogame':
       facts.push(
@@ -1589,7 +2126,7 @@ function buildMeta(item) {
   switch (item.category) {
     case 'boardgame':
     case 'videogame':
-      parts.push(...[playersLabel(d), durationLabel(d)].filter(Boolean));
+      parts.push(...[playersLabel(d, item.category === 'boardgame'), durationLabel(d)].filter(Boolean));
       if (isTournament(item)) parts.push('🏆 Torneo');
       break;
     case 'beverage':

@@ -46,8 +46,7 @@ const FINISH_DAYS = 60;
 const DAY_MS = 86400000;
 
 const TOURNAMENT_RULE =
-  '🏆 Torneo: los juegos competitivos valen para más gente de la que cabe en pantalla. ' +
-  'Echad a suertes quién empieza; el ganador se queda y al perdedor lo sustituye otro.';
+  '🏆 Torneo: si sois más de dos, el que pierde sale, el ganador se queda y entra el siguiente.';
 
 function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => (
@@ -159,7 +158,7 @@ function renderHome() {
 }
 
 async function renderCategory(cat, section) {
-  if (cat === 'boardgame')       return section === 'all' ? renderBoardgameGrid() : renderBoardgameList();
+  if (CATALOG_SCREENS[cat])      return renderCatalogList(cat);
   if (cat === 'food' && section) return renderFoodSection(section);
   if (cat === 'beverage')        return section ? renderBeverageBlock(section) : renderBeverageHome();
 
@@ -172,7 +171,6 @@ async function renderCategory(cat, section) {
         <span>${catInfo.emoji}</span>
         <h2>${catInfo.label}</h2>
       </header>
-      <div id="intro"></div>
       <div id="chips"></div>
       <div id="content">
         <div class="loading"><div class="spinner"></div></div>
@@ -184,10 +182,6 @@ async function renderCategory(cat, section) {
 
   try {
     const items = await withRatings(await loadItems([cat]));
-
-    if (cat === 'videogame' && items.some(isTournament))
-      document.getElementById('intro').innerHTML = `<p class="screen-intro">${esc(TOURNAMENT_RULE)}</p>`;
-
     showList(cat, cat, items);
   } catch (err) {
     console.error(err);
@@ -400,36 +394,46 @@ async function renderBeverageBlock(key) {
   }
 }
 
-// ── Juegos de mesa ──
+// ── Juegos de mesa y videojuegos ──
 
-function topBar(title) {
+function topBar(title, extra = '') {
   return `
     <header class="top-bar">
       <button class="back-icon" id="back-btn" aria-label="Volver">←</button>
       <h2 id="top-title">${esc(title)}</h2>
+      ${extra}
     </header>
   `;
 }
 
-function boardgameThumb(item, cls) {
-  const emoji = CATEGORIES.boardgame.emoji;
-  if (!item.image) return `<div class="${cls} ${cls}--fallback">${emoji}</div>`;
+function catalogThumb(item, cls) {
+  const emoji = CATEGORIES[item.category]?.emoji ?? '📦';
+  const cat   = esc(item.category);
+  if (!item.image) return `<div class="${cls} ${cls}--fallback" data-cat="${cat}">${emoji}</div>`;
 
-  return `<img class="${cls}" src="${esc(item.image)}" alt="" loading="lazy"
-    onerror="this.outerHTML='<div class=\\'${cls} ${cls}--fallback\\'>${emoji}</div>'">`;
+  return `<img class="${cls}" data-cat="${cat}" src="${esc(item.image)}" alt="" loading="lazy"
+    onerror="this.outerHTML='<div class=\\'${cls} ${cls}--fallback\\' data-cat=\\'${cat}\\'>${emoji}</div>'">`;
 }
 
-function buildBoardgameCard(item) {
-  const d     = item.details ?? {};
-  const meta  = [playersLabel(d, true), durationLabel(d)].filter(Boolean).join(' · ');
+function catalogMeta(item) {
+  const d = item.details ?? {};
+  const parts = item.category === 'videogame'
+    ? [(d.platforms ?? []).join(' / '), playersLabel(d)]
+    : [playersLabel(d, true), durationLabel(d)];
+  return parts.filter(Boolean).join(' · ');
+}
+
+function buildCatalogCard(item, groupMin) {
+  const meta  = catalogMeta(item);
   const votes = item._votes ?? 0;
 
   return `
     <a class="bg-card" href="#item/${esc(item.id)}">
-      ${boardgameThumb(item, 'bg-thumb')}
+      ${catalogThumb(item, 'bg-thumb')}
       <div class="bg-card-body">
         <p class="bg-card-name">${esc(item.name)}</p>
         ${meta ? `<p class="bg-card-meta">${esc(meta)}</p>` : ''}
+        ${tournamentApplies(item, groupMin) ? `<p class="bg-card-tag">🏆 Torneo</p>` : ''}
         ${votes ? `<p class="bg-card-rating">★ ${fmtAvg(item._avg)} · ${votes} ${votes === 1 ? 'voto' : 'votos'}</p>` : ''}
       </div>
       <span class="bg-card-chevron" aria-hidden="true">›</span>
@@ -437,24 +441,32 @@ function buildBoardgameCard(item) {
   `;
 }
 
-function buildBoardgameTile(item) {
-  const players = playersLabel(item.details ?? {}, true).replace(/jugadores?/, 'jug.');
-  const votes   = item._votes ?? 0;
+function buildCatalogTile(item, groupMin) {
+  const d        = item.details ?? {};
+  const isVideo  = item.category === 'videogame';
+  const platform = (d.platforms ?? []).join(' / ');
+  const count    = isVideo ? playersShort(d) : '';
+  const players  = isVideo
+    ? (count ? `${count} jug.` : '')
+    : playersLabel(d, true).replace(/jugadores?/, 'jug.');
+  const meta     = [players, tournamentApplies(item, groupMin) ? '🏆 Torneo' : ''].filter(Boolean).join(' · ');
 
   return `
     <a class="bg-tile" href="#item/${esc(item.id)}">
-      ${boardgameThumb(item, 'bg-tile-img')}
+      <div class="bg-tile-media">
+        ${catalogThumb(item, 'bg-tile-img')}
+        ${isVideo && platform ? `<span class="bg-tile-badge">${esc(platform)}</span>` : ''}
+      </div>
       <p class="bg-tile-name">${esc(item.name)}</p>
-      <p class="bg-tile-meta">${esc(players)}</p>
-      ${votes ? `<p class="bg-tile-rating">★ ${fmtAvg(item._avg)}</p>` : ''}
+      <p class="bg-tile-meta">${esc(meta)}</p>
     </a>
   `;
 }
 
-async function renderBoardgameList() {
+async function renderCatalogList(cat) {
   getApp().innerHTML = `
     <div class="screen">
-      ${topBar(CATEGORIES.boardgame.label)}
+      ${topBar(CATALOG_SCREENS[cat].title, '<button type="button" class="view-toggle" id="view-toggle"></button>')}
       <div id="chips"></div>
       <div id="content">
         <div class="loading"><div class="spinner"></div></div>
@@ -464,7 +476,7 @@ async function renderBoardgameList() {
   bindBack('#home');
 
   try {
-    showBoardgames(orderByMemory('boardgame', await withRatings(await loadItems(['boardgame']))));
+    showCatalog(cat, orderByMemory(cat, await withRatings(await loadItems([cat]))));
   } catch (err) {
     console.error(err);
     document.getElementById('content').innerHTML =
@@ -472,70 +484,139 @@ async function renderBoardgameList() {
   }
 }
 
-// ── Filtros de juegos de mesa ──
+// ── Filtros de juegos de mesa y videojuegos ──
 
-const BG_PLAYERS_KEY = 'bunker.boardgame.players';
+const PLAYERS_TITLE = 'Número de jugadores';
 
-const BG_FILTERS = [
-  { id: 'players', label: 'Jugadores', title: 'Número de jugadores', options: [
-    ['2', '2 jugadores'], ['3', '3 jugadores'], ['4', '4 jugadores'], ['5', '5 jugadores'], ['6', '6 o más'],
-  ]},
-  { id: 'duration', label: 'Duración', title: 'Duración', options: [
-    ['short', '< 30 min'], ['medium', '30–60 min'], ['long', '60+ min'],
-  ]},
-  { id: 'difficulty', label: 'Dificultad', title: 'Dificultad', options: [
-    ['easy', 'Fácil'], ['medium', 'Media'], ['hard', 'Difícil'],
-  ]},
+const VIDEO_PLATFORM_ORDER = ['SNES', 'PS1', 'PS2', 'Wii', 'Switch'];
+
+const VIDEO_TYPES = [
+  ['cooperative', 'Cooperativo'], ['competitive', 'Competitivo'], ['party', 'Party'], ['chill', 'Tranquilo'],
 ];
 
-const BG_TESTS = {
-  players: value => {
+const BOARDGAME_FILTERS = [
+  { id: 'players', label: 'Jugadores', title: PLAYERS_TITLE, options: [
+    ['2', '2 jugadores'], ['3', '3 jugadores'], ['4', '4 jugadores'], ['5', '5 jugadores'], ['6', '6 o más'],
+  ], test: value => {
     const n = Number(value);
     return playersTest(n, n >= 6 ? Infinity : n);
-  },
-  duration: value => ({
+  }},
+  { id: 'duration', label: 'Duración', title: 'Duración', options: [
+    ['short', '< 30 min'], ['medium', '30–60 min'], ['long', '60+ min'],
+  ], test: value => ({
     short:  durationTest(0, 29),
     medium: durationTest(30, 60),
     long:   durationTest(60, Infinity),
-  })[value],
-  difficulty: value => item => item.details?.difficulty === value,
+  })[value]},
+  { id: 'difficulty', label: 'Dificultad', title: 'Dificultad', options: [
+    ['easy', 'Fácil'], ['medium', 'Media'], ['hard', 'Difícil'],
+  ], test: value => item => item.details?.difficulty === value },
+];
+
+function videogameFilters(items) {
+  const hasPlatform = p => items.some(i => (i.details?.platforms ?? []).includes(p));
+  const hasMode     = m => items.some(i => (i.details?.mode ?? []).includes(m));
+
+  return [
+    { id: 'players', label: 'Jugadores', title: PLAYERS_TITLE,
+      options: [['3-4', '3–4 jugadores'], ['5', '5 o más']],
+      test: value => value === '5' ? playersTest(5, Infinity) : playersTest(3, 4) },
+    { id: 'platform', label: 'Consola', title: 'Consola',
+      options: VIDEO_PLATFORM_ORDER.filter(hasPlatform).map(p => [p, p]),
+      test: value => item => (item.details?.platforms ?? []).includes(value) },
+    { id: 'type', label: 'Tipo', title: 'Tipo de juego',
+      options: VIDEO_TYPES.filter(([mode]) => hasMode(mode)),
+      test: value => item => (item.details?.mode ?? []).includes(value) },
+  ].filter(f => f.options.length);
+}
+
+const CATALOG_SCREENS = {
+  boardgame: {
+    title: 'Juegos de mesa', playersKey: 'bunker.boardgame.players',
+    viewKey: 'bunker.boardgame.view', defaultView: 'list', cols: 3,
+    filters: () => BOARDGAME_FILTERS, inline: ['players', 'duration'], sheet: true,
+  },
+  videogame: {
+    title: 'Videojuegos', playersKey: 'bunker.videogame.players',
+    viewKey: 'bunker.videogame.view', defaultView: 'grid', cols: 2,
+    filters: videogameFilters, inline: ['players', 'platform', 'type'], sheet: false,
+    groupMin: value => ({ '3-4': 3, '5': 5 })[value],
+  },
 };
 
-function savedBoardgamePlayers() {
+const catalogValues = {};
+
+function savedPlayers(cfg, defs) {
   try {
-    const value = localStorage.getItem(BG_PLAYERS_KEY);
-    return BG_FILTERS[0].options.some(([v]) => v === value) ? value : null;
+    const value = localStorage.getItem(cfg.playersKey);
+    return defs.find(f => f.id === 'players')?.options.some(([v]) => v === value) ? value : null;
   } catch {
     return null;
   }
 }
 
-function saveBoardgamePlayers(value) {
+function savePlayers(cfg, value) {
   try {
-    if (value) localStorage.setItem(BG_PLAYERS_KEY, value);
-    else       localStorage.removeItem(BG_PLAYERS_KEY);
+    if (value) localStorage.setItem(cfg.playersKey, value);
+    else       localStorage.removeItem(cfg.playersKey);
   } catch {}
 }
 
-let boardgameFilters = null;
+const VIEW_ICONS = {
+  grid: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg>',
+  list: '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M3 5h18v3H3V5zm0 5.5h18v3H3v-3zM3 16h18v3H3v-3z"/></svg>',
+};
 
-function currentBoardgameFilters() {
-  boardgameFilters ??= { players: savedBoardgamePlayers(), duration: null, difficulty: null };
-  return boardgameFilters;
+function savedView(cfg) {
+  try {
+    const value = localStorage.getItem(cfg.viewKey);
+    return value === 'grid' || value === 'list' ? value : cfg.defaultView;
+  } catch {
+    return cfg.defaultView;
+  }
 }
 
-function boardgameGroups() {
-  return BG_FILTERS.map(f => ({
+function saveView(cfg, value) {
+  try {
+    localStorage.setItem(cfg.viewKey, value);
+  } catch {}
+}
+
+function renderViewToggle(state) {
+  const btn = document.getElementById('view-toggle');
+  if (!btn) return;
+
+  const next = state.view === 'grid' ? 'list' : 'grid';
+  btn.innerHTML = VIEW_ICONS[next];
+  btn.setAttribute('aria-label', next === 'grid' ? 'Ver en cuadrícula' : 'Ver en lista');
+  btn.onclick = () => {
+    state.view = next;
+    saveView(state.cfg, next);
+    renderViewToggle(state);
+    renderResults(state);
+  };
+}
+
+function catalogFilterValues(cat, cfg, defs) {
+  catalogValues[cat] ??= {
+    ...Object.fromEntries(defs.map(f => [f.id, null])),
+    players: savedPlayers(cfg, defs),
+  };
+  return catalogValues[cat];
+}
+
+function catalogGroups(defs) {
+  return defs.map(f => ({
     id: f.id,
     chips: f.options.map(([value, label]) => ({
-      key: `${f.id}:${value}`, label, test: BG_TESTS[f.id](value),
+      key: `${f.id}:${value}`, label, test: f.test(value),
     })),
   }));
 }
 
-function syncBoardgameActive(state) {
+function syncCatalogActive(state) {
   state.active.clear();
-  for (const [id, value] of Object.entries(currentBoardgameFilters())) {
+  for (const [id, value] of Object.entries(state.values)) {
     if (value) state.active.add(`${id}:${value}`);
   }
 }
@@ -544,61 +625,64 @@ function closeFilterSheet() {
   document.getElementById('bg-sheet-root')?.remove();
 }
 
-function renderBoardgameFilters(state) {
-  const filters = currentBoardgameFilters();
-  const count   = Object.values(filters).filter(Boolean).length;
+function renderCatalogFilters(state) {
+  const { cfg, defs, values } = state;
+  const count = Object.values(values).filter(Boolean).length;
 
   const select = f => `
-    <label class="bg-select${filters[f.id] ? ' is-set' : ''}">
+    <label class="bg-select${values[f.id] ? ' is-set' : ''}">
       <select data-filter="${f.id}" aria-label="${esc(f.title)}">
         <option value="">${esc(f.label)}</option>
-        ${f.options.map(([v, l]) => `<option value="${v}"${filters[f.id] === v ? ' selected' : ''}>${esc(l)}</option>`).join('')}
+        ${f.options.map(([v, l]) => `<option value="${esc(v)}"${values[f.id] === v ? ' selected' : ''}>${esc(l)}</option>`).join('')}
       </select>
     </label>
   `;
 
+  const inline = cfg.inline.map(id => defs.find(f => f.id === id)).filter(Boolean);
+
   const el = document.getElementById('chips');
   el.innerHTML = `
     <div class="bg-filters">
-      ${select(BG_FILTERS[0])}
-      ${select(BG_FILTERS[1])}
-      <button type="button" class="bg-filter-btn${count ? ' is-set' : ''}" id="bg-open-sheet">
-        Filtros${count ? ` <span class="bg-filter-count">${count}</span>` : ''}
-      </button>
+      ${inline.map(f => select(f)).join('')}
+      ${cfg.sheet ? `
+        <button type="button" class="bg-filter-btn${count ? ' is-set' : ''}" id="bg-open-sheet">
+          Filtros${count ? ` <span class="bg-filter-count">${count}</span>` : ''}
+        </button>` : ''}
     </div>
   `;
 
   el.querySelectorAll('select').forEach(sel => sel.addEventListener('change', () => {
-    commitBoardgameFilters(state, { ...currentBoardgameFilters(), [sel.dataset.filter]: sel.value || null });
+    commitCatalogFilters(state, { ...state.values, [sel.dataset.filter]: sel.value || null });
   }));
-  document.getElementById('bg-open-sheet').addEventListener('click', () => openFilterSheet(state));
+  document.getElementById('bg-open-sheet')?.addEventListener('click', () => openFilterSheet(state));
 }
 
-function commitBoardgameFilters(state, values) {
-  boardgameFilters = { ...values };
-  saveBoardgamePlayers(boardgameFilters.players);
-  syncBoardgameActive(state);
-  renderBoardgameFilters(state);
+function commitCatalogFilters(state, values) {
+  catalogValues[state.cat] = { ...values };
+  state.values = catalogValues[state.cat];
+  savePlayers(state.cfg, state.values.players);
+  syncCatalogActive(state);
+  renderCatalogFilters(state);
   renderResults(state);
 }
 
 function openFilterSheet(state) {
   closeFilterSheet();
-  const draft = { ...currentBoardgameFilters() };
+  const draft = { ...state.values };
 
   const root = document.createElement('div');
   root.id = 'bg-sheet-root';
   document.body.appendChild(root);
 
-  const paint = () => {
+  const paint = (enter = false) => {
     root.innerHTML = `
       <div class="sheet-backdrop" data-close></div>
-      <section class="sheet" role="dialog" aria-modal="true" aria-label="Filtros">
+      <section class="sheet${enter ? ' sheet--enter' : ''}" role="dialog" aria-modal="true" aria-label="Filtros">
         <header class="sheet-head">
           <h3>Filtros</h3>
           <button type="button" class="sheet-close" data-close aria-label="Cerrar">✕</button>
         </header>
-        ${BG_FILTERS.map(f => `
+        ${state.defs.map(f => `
           <div class="sheet-group">
             <p class="sheet-group-title">${esc(f.title)}</p>
             <div class="sheet-chips">
@@ -615,7 +699,7 @@ function openFilterSheet(state) {
       </section>
     `;
   };
-  paint();
+  paint(true);
 
   root.addEventListener('click', e => {
     if (e.target.closest('[data-close]')) { closeFilterSheet(); return; }
@@ -634,54 +718,34 @@ function openFilterSheet(state) {
     }
     if (e.target.closest('#sheet-apply')) {
       closeFilterSheet();
-      commitBoardgameFilters(state, draft);
+      commitCatalogFilters(state, draft);
     }
   });
 
   window.addEventListener('hashchange', closeFilterSheet, { once: true });
 }
 
-function showBoardgames(items) {
+function showCatalog(cat, items) {
+  const cfg  = CATALOG_SCREENS[cat];
+  const defs = cfg.filters(items);
+
   const state = {
-    cat:     'boardgame',
-    items,
-    groups:  boardgameGroups(),
+    cat, cfg, items, defs,
+    values:  catalogFilterValues(cat, cfg, defs),
+    groups:  catalogGroups(defs),
     active:  new Set(),
     showAll: false,
-    onClear: () => commitBoardgameFilters(state, { players: null, duration: null, difficulty: null }),
+    view:    savedView(cfg),
+    onClear: () => commitCatalogFilters(state, Object.fromEntries(defs.map(f => [f.id, null]))),
   };
 
-  syncBoardgameActive(state);
-  renderBoardgameFilters(state);
+  syncCatalogActive(state);
+  renderCatalogFilters(state);
+  renderViewToggle(state);
   renderResults(state);
 }
 
-async function renderBoardgameGrid() {
-  getApp().innerHTML = `
-    <div class="screen">
-      ${topBar('Todos los juegos')}
-      <div id="content">
-        <div class="loading"><div class="spinner"></div></div>
-      </div>
-    </div>
-  `;
-  bindBack('#category/boardgame');
-
-  const content = document.getElementById('content');
-
-  try {
-    const items = orderByMemory('boardgame', await withRatings(await loadItems(['boardgame'])));
-    document.getElementById('top-title').textContent = `Todos los juegos (${items.length})`;
-    content.innerHTML = items.length
-      ? `<div class="bg-grid">${items.map(buildBoardgameTile).join('')}</div>`
-      : `<p class="msg-empty">Todavía no hay nada aquí.</p>`;
-  } catch (err) {
-    console.error(err);
-    content.innerHTML = `<p class="msg-empty">No se pudo cargar. Comprueba tu conexión.</p>`;
-  }
-}
-
-// ── Ficha de juegos de mesa ──
+// ── Ficha de juegos de mesa y videojuegos ──
 
 function playersShort(d) {
   if (d.minPlayers == null) return '';
@@ -706,10 +770,14 @@ function relativeTime(createdAt) {
   return ago(Math.floor(diff / (DAY * 365)), 'año', 'años');
 }
 
-function buildBoardgameDetail(item, rating, noteCount) {
+function buildCatalogDetail(item, rating, noteCount) {
   const d = item.details ?? {};
 
-  const stats = [
+  const stats = item.category === 'videogame' ? [
+    ['👥', playersShort(d), 'Jugadores'],
+    ['🎮', (d.platforms ?? []).join(' / '), 'Consola'],
+    [(d.mode ?? []).map(m => MODE_ICONS[m] ?? '🎯').join(''), (d.mode ?? []).map(m => MODE_LABELS[m] ?? m).join(' · '), 'Tipo'],
+  ].filter(([, value]) => value) : [
     ['👥', playersShort(d),                'Jugadores'],
     ['⏱️', durationLabel(d),               'Duración'],
     ['🧠', DIFFICULTY_LABELS[d.difficulty], 'Dificultad'],
@@ -717,10 +785,11 @@ function buildBoardgameDetail(item, rating, noteCount) {
 
   return `
     <article class="detail">
-      ${boardgameThumb(item, 'bg-hero')}
+      ${catalogThumb(item, 'bg-hero')}
       <h2 class="bg-detail-name">${esc(item.name)}</h2>
-      <p class="detail-rating" id="detail-rating">${ratingText(rating)}</p>
+      <p class="detail-rating" id="detail-rating">${ratingHtml(rating)}</p>
       ${item.description ? `<p class="detail-desc">${esc(item.description)}</p>` : ''}
+      ${isTournament(item) ? `<p class="bg-tournament">${esc(TOURNAMENT_RULE)}</p>` : ''}
       ${stats.length ? `
         <div class="bg-stats">
           ${stats.map(([icon, value, label]) => `
@@ -752,7 +821,7 @@ function buildBoardgameDetail(item, rating, noteCount) {
   `;
 }
 
-function bindBoardgameStars(item, root) {
+function bindCatalogStars(item, root) {
   const stars   = root.querySelector('.stars');
   const voteMsg = root.querySelector('#vote-msg');
 
@@ -772,7 +841,7 @@ function bindBoardgameStars(item, root) {
       await saveRating(item.id, value);
       voteMsg.textContent = 'Guardado. Gracias.';
       const ratings = await loadRatings([item.id]);
-      root.querySelector('#detail-rating').textContent = ratingText(ratings[item.id]);
+      root.querySelector('#detail-rating').innerHTML = ratingHtml(ratings[item.id]);
     } catch (err) {
       console.error(err);
       voteMsg.textContent = 'No se pudo guardar. Prueba otra vez.';
@@ -781,18 +850,18 @@ function bindBoardgameStars(item, root) {
   });
 }
 
-function showBoardgameDetail(item, rating, comments) {
+function showCatalogDetail(item, rating, comments) {
   getApp().innerHTML = `
     <div class="screen">
       ${topBar('')}
       <div id="content"></div>
     </div>
   `;
-  bindBack('#category/boardgame');
+  bindBack(`#category/${item.category}`);
 
   const content = document.getElementById('content');
-  content.innerHTML = buildBoardgameDetail(item, rating, comments.length);
-  bindBoardgameStars(item, content);
+  content.innerHTML = buildCatalogDetail(item, rating, comments.length);
+  bindCatalogStars(item, content);
 }
 
 async function loadStarsByUser(itemId) {
@@ -805,7 +874,7 @@ async function loadStarsByUser(itemId) {
   }
 }
 
-function buildBoardgameNote(c, stars) {
+function buildCatalogNote(c, stars) {
   const name = c.name || 'Alguien del búnker';
 
   return `
@@ -834,7 +903,7 @@ function openNoteSheet(item, onSaved) {
   root.id = 'note-sheet-root';
   root.innerHTML = `
     <div class="sheet-backdrop" data-close></div>
-    <section class="sheet" role="dialog" aria-modal="true" aria-label="Dejar una nota">
+    <section class="sheet sheet--enter" role="dialog" aria-modal="true" aria-label="Dejar una nota">
       <header class="sheet-head">
         <h3>Dejar una nota</h3>
         <button type="button" class="sheet-close" data-close aria-label="Cerrar">✕</button>
@@ -882,7 +951,7 @@ function openNoteSheet(item, onSaved) {
   text.focus();
 }
 
-async function renderBoardgameNotes(id) {
+async function renderCatalogNotes(id) {
   getApp().innerHTML = `
     <div class="screen">
       ${topBar('Notas')}
@@ -897,7 +966,7 @@ async function renderBoardgameNotes(id) {
 
   try {
     const snap = id ? await getDoc(doc(db, 'items', id)) : null;
-    if (!snap?.exists() || snap.data().category !== 'boardgame') {
+    if (!snap?.exists() || !CATALOG_SCREENS[snap.data().category]) {
       location.replace(`#item/${id ?? ''}`);
       return;
     }
@@ -914,7 +983,7 @@ async function renderBoardgameNotes(id) {
       content.innerHTML = `
         <p class="notes-sub">${esc(item.name)}${ratings[id] ? ` · ${esc(ratingText(ratings[id]))}` : ''}</p>
         ${comments.length
-          ? `<div class="bg-notes">${comments.map(c => buildBoardgameNote(c, byUser.get(c.uid))).join('')}</div>`
+          ? `<div class="bg-notes">${comments.map(c => buildCatalogNote(c, byUser.get(c.uid))).join('')}</div>`
           : `<p class="notes-empty">Todavía nadie ha dejado una nota. ¿Empiezas tú?</p>`}
         <button type="button" class="btn-primary bg-notes-add" id="btn-add-note">Dejar una nota</button>
       `;
@@ -939,8 +1008,10 @@ function rangeOverlaps(item, minKey, maxKey, lo, hi) {
   return a <= hi && b >= lo;
 }
 
-const isTournament = item =>
-  item.category === 'videogame' && (item.details?.mode ?? []).includes('competitive');
+const isTournament = item => item.category === 'videogame' && item.details?.tournament === true;
+
+const tournamentApplies = (item, groupMin) =>
+  isTournament(item) && groupMin > (item.details?.maxPlayers ?? 0);
 
 const playersTest = (lo, hi) => item => {
   const d = item.details ?? {};
@@ -969,21 +1040,6 @@ function buildFilterGroups(cat, items) {
         ]},
       ];
       break;
-
-    case 'videogame': {
-      const platforms = [...new Set(items.flatMap(i => i.details?.platforms ?? []))].sort();
-      groups = [
-        { id: 'players', chips: [
-          chip('players', '2',   '2',   playersTest(2, 2)),
-          chip('players', '3-4', '3–4', playersTest(3, 4)),
-          chip('players', '5+',  '5+',  playersTest(5, Infinity)),
-        ]},
-        { id: 'platform', chips: platforms.map(p =>
-          chip('platform', p, p, item => (item.details?.platforms ?? []).includes(p))
-        )},
-      ];
-      break;
-    }
 
     case 'beverage':
       groups = [
@@ -1085,30 +1141,34 @@ function renderResults(state) {
     return;
   }
 
-  const sections = state.cat === 'food' ? groupFood(filtered) : null;
+  const isCatalog = Boolean(state.cfg);
+  const groupMin  = state.cfg?.groupMin?.(state.values.players);
+  const sections  = state.cat === 'food' ? groupFood(filtered) : null;
   let listHtml;
   let shownCount;
 
   if (sections) {
     shownCount = filtered.length;
     listHtml   = sections.map(buildFoodRow).join('');
+  } else if (isCatalog && state.view === 'grid') {
+    shownCount = filtered.length;
+    listHtml   = `<div class="bg-grid bg-grid--${state.cfg.cols}">${filtered.map(item => buildCatalogTile(item, groupMin)).join('')}</div>`;
   } else {
-    const filtering = state.cat === 'boardgame' && state.active.size > 0;
+    const filtering = isCatalog && state.active.size > 0;
     const displayed = state.showAll || filtering ? filtered : filtered.slice(0, state.initial ?? INITIAL_ITEMS);
     shownCount = displayed.length;
-    listHtml   = `<div class="items-list">${displayed.map(state.cat === 'boardgame' ? buildBoardgameCard : buildItemCard).join('')}</div>`;
+    listHtml   = `<div class="items-list">${displayed.map(isCatalog ? (item => buildCatalogCard(item, groupMin)) : buildItemCard).join('')}</div>`;
   }
 
-  const isBoard = state.cat === 'boardgame';
-  const hasMore = isBoard ? !state.active.size && state.items.length > shownCount : filtered.length > shownCount;
+  const hasMore = filtered.length > shownCount;
 
   content.innerHTML = `
-    ${isBoard ? '' : `<p class="result-count">${filtered.length} ${filtered.length === 1 ? 'opción' : 'opciones'}</p>`}
+    ${isCatalog ? '' : `<p class="result-count">${filtered.length} ${filtered.length === 1 ? 'opción' : 'opciones'}</p>`}
     ${listHtml}
-    ${hasMore ? (isBoard ? `<a class="btn-see-all" href="#category/boardgame/all">Ver todos (${state.items.length})</a>` : `<button class="btn-see-all" id="btn-see-all">Ver todas (${filtered.length})</button>`) : ''}
+    ${hasMore ? `<button class="btn-see-all" id="btn-see-all">Ver ${isCatalog ? 'todos' : 'todas'} (${filtered.length})</button>` : ''}
   `;
 
-  if (hasMore && !isBoard) {
+  if (hasMore) {
     document.getElementById('btn-see-all').addEventListener('click', () => {
       state.showAll = true;
       renderResults(state);
@@ -1594,7 +1654,7 @@ function renderPieces(plan) {
           <span class="plan-piece-label">${PLAN_PIECES[kind].label}</span>
           <button type="button" class="plan-reroll" data-kind="${kind}">🔄 Otra</button>
         </div>
-        ${buildItemCard(item)}
+        ${buildItemCard(item, { groupMin: GROUP_SIZES[plan.players].range[0] })}
         ${exact ? '' : `<p class="plan-note">Es lo más cercano que tenemos a lo que pedís.</p>`}
       </section>
     `;
@@ -1666,7 +1726,10 @@ async function renderSecret() {
 
 const DIFFICULTY_LABELS = { easy: 'Fácil', medium: 'Media', hard: 'Difícil' };
 const MODE_LABELS = {
-  competitive: 'Competitivo', cooperative: 'Cooperativo', party: 'Party', casual: 'Casual',
+  competitive: 'Competitivo', cooperative: 'Cooperativo', party: 'Party', chill: 'Tranquilo',
+};
+const MODE_ICONS = {
+  competitive: '⚔️', cooperative: '🤝', party: '🎉', chill: '😌',
 };
 
 const fmtAvg = n => n.toFixed(1).replace('.', ',');
@@ -1687,7 +1750,7 @@ function durationLabel(d) {
 }
 
 async function renderItem(id, sub) {
-  if (sub === 'notes') return renderBoardgameNotes(id);
+  if (sub === 'notes') return renderCatalogNotes(id);
 
   getApp().innerHTML = `
     <div class="screen">
@@ -1717,7 +1780,7 @@ async function renderItem(id, sub) {
     if (!snap.exists()) { content.innerHTML = notFound; return; }
 
     const item = { id: snap.id, ...snap.data() };
-    if (item.category === 'boardgame') { showBoardgameDetail(item, ratings[id], comments); return; }
+    if (CATALOG_SCREENS[item.category]) { showCatalogDetail(item, ratings[id], comments); return; }
     backBtn.dataset.fallback = item.category === 'beverage'
       ? `#category/beverage/${blockKeyFor(item)}`
       : `#category/${item.category}`;
@@ -1756,14 +1819,6 @@ function buildFacts(item) {
   switch (item.category) {
     case 'boardgame':
       facts.push(playersLabel(d, true), durationLabel(d), DIFFICULTY_LABELS[d.difficulty]);
-      break;
-    case 'videogame':
-      facts.push(
-        playersLabel(d), durationLabel(d),
-        (d.platforms ?? []).join(' / '),
-        ...(d.mode ?? []).map(m => MODE_LABELS[m] ?? m),
-        isTournament(item) ? '🏆 Torneo' : null
-      );
       break;
     case 'beverage':
       facts.push(
@@ -1935,6 +1990,17 @@ function ratingText(rating) {
   return votes ? `★ ${fmtAvg(rating.avg)} · ${votes} ${votes === 1 ? 'voto' : 'votos'}` : '';
 }
 
+function starsHtml(avg) {
+  const fill = Math.round(Math.min(5, Math.max(0, avg)) * 2) * 10;
+  return `<span class="rating-stars" style="--fill:${fill}%" aria-hidden="true">★★★★★</span>`;
+}
+
+function ratingHtml(rating) {
+  const votes = rating?.count ?? 0;
+  if (!votes) return '';
+  return `${starsHtml(rating.avg)}<span class="rating-text">${fmtAvg(rating.avg)} · ${votes} ${votes === 1 ? 'voto' : 'votos'}</span>`;
+}
+
 function savedName() {
   try {
     return localStorage.getItem(NAME_KEY) ?? '';
@@ -2094,9 +2160,9 @@ function bindDetail(item, root, initialComments) {
   });
 }
 
-function buildItemCard(item) {
+function buildItemCard(item, { groupMin } = {}) {
   const emoji  = CATEGORIES[item.category]?.emoji ?? '📦';
-  const meta   = buildMeta(item);
+  const meta   = buildMeta(item, groupMin);
   const rating = item._votes > 0
     ? `<span class="item-rating">★ ${fmtAvg(item._avg)} · ${item._votes} ${item._votes === 1 ? 'voto' : 'votos'}</span>`
     : '';
@@ -2119,15 +2185,17 @@ function buildItemCard(item) {
   `;
 }
 
-function buildMeta(item) {
+function buildMeta(item, groupMin) {
   const d = item.details ?? {};
   const parts = [];
 
   switch (item.category) {
     case 'boardgame':
+      parts.push(...[playersLabel(d, true), durationLabel(d)].filter(Boolean));
+      break;
     case 'videogame':
-      parts.push(...[playersLabel(d, item.category === 'boardgame'), durationLabel(d)].filter(Boolean));
-      if (isTournament(item)) parts.push('🏆 Torneo');
+      parts.push(...[(d.platforms ?? []).join(' / '), playersLabel(d)].filter(Boolean));
+      if (tournamentApplies(item, groupMin)) parts.push('🏆 Torneo');
       break;
     case 'beverage':
       if (d.type)        parts.push(BEVERAGE_TYPES[d.type] ?? d.type);

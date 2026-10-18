@@ -25,7 +25,7 @@ const AVAILABILITY = ['ready', 'quick', 'planned'];
 const KINDS        = ['consume', 'prepare', 'play'];
 const DIFFICULTY   = ['easy', 'medium', 'hard'];
 const PLATFORMS    = ['PS1', 'PS2', 'SNES', 'Wii', 'Switch'];
-const VIDEO_MODES  = ['competitive', 'cooperative', 'party', 'casual'];
+const VIDEO_MODES  = ['competitive', 'cooperative', 'party', 'chill'];
 const BEV_TYPES    = ['tea', 'infusion', 'coffee', 'cocoa', 'shake', 'water', 'soft', 'mocktail', 'cocktail'];
 const TEMPERATURES = ['hot', 'cold', 'either'];
 const CAFFEINE     = ['none', 'some', 'high'];
@@ -125,6 +125,8 @@ function validateItem({ item, isLocal, file, index }, errors, warnings) {
     if (!Array.isArray(d.platforms) || d.platforms.length === 0 || !d.platforms.every(p => PLATFORMS.includes(p))) err(`platforms debe usar: ${PLATFORMS.join(', ')}`);
     if (!Array.isArray(d.mode) || d.mode.length === 0 || !d.mode.every(m => VIDEO_MODES.includes(m))) err(`mode debe usar: ${VIDEO_MODES.join(', ')}`);
     if (!isNumOrNull(d.durationMin) || !isNumOrNull(d.durationMax)) err('durationMin y durationMax deben ser números o null');
+    if (d.tournament !== undefined && typeof d.tournament !== 'boolean') err('tournament debe ser true o false');
+    if (d.tournament === true && d.maxPlayers !== 2) err('tournament solo vale para juegos de 2 jugadores');
     if (item.kind !== 'play') err('un videojuego debe tener kind "play"');
   }
 

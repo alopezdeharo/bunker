@@ -36,5 +36,8 @@ catalog/local/
 # Originales de las fotos del catálogo (solo se sube el WebP optimizado de public/images/items/)
 assets-src/images/*/
 
+# Carátulas de videojuegos (de tiendas y wikis: se despliegan, pero no se suben al repositorio público)
+public/images/items/vg-*.webp
+
 # Prototipos desechables
 public/prototipo-*.html

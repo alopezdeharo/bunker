@@ -111,7 +111,7 @@
     "id": "bg-amigos-amor-con-palabras", "name": "Amig@s (Amor con Palabras)", "category": "boardgame",
     "description": "Mazo de conversación de la colección \"Momentos inolvidables\", versión para amigos: preguntas para conoceros mejor. Para todos los públicos y sin ganador.",
     "tags": ["conversación", "recuerdos", "conexión", "sobremesa", "sin ganador"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": null, "maxPlayers": null, "durationMin": null, "durationMax": null, "setupTime": null, "difficulty": "easy", "type": ["conversación"] }
+    "details": { "minPlayers": 2, "maxPlayers": null, "durationMin": null, "durationMax": null, "setupTime": null, "difficulty": "easy", "type": ["conversación"] }
   },
   {
     "id": "bg-7-wonders-duel", "name": "7 Wonders Duel", "category": "boardgame",

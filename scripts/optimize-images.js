@@ -15,7 +15,7 @@ const BOXES = {
 const DEFAULT_BOX = { width: 320, height: 320 };
 const ITEM_BOX    = { width: 800, height: 800 };
 
-const IMAGE_EXT = /\.(png|jpe?g)$/i;
+const IMAGE_EXT = /\.(png|jpe?g|webp)$/i;
 const FORCE     = process.argv.includes('--forzar');
 
 // ── Trabajos ──
@@ -31,19 +31,26 @@ function interfaceJobs() {
     }));
 }
 
+function listImages(dir) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) return listImages(full);
+    return IMAGE_EXT.test(entry.name) ? [full] : [];
+  });
+}
+
 function itemJobs() {
   if (!fs.existsSync(SRC_DIR)) return [];
 
   return fs.readdirSync(SRC_DIR, { withFileTypes: true })
     .filter(entry => entry.isDirectory())
-    .flatMap(folder => fs.readdirSync(path.join(SRC_DIR, folder.name))
-      .filter(file => IMAGE_EXT.test(file))
-      .map(file => ({
-        label: `${folder.name}/${file}`,
-        src:   path.join(SRC_DIR, folder.name, file),
-        out:   path.join(ITEMS_DIR, file.replace(IMAGE_EXT, '.webp')),
-        box:   ITEM_BOX,
-      })));
+    .flatMap(folder => listImages(path.join(SRC_DIR, folder.name)))
+    .map(src => ({
+      label: path.relative(SRC_DIR, src).replace(/\\/g, '/'),
+      src,
+      out:   path.join(ITEMS_DIR, path.basename(src).replace(IMAGE_EXT, '.webp')),
+      box:   ITEM_BOX,
+    }));
 }
 
 function assertUnique(jobs) {

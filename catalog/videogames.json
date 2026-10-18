@@ -3,37 +3,37 @@
     "id": "vg-bloody-roar-2", "name": "Bloody Roar 2", "category": "videogame",
     "description": "Lucha uno contra uno en la que los luchadores se transforman en bestias a mitad del combate.",
     "tags": ["lucha", "clásico", "duelo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS1"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS1"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-dbz-budokai-tenkaichi-3", "name": "Dragon Ball Z: Budokai Tenkaichi 3", "category": "videogame",
     "description": "Combates 3D de Dragon Ball con una plantilla enorme de personajes, transformaciones y ataques especiales.",
     "tags": ["lucha", "anime", "duelo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-naruto-ultimate-ninja-5", "name": "Naruto Shippuden: Ultimate Ninja 5", "category": "videogame",
     "description": "Lucha de Naruto con jutsus y transformaciones.",
     "tags": ["lucha", "anime", "duelo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-battle-stadium-don", "name": "Battle Stadium D.O.N.", "category": "videogame",
     "description": "Cruce de lucha entre Dragon Ball Z, One Piece y Naruto. Sin multitap solo juegan dos a la vez.",
     "tags": ["lucha", "anime", "crossover"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-tekken-5", "name": "Tekken 5", "category": "videogame",
     "description": "Lucha de artes marciales con combos y una plantilla muy variada.",
     "tags": ["lucha", "clásico", "duelo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-killzone", "name": "Killzone", "category": "videogame",
-    "description": "Shooter de ciencia ficción en primera persona; a dos se juega en versus, con pantalla dividida.",
+    "description": "Shooter de ciencia ficción en primera persona. En local, dos jugadores pueden jugar juntos en pantalla dividida contra bots.",
     "tags": ["acción", "shooter", "pantalla dividida"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
   },
   {
     "id": "vg-burnout-3-takedown", "name": "Burnout 3: Takedown", "category": "videogame",
@@ -63,19 +63,19 @@
     "id": "vg-singstar", "name": "SingStar", "category": "videogame",
     "description": "Karaoke con vídeos y puntuación: cantan dos a la vez con los micros. Hay ocho discos: Party, Latino, Legends, Pop Hits, Clásicos, La Edad de Oro del Pop Español, Rocks! y 90s.",
     "tags": ["música", "karaoke", "fiesta"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["PS2"], "durationMin": null, "durationMax": null, "mode": ["party", "chill"], "tournament": true }
   },
   {
     "id": "vg-street-fighter-ii", "name": "Street Fighter II", "category": "videogame",
     "description": "El clásico de lucha de las recreativas.",
     "tags": ["lucha", "clásico", "duelo", "retro"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-super-mario-world", "name": "Super Mario World", "category": "videogame",
     "description": "Plataformas clásico. Dos jugadores se turnan: uno es Mario y el otro Luigi.",
     "tags": ["plataformas", "clásico", "retro", "por turnos"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["casual"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["chill"] }
   },
   {
     "id": "vg-donkey-kong-country", "name": "Donkey Kong Country", "category": "videogame",
@@ -93,31 +93,31 @@
     "id": "vg-dragon-bruce-lee-story", "name": "Dragon: The Bruce Lee Story", "category": "videogame",
     "description": "Lucha uno contra uno basada en la película; en el modo versus siempre se juega con Bruce Lee.",
     "tags": ["lucha", "retro", "duelo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["SNES"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-wii-sports", "name": "Wii Sports", "category": "videogame",
     "description": "Los deportes de siempre con el mando: tenis, bolos, golf, béisbol y boxeo.",
     "tags": ["deportes", "familiar", "movimiento"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive", "casual"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive", "chill"] }
   },
   {
     "id": "vg-wii-sports-resort", "name": "Wii Sports Resort", "category": "videogame",
     "description": "Más deportes con el mando (con MotionPlus): espada, tiro con arco, ping-pong, baloncesto y más.",
     "tags": ["deportes", "familiar", "movimiento"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive", "casual"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["competitive", "chill"] }
   },
   {
     "id": "vg-mario-party-9", "name": "Mario Party 9", "category": "videogame",
     "description": "Minijuegos con tablero, donde todos van en el mismo coche y se compite por las estrellas.",
     "tags": ["fiesta", "minijuegos", "pique"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party", "chill"] }
   },
   {
     "id": "vg-wii-party", "name": "Wii Party", "category": "videogame",
     "description": "Minijuegos y juegos de tablero para jugar en grupo.",
     "tags": ["fiesta", "minijuegos", "familiar"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Wii"], "durationMin": null, "durationMax": null, "mode": ["party", "chill"] }
   },
   {
     "id": "vg-mario-kart-wii", "name": "Mario Kart Wii", "category": "videogame",
@@ -177,13 +177,13 @@
     "id": "vg-super-mario-bros-wonder", "name": "Super Mario Bros. Wonder", "category": "videogame",
     "description": "Plataformas para hasta cuatro, con \"flores maravilla\" que cambian el nivel.",
     "tags": ["plataformas", "cooperativo", "familiar"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "casual"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "chill"] }
   },
   {
     "id": "vg-super-mario-3d-world-bowsers-fury", "name": "Super Mario 3D World + Bowser's Fury", "category": "videogame",
     "description": "Plataformas en 3D para hasta cuatro; Bowser's Fury, la segunda parte, es para uno o dos.",
     "tags": ["plataformas", "cooperativo", "familiar"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "casual"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "chill"] }
   },
   {
     "id": "vg-smash-bros-ultimate", "name": "Super Smash Bros. Ultimate", "category": "videogame",
@@ -201,7 +201,7 @@
     "id": "vg-pokken-tournament-dx", "name": "Pokkén Tournament DX", "category": "videogame",
     "description": "Lucha 3D con Pokémon.",
     "tags": ["lucha", "Pokémon", "duelo"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["competitive"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["competitive"], "tournament": true }
   },
   {
     "id": "vg-boomerang-fu", "name": "Boomerang Fu", "category": "videogame",
@@ -213,7 +213,7 @@
     "id": "vg-luigis-mansion-3", "name": "Luigi's Mansion 3", "category": "videogame",
     "description": "Aventura de cazafantasmas en un hotel encantado; un segundo jugador controla a Gooigi.",
     "tags": ["aventura", "cooperativo", "terror suave"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+    "details": { "minPlayers": 1, "maxPlayers": 2, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "chill"] }
   },
   {
     "id": "vg-pico-park", "name": "PICO PARK", "category": "videogame",
@@ -243,6 +243,6 @@
     "id": "vg-trine-4", "name": "Trine 4: The Nightmare Prince", "category": "videogame",
     "description": "Plataformas y puzles con tres héroes (mago, ladrón y caballero), para hasta cuatro.",
     "tags": ["cooperativo", "puzles", "aventura"], "availability": "ready", "kind": "play",
-    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative"] }
+    "details": { "minPlayers": 1, "maxPlayers": 4, "platforms": ["Switch"], "durationMin": null, "durationMax": null, "mode": ["cooperative", "chill"] }
   }
 ]

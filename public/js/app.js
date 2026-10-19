@@ -1,7 +1,7 @@
 import { db, ensureUser, currentUserId } from './firebase-config.js';
 import {
   collection, query, where, getDocs, doc, getDoc, limit, setDoc, updateDoc, addDoc, serverTimestamp
-} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+} from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore-lite.js';
 
 const CATEGORIES = {
   boardgame: { label: 'Juegos de mesa',  emoji: '🎲' },
@@ -2291,12 +2291,5 @@ function weightedOrder(items, factor = () => 1) {
 function getApp() {
   return document.getElementById('app');
 }
-
-function warmUpFirestore() {
-  getDocs(query(collection(db, 'items'), where('active', '==', true), limit(1)))
-    .catch(() => {});
-}
-
-warmUpFirestore();
 
 router();

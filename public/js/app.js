@@ -406,12 +406,14 @@ function topBar(title, extra = '') {
   `;
 }
 
-function catalogThumb(item, cls) {
+function catalogThumb(item, cls, rank = Infinity) {
   const emoji = CATEGORIES[item.category]?.emoji ?? '📦';
   const cat   = esc(item.category);
+  const load  = rank < 6 ? 'eager' : 'lazy';
+  const prio  = rank < 2 ? ' fetchpriority="high"' : '';
   if (!item.image) return `<div class="${cls} ${cls}--fallback" data-cat="${cat}">${emoji}</div>`;
 
-  return `<img class="${cls}" data-cat="${cat}" src="${esc(item.image)}" alt="" loading="lazy"
+  return `<img class="${cls}" data-cat="${cat}" src="${esc(item.image)}" alt="" loading="${load}"${prio}
     onerror="this.outerHTML='<div class=\\'${cls} ${cls}--fallback\\' data-cat=\\'${cat}\\'>${emoji}</div>'">`;
 }
 
@@ -423,13 +425,13 @@ function catalogMeta(item) {
   return parts.filter(Boolean).join(' · ');
 }
 
-function buildCatalogCard(item, groupMin) {
+function buildCatalogCard(item, groupMin, rank) {
   const meta  = catalogMeta(item);
   const votes = item._votes ?? 0;
 
   return `
     <a class="bg-card" href="#item/${esc(item.id)}">
-      ${catalogThumb(item, 'bg-thumb')}
+      ${catalogThumb(item, 'bg-thumb', rank)}
       <div class="bg-card-body">
         <p class="bg-card-name">${esc(item.name)}</p>
         ${meta ? `<p class="bg-card-meta">${esc(meta)}</p>` : ''}
@@ -441,7 +443,7 @@ function buildCatalogCard(item, groupMin) {
   `;
 }
 
-function buildCatalogTile(item, groupMin) {
+function buildCatalogTile(item, groupMin, rank) {
   const d        = item.details ?? {};
   const isVideo  = item.category === 'videogame';
   const platform = (d.platforms ?? []).join(' / ');
@@ -454,7 +456,7 @@ function buildCatalogTile(item, groupMin) {
   return `
     <a class="bg-tile" href="#item/${esc(item.id)}">
       <div class="bg-tile-media">
-        ${catalogThumb(item, 'bg-tile-img')}
+        ${catalogThumb(item, 'bg-tile-img', rank)}
         ${isVideo && platform ? `<span class="bg-tile-badge">${esc(platform)}</span>` : ''}
       </div>
       <p class="bg-tile-name">${esc(item.name)}</p>
@@ -785,7 +787,7 @@ function buildCatalogDetail(item, rating, noteCount) {
 
   return `
     <article class="detail">
-      ${catalogThumb(item, 'bg-hero')}
+      ${catalogThumb(item, 'bg-hero', 0)}
       <h2 class="bg-detail-name">${esc(item.name)}</h2>
       <p class="detail-rating" id="detail-rating">${ratingHtml(rating)}</p>
       ${item.description ? `<p class="detail-desc">${esc(item.description)}</p>` : ''}
@@ -1152,12 +1154,12 @@ function renderResults(state) {
     listHtml   = sections.map(buildFoodRow).join('');
   } else if (isCatalog && state.view === 'grid') {
     shownCount = filtered.length;
-    listHtml   = `<div class="bg-grid bg-grid--${state.cfg.cols}">${filtered.map(item => buildCatalogTile(item, groupMin)).join('')}</div>`;
+    listHtml   = `<div class="bg-grid bg-grid--${state.cfg.cols}">${filtered.map((item, i) => buildCatalogTile(item, groupMin, i)).join('')}</div>`;
   } else {
     const filtering = isCatalog && state.active.size > 0;
     const displayed = state.showAll || filtering ? filtered : filtered.slice(0, state.initial ?? INITIAL_ITEMS);
     shownCount = displayed.length;
-    listHtml   = `<div class="items-list">${displayed.map(isCatalog ? (item => buildCatalogCard(item, groupMin)) : buildItemCard).join('')}</div>`;
+    listHtml   = `<div class="items-list">${displayed.map(isCatalog ? ((item, i) => buildCatalogCard(item, groupMin, i)) : buildItemCard).join('')}</div>`;
   }
 
   const hasMore = filtered.length > shownCount;

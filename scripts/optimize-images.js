@@ -13,7 +13,10 @@ const BOXES = {
   'subtitulo.png': { width: 320, height: 100 },
 };
 const DEFAULT_BOX = { width: 320, height: 320 };
-const ITEM_BOX    = { width: 800, height: 800 };
+const ITEM_BOX    = { width: 640, height: 640 };
+
+const ITEM_QUALITY = 76;
+const UI_QUALITY   = 82;
 
 const IMAGE_EXT = /\.(png|jpe?g|webp)$/i;
 const FORCE     = process.argv.includes('--forzar');
@@ -70,7 +73,7 @@ async function convert({ src, out, box }) {
   await sharp(src)
     .rotate()
     .resize({ ...box, fit: 'inside', withoutEnlargement: true })
-    .webp({ quality: 82, effort: 6 })
+    .webp({ quality: box === ITEM_BOX ? ITEM_QUALITY : UI_QUALITY, effort: 6 })
     .toFile(out);
 }
 

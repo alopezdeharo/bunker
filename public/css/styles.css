@@ -62,7 +62,9 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   display: inline-block;
   color: var(--text-soft);
   font-size: 15px;
-  padding: 4px 0 16px;
+  padding: 0 16px 0 0;
+  line-height: 44px;
+  margin-bottom: 4px;
 }
 
 /* Inicio */
@@ -801,8 +803,9 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   margin-top: 14px;
   padding: 8px 12px;
   border-radius: var(--r-sm);
-  background: var(--avail-quick-bg);
-  color: var(--avail-quick-fg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-soft);
   font-size: 14px;
   line-height: 1.5;
 }
@@ -1350,6 +1353,155 @@ button { font: inherit; cursor: pointer; background: none; border: none; }
   font-size: 13px;
   color: var(--text-soft);
 }
+
+/* Bebidas */
+
+.item-card--beverage .item-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-family: var(--font-hand);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.15;
+  white-space: normal;
+}
+
+.item-meta--desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  white-space: normal;
+}
+
+.detail-name--hand {
+  font-family: var(--font-hand);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.detail-fold { margin-top: 24px; }
+
+.detail-fold > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid rgba(0,0,0,.07);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 15px;
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.detail-fold > summary::-webkit-details-marker { display: none; }
+
+.detail-fold > summary::after {
+  content: '▾';
+  color: var(--text-soft);
+  transition: transform .15s;
+}
+
+.detail-fold[open] > summary::after { transform: rotate(180deg); }
+
+.detail-fold-body { padding: 4px 4px 0; }
+
+.detail-fold-body h4 {
+  margin: 14px 0 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.detail-fold-body li {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.detail-fold-body ul,
+.detail-fold-body ol {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 20px;
+}
+
+/* Notas desplegables */
+
+.vote-hint {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.notes-fold > summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 12px 16px;
+  border: 1px solid rgba(0,0,0,.07);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  list-style: none;
+  cursor: pointer;
+}
+
+.notes-fold > summary::-webkit-details-marker { display: none; }
+
+.notes-fold > summary::after {
+  grid-column: 2;
+  grid-row: 1;
+  content: '▾';
+  color: var(--text-soft);
+  transition: transform .15s;
+}
+
+.notes-fold[open] > summary::after { transform: rotate(180deg); }
+
+.notes-fold-head {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.notes-fold-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.notes-fold-sub {
+  font-size: 13px;
+  color: var(--text-soft);
+}
+
+.notes-preview {
+  grid-column: 1 / -1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.notes-preview:empty,
+.notes-fold[open] .notes-preview { display: none; }
+
+.notes-fold-body { padding-top: 12px; }
+
+.notes-fold-body .note-form { margin-top: 12px; }
 
 /* Videojuegos */
 

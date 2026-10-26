@@ -35,14 +35,14 @@
     "id": "bev-cola-cao", "name": "Cola Cao", "category": "beverage",
     "description": "Cacao soluble de toda la vida, caliente o frío.",
     "tags": ["cacao", "dulce"], "availability": "quick", "kind": "consume",
-    "details": { "type": "cocoa", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": null, "steepingTime": null, "bestBefore": null },
+    "details": { "type": "cocoa", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": null },
     "pairsWith": ["food-tortitas-a-tu-gusto", "food-vasitos-de-galleta"]
   },
   {
     "id": "bev-cacao-premium", "name": "Cacao premium", "category": "beverage",
     "description": "Cacao soluble sin azúcares añadidos ni edulcorantes, menos dulce que un Cola Cao y apto para veganos. Caliente o frío.",
     "tags": ["cacao", "sin azúcares añadidos", "vegano"], "availability": "quick", "kind": "consume",
-    "details": { "type": "cocoa", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": null, "steepingTime": null, "bestBefore": "2027-09-30" },
+    "details": { "type": "cocoa", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2027-09-30" },
     "pairsWith": ["food-tortitas-a-tu-gusto", "food-vasitos-de-galleta"]
   },
   {
@@ -59,7 +59,7 @@
   },
   {
     "id": "bev-refresco-de-la-casa", "name": "Refresco de la casa", "category": "beverage",
-    "description": "El refresco que haya ese día: Aquarius, Coca-Cola o Nestea.",
+    "description": "El refresco que haya ese día: Aquarius, Coca-Cola o Nestea. Coca-Cola y Nestea suelen llevar cafeína; Aquarius, no.",
     "tags": ["refresco"], "availability": "ready", "kind": "consume",
     "details": { "type": "soft", "alcoholic": false, "temperature": "cold", "preparationTime": 0, "caffeineLevel": null, "steepingTime": null, "bestBefore": null }
   },
@@ -84,7 +84,7 @@
     "id": "bev-chocolate-espesito", "name": "Chocolate espesito", "category": "beverage",
     "description": "Chocolate a la taza casero, muy espeso y poco dulce, con sabor intenso a cacao. Casi de cuchara. Vegano (lleva soja).",
     "tags": ["chocolate", "caliente", "vegano"], "availability": "quick", "kind": "prepare",
-    "details": { "type": "cocoa", "alcoholic": false, "temperature": "hot", "preparationTime": 10, "caffeineLevel": null, "steepingTime": null, "bestBefore": null },
+    "details": { "type": "cocoa", "alcoholic": false, "temperature": "hot", "preparationTime": 10, "caffeineLevel": "some", "steepingTime": null, "bestBefore": null },
     "ingredients": ["200 ml de bebida de soja sin azúcares añadidos", "12 g de cacao puro en polvo (sin azúcar)", "25 g de chocolate negro 85 %", "6 g de maicena (unas 2 cucharaditas rasas)", "1 pizca de sal", "Opcional: una pizca de canela y unas gotas de vainilla"],
     "steps": [
       "Separa 40 ml de bebida de soja fría, tamiza el cacao y mézclalo con ellos hasta tener una pasta sin grumos.",
@@ -262,10 +262,10 @@
     "serveTip": "Fría, con agave si quieres."
   },
   {
-    "id": "bev-chai-latte-de-curcuma", "name": "Chai latte de cúrcuma", "category": "beverage",
-    "description": "Chai latte de cúrcuma en polvo, para tomar frío o caliente. Lleva cafeína.",
-    "tags": ["té", "con cafeína", "chai", "latte"], "availability": "quick", "kind": "prepare",
-    "details": { "type": "tea", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2029-03-31" },
+    "id": "bev-chai-latte-de-curcuma", "name": "Chai latte de cúrcuma (sin cafeína)", "category": "beverage",
+    "description": "Chai latte de cúrcuma en polvo, para tomar frío o caliente. Sin té y sin cafeína.",
+    "tags": ["chai", "latte", "sin cafeína", "cúrcuma"], "availability": "quick", "kind": "prepare",
+    "details": { "type": "tea", "alcoholic": false, "temperature": "either", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2029-03-31" },
     "ingredients": ["1-2 cucharaditas de chai latte de cúrcuma en polvo", "Bebida vegetal o leche (sin lactosa también vale)"],
     "steps": ["Pon 1 o 2 cucharaditas del polvo en el vaso.", "Añade la bebida, caliente o fría, y remueve hasta que se disuelva."],
     "serveTip": "Con bebida vegetal o leche, frío o caliente. Miel oscura o agave, si quieres.",

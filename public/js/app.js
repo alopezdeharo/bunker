@@ -23,9 +23,21 @@ const BEVERAGE_TYPES = {
   water: 'Agua', soft: 'Refresco', mocktail: 'Mocktail', cocktail: 'Cóctel',
 };
 
-const CAFFEINE_LABELS = {
-  none: '🌙 Sin cafeína', some: 'Algo de cafeína', high: 'Con cafeína',
+const BEVERAGE_EMOJI = {
+  tea: '🍵', infusion: '🌿', coffee: '☕', cocoa: '🍫', shake: '🥛',
+  water: '💧', soft: '🥤', mocktail: '🍹', cocktail: '🍸',
 };
+
+const CAFFEINE_LABELS = {
+  none: '🌙 Sin cafeína', some: '☕ Con cafeína', high: '⚡ Mucha cafeína',
+};
+
+const NO_CAFFEINE_OBVIOUS = ['water', 'soft', 'shake'];
+
+function caffeineFact(d) {
+  if (d.caffeineLevel === 'none' && NO_CAFFEINE_OBVIOUS.includes(d.type)) return null;
+  return CAFFEINE_LABELS[d.caffeineLevel];
+}
 
 const BEVERAGE_BLOCKS = [
   { key: 'tea',      label: 'Tés',                   emoji: '🍵', hint: 'Con cafeína', types: ['tea'] },
@@ -52,6 +64,16 @@ function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
   ));
+}
+
+function itemEmoji(item) {
+  if (item.category === 'beverage') return BEVERAGE_EMOJI[item.details?.type] ?? CATEGORIES.beverage.emoji;
+  return CATEGORIES[item.category]?.emoji ?? '📦';
+}
+
+function firstSentence(text) {
+  const clean = String(text ?? '').trim();
+  return clean.match(/^.+?[.!?](?=\s|$)/)?.[0] ?? clean;
 }
 
 let navCount = 0;
@@ -253,8 +275,7 @@ function needsFinishing(item) {
 function expiryNote(item) {
   const days = daysToBestBefore(item);
   if (days == null) return '';
-  if (days < 0)            return 'Pasó su fecha de consumo preferente; lo huelo antes de prepararlo.';
-  if (days <= FINISH_DAYS) return 'Caduca pronto.';
+  if (days < 0) return 'Pasó su fecha de consumo preferente, pero se puede tomar con tranquilidad: solo puede haber perdido algo de aroma.';
   return '';
 }
 
@@ -297,7 +318,7 @@ function pickSpendItems(items) {
 function buildBlockCard(block) {
   const n = block.items.length;
   return `
-    <a class="item-card" href="#category/beverage/${esc(block.key)}">
+    <a class="item-card item-card--beverage" href="#category/beverage/${esc(block.key)}">
       <div class="item-thumb item-thumb--fallback" data-cat="beverage">${block.emoji}</div>
       <div class="item-body">
         <p class="item-name">${esc(block.label)}</p>
@@ -312,11 +333,7 @@ async function renderBeverageHome() {
 
   getApp().innerHTML = `
     <div class="screen">
-      <button class="back-btn" id="back-btn">← Volver</button>
-      <header class="cat-screen-header">
-        <span>${info.emoji}</span>
-        <h2>${info.label}</h2>
-      </header>
+      ${topBar(info.label)}
       <div id="content">
         <div class="loading"><div class="spinner"></div></div>
       </div>
@@ -346,8 +363,7 @@ async function renderBeverageHome() {
       </section>
       ${spend.length ? `
         <section class="item-group">
-          <h3 class="item-group-title">Ayúdame a gastar</h3>
-          <p class="result-count">Se les acaba el tiempo. Si te apetece alguna, me haces un favor.</p>
+          <h3 class="item-group-title">Para tomar pronto</h3>
           <div class="items-list">${spend.map(buildItemCard).join('')}</div>
         </section>` : ''}
     `;
@@ -362,11 +378,7 @@ async function renderBeverageBlock(key) {
 
   getApp().innerHTML = `
     <div class="screen">
-      <button class="back-btn" id="back-btn">← Volver</button>
-      <header class="cat-screen-header">
-        <span>${block ? block.emoji : CATEGORIES.beverage.emoji}</span>
-        <h2>${esc(block ? block.label : 'Bebidas')}</h2>
-      </header>
+      ${topBar(block ? block.label : 'Bebidas')}
       <div id="chips"></div>
       <div id="content">
         <div class="loading"><div class="spinner"></div></div>
@@ -1046,7 +1058,7 @@ function buildFilterGroups(cat, items) {
     case 'beverage':
       groups = [
         { id: 'temp', chips: [
-          chip('temp', 'hot',  '☕ Caliente', i => ['hot',  'either'].includes(i.details?.temperature)),
+          chip('temp', 'hot',  '♨️ Caliente', i => ['hot',  'either'].includes(i.details?.temperature)),
           chip('temp', 'cold', '🧊 Fría',     i => ['cold', 'either'].includes(i.details?.temperature)),
         ]},
         { id: 'caffeine', chips: [
@@ -1824,14 +1836,13 @@ function buildFacts(item) {
       break;
     case 'beverage':
       facts.push(
-        AVAILABILITY_LABELS[item.availability],
-        BEVERAGE_TYPES[d.type] ?? d.type,
-        { hot: '☕ Caliente', cold: '🧊 Frío', either: '☕ / 🧊 Frío o caliente' }[d.temperature],
-        d.alcoholic === true ? '🍺 Con alcohol' : d.alcoholic === false ? '🥤 Sin alcohol' : null,
-        CAFFEINE_LABELS[d.caffeineLevel],
         d.steepingTime > 0 ? `Infusión ${d.steepingTime} min` : null,
         d.preparationTime > 0 ? `${d.preparationTime} min` : null,
-        needsFinishing(item) ? 'Ayúdame a acabarlo' : null
+        d.steepingTime > 0 || d.preparationTime > 0 || item.availability === 'ready'
+          ? null : AVAILABILITY_LABELS[item.availability],
+        { hot: '♨️ Caliente', cold: '🧊 Frío', either: '♨️ / 🧊 Frío o caliente' }[d.temperature],
+        caffeineFact(d),
+        d.alcoholic === true ? '🍺 Con alcohol' : d.type === 'mocktail' ? '🥤 Sin alcohol' : null
       );
       break;
     case 'food':
@@ -1844,7 +1855,7 @@ function buildFacts(item) {
       break;
   }
 
-  if (item.kind === 'prepare') facts.push('👨‍🍳 Para preparar');
+  if (item.kind === 'prepare' && item.category !== 'beverage') facts.push('👨‍🍳 Para preparar');
   return facts.filter(Boolean);
 }
 
@@ -1857,14 +1868,17 @@ const listHtml = (title, list, ordered) => list?.length
   ? `<h4>${title}</h4><${ordered ? 'ol' : 'ul'}>${list.map(t => `<li>${esc(t)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`
   : '';
 
-function buildHowTo(item, variant) {
+function buildHowTo(item, variant, open = false) {
   const html =
     listHtml('Ingredientes', variant?.ingredients ?? item.ingredients) +
     listHtml('Pasos',        variant?.steps       ?? item.steps, true) +
     listHtml('Toppings',     item.toppings) +
     listHtml('Trucos',       item.tips);
 
-  return html ? `<section class="detail-section"><h3>Cómo se hace</h3>${html}</section>` : '';
+  if (!html) return '';
+  if (item.category === 'beverage')
+    return `<details class="detail-fold"${open ? ' open' : ''}><summary>Cómo se hace</summary><div class="detail-fold-body">${html}</div></details>`;
+  return `<section class="detail-section"><h3>Cómo se hace</h3>${html}</section>`;
 }
 
 function variantText(item, index) {
@@ -1898,7 +1912,7 @@ function bindVariants(item, root) {
   const show = () => {
     root.querySelector('#variant-indicator').textContent = variantText(item, index);
     root.querySelector('#variant-desc').textContent = variants[index].description ?? '';
-    root.querySelector('#how-to').innerHTML = buildHowTo(item, variants[index]);
+    root.querySelector('#how-to').innerHTML = buildHowTo(item, variants[index], root.querySelector('#how-to details')?.open);
   };
 
   nav.addEventListener('click', e => {
@@ -1927,7 +1941,7 @@ async function loadPairs(item, root) {
 }
 
 function buildDetail(item, rating, comments) {
-  const emoji  = CATEGORIES[item.category]?.emoji ?? '📦';
+  const emoji  = itemEmoji(item);
   const cat    = esc(item.category);
   const facts  = buildFacts(item);
   const expiry = expiryNote(item);
@@ -1939,9 +1953,6 @@ function buildDetail(item, rating, comments) {
 
   const notes = `
     <section class="detail-notes">
-      <h3>Lo que opinó la gente</h3>
-      <div id="notes-list"></div>
-
       <div class="vote">
         <p class="vote-label">¿Qué te pareció?</p>
         <div class="stars" role="group" aria-label="Tu valoración">
@@ -1949,26 +1960,39 @@ function buildDetail(item, rating, comments) {
             `<button type="button" class="star" data-stars="${n}" aria-label="${n} de 5" aria-pressed="false">★</button>`
           ).join('')}
         </div>
+        <p class="vote-hint">Opcional · Puedes puntuar sin escribir una nota.</p>
         <p class="vote-msg" id="vote-msg" role="status"></p>
       </div>
 
-      <div class="note-form">
-        <textarea id="note-text" rows="3" maxlength="500" placeholder="Deja una nota: qué tal estuvo, cómo lo hicisteis…"></textarea>
-        <input id="note-name" type="text" maxlength="40" placeholder="Tu nombre (opcional)" autocomplete="off">
-        <button type="button" class="btn-primary" id="btn-note" disabled>Dejar una nota</button>
-        <p class="note-msg" id="note-msg" role="status"></p>
-      </div>
+      <details class="notes-fold">
+        <summary>
+          <span class="notes-fold-head">
+            <span class="notes-fold-title">💬 Notas (<span id="notes-count">${comments.length}</span>)</span>
+            <span class="notes-fold-sub" id="notes-sub">${notesSubtitle(comments)}</span>
+          </span>
+          <span class="notes-preview" id="notes-preview">${notePreview(comments)}</span>
+        </summary>
+        <div class="notes-fold-body">
+          <div id="notes-list"></div>
+          <div class="note-form">
+            <textarea id="note-text" rows="3" maxlength="500" placeholder="Deja una nota: qué tal estuvo, cómo lo hicisteis…"></textarea>
+            <input id="note-name" type="text" maxlength="40" placeholder="Tu nombre (opcional)" autocomplete="off">
+            <button type="button" class="btn-primary" id="btn-note" disabled>Dejar una nota</button>
+            <p class="note-msg" id="note-msg" role="status"></p>
+          </div>
+        </div>
+      </details>
     </section>
   `;
 
   return `
     <article class="detail">
       ${hero}
-      <h2 class="detail-name">${esc(item.name)}</h2>
+      <h2 class="detail-name${item.category === 'beverage' ? ' detail-name--hand' : ''}">${esc(item.name)}</h2>
       ${item.description ? `<p class="detail-desc">${esc(item.description)}</p>` : ''}
       ${facts.length ? `<div class="detail-facts">${facts.map(f => `<span class="fact">${esc(f)}</span>`).join('')}</div>` : ''}
       <p class="detail-rating" id="detail-rating">${ratingText(rating)}</p>
-      ${item.tags?.length ? `<p class="detail-tags">${item.tags.map(esc).join(' · ')}</p>` : ''}
+      ${item.tags?.length && item.category !== 'beverage' ? `<p class="detail-tags">${item.tags.map(esc).join(' · ')}</p>` : ''}
       ${expiry ? `<p class="detail-note">${esc(expiry)}</p>` : ''}
       ${item.serveTip ? `<section class="detail-section"><h3>Cómo tomarlo</h3><p>${esc(item.serveTip)}</p></section>` : ''}
       ${buildVariants(item)}
@@ -2026,9 +2050,20 @@ function noteHtml(c) {
   `;
 }
 
+function notesSubtitle(comments) {
+  return comments.length ? 'Opiniones del grupo' : 'Sé el primero en opinar';
+}
+
+function notePreview(comments) {
+  const last = comments[0];
+  if (!last) return '';
+  const text = last.text.length > 110 ? `${last.text.slice(0, 110).trimEnd()}…` : last.text;
+  return `“${esc(text)}” — ${esc(last.name || 'Alguien del búnker')}`;
+}
+
 function buildNotesList(comments, showAll) {
   if (!comments.length) {
-    return `<p class="notes-empty">Todavía nadie ha dejado una nota. ¿Empiezas tú?</p>`;
+    return `<p class="notes-empty">Aún no hay notas. Puedes ser el primero en compartir tu opinión.</p>`;
   }
 
   const shown = showAll ? comments : comments.slice(0, NOTES_VISIBLE);
@@ -2108,6 +2143,9 @@ function bindDetail(item, root, initialComments) {
 
   const renderList = () => {
     list.innerHTML = buildNotesList(comments, showAll);
+    root.querySelector('#notes-count').textContent = comments.length;
+    root.querySelector('#notes-sub').textContent = notesSubtitle(comments);
+    root.querySelector('#notes-preview').innerHTML = notePreview(comments);
     list.querySelector('#btn-more-notes')?.addEventListener('click', () => {
       showAll = true;
       renderList();
@@ -2163,7 +2201,7 @@ function bindDetail(item, root, initialComments) {
 }
 
 function buildItemCard(item, { groupMin } = {}) {
-  const emoji  = CATEGORIES[item.category]?.emoji ?? '📦';
+  const emoji  = itemEmoji(item);
   const meta   = buildMeta(item, groupMin);
   const rating = item._votes > 0
     ? `<span class="item-rating">★ ${fmtAvg(item._avg)} · ${item._votes} ${item._votes === 1 ? 'voto' : 'votos'}</span>`
@@ -2175,13 +2213,13 @@ function buildItemCard(item, { groupMin } = {}) {
     : `<div class="item-thumb item-thumb--fallback" data-cat="${item.category}">${emoji}</div>`;
 
   return `
-    <a class="item-card" href="#item/${esc(item.id)}">
+    <a class="item-card${item.category === 'beverage' ? ' item-card--beverage' : ''}" href="#item/${esc(item.id)}">
       ${thumb}
       <div class="item-body">
         <p class="item-name">${esc(item.name)}</p>
-        ${meta   ? `<p class="item-meta">${esc(meta)}</p>` : ''}
+        ${meta   ? `<p class="item-meta${item.category === 'beverage' ? ' item-meta--desc' : ''}">${esc(meta)}</p>` : ''}
         ${rating}
-        ${needsFinishing(item) ? `<p class="item-meta"><span class="food-pill is-quick">Ayúdame a acabarlo</span></p>` : ''}
+        ${needsFinishing(item) ? `<p class="item-meta"><span class="food-pill is-quick">⌛ Mejor pronto</span></p>` : ''}
       </div>
     </a>
   `;
@@ -2199,13 +2237,16 @@ function buildMeta(item, groupMin) {
       parts.push(...[(d.platforms ?? []).join(' / '), playersLabel(d)].filter(Boolean));
       if (tournamentApplies(item, groupMin)) parts.push('🏆 Torneo');
       break;
-    case 'beverage':
+    case 'beverage': {
+      const line = firstSentence(item.description);
+      if (line) return line;
       if (d.type)        parts.push(BEVERAGE_TYPES[d.type] ?? d.type);
-      if (d.temperature === 'hot')  parts.push('☕ Caliente');
+      if (d.temperature === 'hot')  parts.push('♨️ Caliente');
       if (d.temperature === 'cold') parts.push('🧊 Frío');
       if (d.alcoholic === true)     parts.push('Con alcohol');
       else if (d.type === 'mocktail') parts.push('Sin alcohol');
       break;
+    }
     case 'food':
       if (d.preparationTime) parts.push(`${d.preparationTime} min`);
       if (d.vegetarian)      parts.push('🌱');

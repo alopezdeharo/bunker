@@ -18,7 +18,7 @@ const ITEM_BOX    = { width: 640, height: 640 };
 const ITEM_QUALITY = 76;
 const UI_QUALITY   = 82;
 
-const IMAGE_EXT = /\.(png|jpe?g|webp)$/i;
+const IMAGE_EXT = /\.(png|jpe?g|webp|avif)$/i;
 const FORCE     = process.argv.includes('--forzar');
 
 // ── Trabajos ──

@@ -69,6 +69,41 @@
     "details": { "type": ["snack"], "preparationTime": null, "servings": null, "vegetarian": true, "bestBefore": null }
   },
   {
+    "id": "food-edamames", "name": "Edamames", "category": "food",
+    "description": "Edamames cocidos y salteados con sal en escamas. Se muerde la vaina para sacar las habas y queda el regustillo salado.",
+    "tags": ["picar", "sartén", "salado"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["snack"], "preparationTime": 10, "servings": 2, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["250 g de edamames congelados, con vaina", "Agua con sal para cocerlos", "Un chorrito de aceite", "Sal en escamas o sal gruesa"],
+    "steps": [
+      "Cuece los edamames congelados, con su vaina, en agua con sal 4-5 min (o lo que indique el paquete).",
+      "Escúrrelos y sécalos bien.",
+      "Saltéalos 2-3 min en una sartén o plancha muy caliente con un chorrito de aceite, hasta que se doren un poco por fuera.",
+      "Échales sal en escamas y sírvelos calientes."
+    ],
+    "tips": [
+      "Se comen sacando las habas de la vaina con los dientes; la vaina no se come.",
+      "Con zumo de lima y una pizca de pimentón picante también quedan muy bien."
+    ]
+  },
+  {
+    "id": "food-patatas-gajo", "name": "Patatas gajo", "category": "food",
+    "description": "Gajos de patata especiados, hechos al horno. Crujientes por fuera y blandos por dentro.",
+    "tags": ["picar", "horno", "para compartir"], "availability": "quick", "kind": "prepare",
+    "details": { "type": ["snack"], "preparationTime": 50, "servings": 4, "vegetarian": true, "bestBefore": null },
+    "ingredients": ["4 patatas grandes, de piel fina si es posible", "3 cucharadas de aceite de oliva virgen extra", "1 cucharadita de pimentón (dulce o picante)", "1 cucharadita de ajo en polvo", "½ cucharadita de pimienta negra", "1 cucharadita de sal", "1 cucharadita de orégano o tomillo"],
+    "steps": [
+      "Lava bien las patatas y córtalas en gajos de tamaño parecido, con piel.",
+      "Déjalas 20-30 min en agua fría y sécalas muy bien.",
+      "Mézclalas con el aceite, el pimentón, el ajo en polvo, la pimienta, la sal y el orégano.",
+      "Repártelas sin amontonar en una bandeja con papel de horno, con el horno precalentado a 200 °C.",
+      "Hornea 35-40 min, dándoles la vuelta a mitad de cocción."
+    ],
+    "tips": [
+      "Para que queden más crujientes, mezcla una cucharadita de maicena con las especias antes de hornear.",
+      "Si los gajos son gruesos, tardan más; mejor que sean todos del mismo tamaño."
+    ]
+  },
+  {
     "id": "food-cereales-con-extras", "name": "Cereales con extras", "category": "food",
     "description": "Cereales con los extras que quieras por encima.",
     "tags": ["dulce", "sin esfuerzo"], "availability": "ready", "kind": "consume",

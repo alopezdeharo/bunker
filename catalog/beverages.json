@@ -130,14 +130,14 @@
   },
   {
     "id": "bev-te-blanco-gracia-blend", "name": "Té blanco Gracia Blend", "category": "beverage", "active": false,
-    "description": "Té blanco aromatizado de Tea Shop.",
+    "description": "Té blanco aromatizado.",
     "tags": ["té", "con cafeína", "té blanco"], "availability": "quick", "kind": "consume",
     "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2024-08-31" },
     "serveTip": "Solo, sin leche ni endulzante."
   },
   {
     "id": "bev-oolong-de-panettone", "name": "Oolong de panettone", "category": "beverage",
-    "description": "Té oolong aromatizado con panettone, de Tea Shop.",
+    "description": "Té oolong aromatizado con panettone.",
     "tags": ["té", "con cafeína", "oolong"], "availability": "quick", "kind": "consume",
     "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2027-04-30" },
     "serveTip": "Solo, sin leche ni endulzante.",
@@ -152,7 +152,7 @@
     "pairsWith": ["food-vasitos-de-galleta", "food-mugcake", "food-flan-expres", "food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
   },
   {
-    "id": "bev-armonia-interior", "name": "Armonía interior (Yogi Tea)", "category": "beverage",
+    "id": "bev-armonia-interior", "name": "Armonía interior", "category": "beverage",
     "description": "Infusión ayurvédica de melisa, rooibos y canela, con un toque de regaliz, cáscara de cacao, menta y lavanda, pensada para un momento de calma. Sin cafeína.",
     "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-02-28" },
@@ -160,7 +160,7 @@
   },
   {
     "id": "bev-te-rojo-de-choco-turron", "name": "Té rojo de choco-turrón", "category": "beverage",
-    "description": "Té rojo aromatizado con chocolate y turrón, de Tea Shop. Lleva cafeína.",
+    "description": "Té rojo aromatizado con chocolate y turrón. Lleva cafeína.",
     "tags": ["té", "con cafeína", "té rojo"], "availability": "quick", "kind": "consume",
     "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2026-07-31" },
     "serveTip": "Con un chorrito de bebida de avellanas, de avena o leche sin lactosa. No hace falta endulzar.",
@@ -168,7 +168,7 @@
   },
   {
     "id": "bev-rooibos-red-velvet", "name": "Rooibos Red Velvet", "category": "beverage",
-    "description": "Rooibos con aroma a tarta red velvet, de Tea Shop. Sin cafeína.",
+    "description": "Rooibos con aroma a tarta red velvet. Sin cafeína.",
     "tags": ["infusión", "rooibos", "sin cafeína"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-07-31" },
     "serveTip": "Con bebida de avena, de almendra o leche sin lactosa. No hace falta endulzar.",
@@ -176,7 +176,7 @@
   },
   {
     "id": "bev-te-rojo-de-praline", "name": "Té rojo de praliné", "category": "beverage",
-    "description": "Té rojo aromatizado con praliné, de Tea Shop. Lleva cafeína.",
+    "description": "Té rojo aromatizado con praliné. Lleva cafeína.",
     "tags": ["té", "con cafeína", "té rojo"], "availability": "quick", "kind": "consume",
     "details": { "type": "tea", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2026-07-31" },
     "serveTip": "Con un chorrito de bebida de avellanas, de avena o leche sin lactosa. No hace falta endulzar.",
@@ -184,36 +184,36 @@
   },
   {
     "id": "bev-rosa-mosqueta", "name": "Rosa mosqueta", "category": "beverage",
-    "description": "Infusión de rosa mosqueta (Hornimans). Sin cafeína.",
+    "description": "Infusión de rosa mosqueta. Sin cafeína.",
     "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-09-30" },
     "serveTip": "Sola, con un poco de miel clara si quieres."
   },
   {
-    "id": "bev-rooibos-clasico", "name": "Rooibos clásico (Conca)", "category": "beverage",
-    "description": "Rooibos de siempre, de Conca. Sin cafeína.",
+    "id": "bev-rooibos-clasico", "name": "Rooibos clásico", "category": "beverage",
+    "description": "Rooibos de siempre. Sin cafeína.",
     "tags": ["infusión", "rooibos", "sin cafeína"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2026-11-30" },
     "serveTip": "Sola o con un chorrito de leche. Miel oscura o agave, si quieres.",
     "pairsWith": ["food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
   },
   {
-    "id": "bev-inmuno", "name": "Inmuno (Conca)", "category": "beverage",
+    "id": "bev-inmuno", "name": "Inmuno", "category": "beverage",
     "description": "Infusión ecológica de equinácea, ajedrea, romero, citronela, hoja de olivo y caléndula. Sin cafeína.",
     "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-02-28" },
     "serveTip": "Sola, sin añadir nada, para notar su sabor. 200 ml de agua a 100 °C y 4-5 minutos de infusión; cada bolsita se puede usar hasta tres veces."
   },
   {
-    "id": "bev-felicita", "name": "Felicita (Yogi Tea)", "category": "beverage",
+    "id": "bev-felicita", "name": "Felicita", "category": "beverage",
     "description": "Infusión ayurvédica de canela, jengibre y cáscara de naranja, con lúpulo, hinojo, regaliz, anís y cardamomo. Especiada y afrutada. Sin cafeína.",
     "tags": ["infusión", "sin cafeína"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-07-31" },
     "serveTip": "Sola, para notar su sabor especiado y afrutado. 250 ml de agua recién hervida y 5-6 minutos de infusión."
   },
   {
-    "id": "bev-duerme-bien", "name": "Duerme bien (Conca)", "category": "beverage",
-    "description": "Infusión de Conca pensada para la noche. Sin cafeína.",
+    "id": "bev-duerme-bien", "name": "Duerme bien", "category": "beverage",
+    "description": "Infusión pensada para la noche. Sin cafeína.",
     "tags": ["infusión", "sin cafeína", "noche"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "hot", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2027-08-31" },
     "serveTip": "Sola, con un poco de miel clara si quieres."
@@ -255,8 +255,8 @@
     "serveTip": "Sola, con un poco de miel clara si quieres."
   },
   {
-    "id": "bev-infusion-fria-de-frutos-rojos", "name": "Infusión fría de frutos rojos (Pompadour)", "category": "beverage",
-    "description": "Infusión de frutos rojos para tomar fría (Pompadour). Sin cafeína.",
+    "id": "bev-infusion-fria-de-frutos-rojos", "name": "Infusión fría de frutos rojos", "category": "beverage",
+    "description": "Infusión de frutos rojos para tomar fría. Sin cafeína.",
     "tags": ["infusión", "sin cafeína", "fría", "frutos rojos"], "availability": "quick", "kind": "consume",
     "details": { "type": "infusion", "alcoholic": false, "temperature": "cold", "preparationTime": null, "caffeineLevel": "none", "steepingTime": null, "bestBefore": "2028-07-31" },
     "serveTip": "Fría, con agave si quieres."
@@ -272,8 +272,8 @@
     "pairsWith": ["food-tortitas-a-tu-gusto", "food-natillas-de-caqui"]
   },
   {
-    "id": "bev-te-verde-con-hierbabuena-en-frio", "name": "Té verde con hierbabuena, en frío (Pompadour)", "category": "beverage",
-    "description": "Té verde con hierbabuena para tomar frío (Pompadour). Lleva cafeína.",
+    "id": "bev-te-verde-con-hierbabuena-en-frio", "name": "Té verde con hierbabuena, en frío", "category": "beverage",
+    "description": "Té verde con hierbabuena para tomar frío. Lleva cafeína.",
     "tags": ["té", "con cafeína", "té verde", "frío"], "availability": "quick", "kind": "consume",
     "details": { "type": "tea", "alcoholic": false, "temperature": "cold", "preparationTime": null, "caffeineLevel": "some", "steepingTime": null, "bestBefore": "2029-06-30" },
     "serveTip": "Frío, con miel clara o agave si quieres."
